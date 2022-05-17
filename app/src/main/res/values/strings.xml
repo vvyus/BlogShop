@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">BlogShop</string>
+    <string name="ad_Id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="ad_inter_Id">ca-app-pub-3940256099942544/1033173712</string>
+
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+
+    <string name="purchase_cat1">Покупки</string>
+    <string name="purchase_cat2">Аккаунт</string>
+    <string name="purchase_foods">Продукты питания</string>
+    <string name="purchase_drugs">Лекарства</string>
+    <string name="price_desc">Цена:</string>
+    <string name="publish">Сохранить</string>
+    <string name="description_hint">Введите описание</string>
+    <string name="description">Описание</string>
+    <string name="price_hint">Укажите цену</string>
+    <string name="price">Цена</string>
+    <string name="title_hint">Введите заголовок</string>
+    <string name="title">Заголовок</string>
+    <string name="select_category">Выберите категорию</string>
+    <string name="category">Категория</string>
+    <string name="PURCHASE_ID">PURCHASE_ID</string>
+    <string name="delete_item">Удаление элемента</string>
+    <string name="delete_item_message">Удалить выбранный элемент?</string>
+    <string name="confirm_dialog">Да</string>
+    <string name="cancel_dialog">Отменить</string>
+    <string name="quantity">Количество</string>
+    <string name="quantity_hint">Укажите количество</string>
+    <string name="summa">Сумма</string>
+    <string name="summa_hint">Укажите сумму</string>
+</resources>
