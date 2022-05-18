@@ -47,7 +47,7 @@ class EditPurchaseActivity : AppCompatActivity(),FragmentCloseInterface {
         idPurchase=intent.getIntExtra(R.string.PURCHASE_ID.toString(), 0)
         initPurchases()
         init()
-        initToolbar()
+        //initToolbar()
     }
 
     override fun onResume() {
@@ -60,28 +60,28 @@ class EditPurchaseActivity : AppCompatActivity(),FragmentCloseInterface {
         dbManager.closeDb()
         job?.cancel()
     }
-    private fun initToolbar(){
-        rootElement.apply {
-            val savePurchaseItem = tb.menu.findItem(R.id.id_save_purchase)
-            savePurchaseItem.setOnMenuItemClickListener {
-                job?.cancel()
-                job = CoroutineScope(Dispatchers.Main).launch{
-                    if(dbManager!=null) {
-                        if(idPurchase>0){
-                            dbManager.updatePurchaseItem(idPurchase,edTitle.text.toString(),edDescription.text.toString())
-                        }else{
-                            dbManager.insertPurchaseToDb(edTitle.text.toString(),edDescription.text.toString())
-                        }
-                    }
-                    onBackPressed()
-                }
-                true
-            }
-            tb.setNavigationOnClickListener {
-                onBackPressed()
-            }
-        }
-    }
+//    private fun initToolbar(){
+//        rootElement.apply {
+//            val savePurchaseItem = tb.menu.findItem(R.id.id_save_purchase)
+//            savePurchaseItem.setOnMenuItemClickListener {
+//                job?.cancel()
+//                job = CoroutineScope(Dispatchers.Main).launch{
+//                    if(dbManager!=null) {
+//                        if(idPurchase>0){
+//                            dbManager.updatePurchaseItem(idPurchase,edTitle.text.toString(),edDescription.text.toString())
+//                        }else{
+//                            dbManager.insertPurchaseToDb(edTitle.text.toString(),edDescription.text.toString())
+//                        }
+//                    }
+//                    onBackPressed()
+//                }
+//                true
+//            }
+//            tb.setNavigationOnClickListener {
+//                onBackPressed()
+//            }
+//        }
+//    }
     private fun initPurchases(){
         if(idPurchase>0) {
             dbManager.openDb()
@@ -102,7 +102,7 @@ class EditPurchaseActivity : AppCompatActivity(),FragmentCloseInterface {
 
     private fun init(){
         cardItemPurchaseAdapter= CardItemPurchaseRcAdapter()
-        rootElement.vpimages.adapter=cardItemPurchaseAdapter
+        rootElement.vpPurchaseItems.adapter=cardItemPurchaseAdapter
 
     }
 
@@ -135,7 +135,7 @@ class EditPurchaseActivity : AppCompatActivity(),FragmentCloseInterface {
 
     }
 
-    fun onClickPublishPurchase(view: View){
+    fun onClickSavePurchase(view: View){
         rootElement.apply {
             job?.cancel()
             job = CoroutineScope(Dispatchers.Main).launch{
@@ -151,6 +151,10 @@ class EditPurchaseActivity : AppCompatActivity(),FragmentCloseInterface {
         }
 
 //        dbManager.publishAd(fillAd())
+    }
+
+    fun onClickCancelPurchase(view: View) {
+        onBackPressed()
     }
 
     override fun onBackPressed() {
@@ -186,5 +190,6 @@ class EditPurchaseActivity : AppCompatActivity(),FragmentCloseInterface {
         rootElement.scrollViewMain.visibility=View.VISIBLE
         cardItemPurchaseAdapter.update(list)
     }
+
 
 }
