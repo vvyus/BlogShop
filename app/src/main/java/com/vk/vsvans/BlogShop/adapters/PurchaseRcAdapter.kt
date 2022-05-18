@@ -60,7 +60,7 @@ class PurchaseRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
 
         fun setData(purchase:Purchase){
             binding.apply {
-                tvDescription.text=purchase.description
+                tvDescription.text=purchase.content
                 tvPrice.text= purchase.price.toString()
                 tvTitle.text=purchase.title
                 //tvTitle.tag= com.vk.vsvans.BlogShop.helper.Tag(purchase.id,se)

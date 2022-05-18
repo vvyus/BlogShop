@@ -90,7 +90,7 @@ class EditPurchaseActivity : AppCompatActivity(),FragmentCloseInterface {
                 purchases=dbManager.readOnePurchaseFromDb(idPurchase)
                 if(!purchases.isEmpty()){
                     rootElement.apply {
-                        edDescription.setText(purchases[0].description)
+                        edDescription.setText(purchases[0].content)
                         edTitle.setText(purchases[0].title)
                     }
                     val purchaseItems=dbManager.readPurchaseItems(idPurchase)
@@ -142,18 +142,25 @@ class EditPurchaseActivity : AppCompatActivity(),FragmentCloseInterface {
             job?.cancel()
             job = CoroutineScope(Dispatchers.Main).launch{
                if(dbManager!=null) {
-                   if(idPurchase>0){
-                       dbManager.updatePurchase(idPurchase,edTitle.text.toString(),edDescription.text.toString())
-                   }else{
-                       dbManager.insertPurchaseToDb(edTitle.text.toString(),edDescription.text.toString())
-                   }
+                   var content=""
                    for(pit:PurchaseItem in (vpPurchaseItems.adapter as CardItemPurchaseRcAdapter).mainArray){
                        if(pit.id==0){
                            dbManager.insertPurchaseItem(pit)
                        }else{
                            dbManager.updatePurchaseItem(pit)
                        }
+                       content+=pit.getContent()+"\n\n"
                    }
+                   if(purchases.isEmpty()) purchases.add(Purchase())
+                   purchases[0].content=content
+                   purchases[0].title=edTitle.text.toString()
+                   if(idPurchase>0){
+                       //dbManager.updatePurchase(idPurchase,edTitle.text.toString(),edDescription.text.toString())
+                       dbManager.updatePurchase(purchases[0])
+                   }else{
+                       dbManager.insertPurchase(purchases[0])
+                   }
+
                }
                 onBackPressed()
             }

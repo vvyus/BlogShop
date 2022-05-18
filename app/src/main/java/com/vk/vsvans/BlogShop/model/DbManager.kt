@@ -57,11 +57,10 @@ class DbManager(context: Context) {
     }
 
     //    PURCHASES
-    suspend fun insertPurchaseToDb(title: String, content: String) = withContext(Dispatchers.IO){
+    suspend fun insertPurchase(purchase:Purchase) = withContext(Dispatchers.IO){
         val values = ContentValues().apply {
-
-            put(DbName.COLUMN_NAME_TITLE, title)
-            put(DbName.COLUMN_NAME_CONTENT, content)
+            put(DbName.COLUMN_NAME_TITLE, purchase.title)
+            put(DbName.COLUMN_NAME_CONTENT, purchase.content)
             val time= UtilsHelper.getCurrentDate()
             put(DbName.COLUMN_NAME_TIME, time)
 
@@ -69,12 +68,13 @@ class DbManager(context: Context) {
         db?.insert(DbName.TABLE_NAME,null, values)
     }
 
-    suspend fun updatePurchase(id:Int, title: String, content: String) = withContext(Dispatchers.IO){
+    suspend fun updatePurchase(purchase:Purchase) = withContext(Dispatchers.IO){
+        val id=purchase.id
         val selection = BaseColumns._ID + "=$id"
         val values = ContentValues().apply {
 
-            put(DbName.COLUMN_NAME_TITLE, title)
-            put(DbName.COLUMN_NAME_CONTENT, content)
+            put(DbName.COLUMN_NAME_TITLE, purchase.title)
+            put(DbName.COLUMN_NAME_CONTENT, purchase.content)
             //put(DbName.COLUMN_NAME_TIME, time)
         }
         db?.update(DbName.TABLE_NAME, values, selection, null)
@@ -104,7 +104,7 @@ class DbManager(context: Context) {
                 cursor.getLong(cursor.getColumnIndex(DbName.COLUMN_NAME_TIME))
             val item = Purchase()
             item.title = dataTitle
-            item.description = dataContent
+            item.content = dataContent
             item.id = dataId
             item.time = time
             dataList.add(item)
@@ -138,7 +138,7 @@ class DbManager(context: Context) {
                     cursor.getLong(cursor.getColumnIndex(DbName.COLUMN_NAME_TIME))
                 val item = Purchase()
                 item.title = dataTitle
-                item.description = dataContent
+                item.content = dataContent
                 item.id = dataId
                 item.time = time
                 dataList.add(item)
@@ -192,7 +192,8 @@ class DbManager(context: Context) {
 
     @SuppressLint("Range")
     suspend fun updatePurchaseItem(purchaseItem:PurchaseItem) = withContext(Dispatchers.IO){
-        val selection = BaseColumns._ID + "=$purchaseItem.id"
+        val id:Int=purchaseItem.id
+        val selection = BaseColumns._ID + "=$id"
         val values = ContentValues().apply {
 
             put(DbName.COLUMN_NAME_PRICE, purchaseItem.price)
