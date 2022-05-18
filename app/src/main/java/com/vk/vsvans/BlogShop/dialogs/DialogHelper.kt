@@ -1,13 +1,11 @@
 package com.vk.vsvans.BlogShop.dialogs
 
-import android.R
 import android.app.AlertDialog
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
 import com.vk.vsvans.BlogShop.activity.EditPurchaseActivity
 import com.vk.vsvans.BlogShop.interfaces.IUpdatePurchaseItemList
 import com.vk.vsvans.BlogShop.mainActivity
@@ -28,7 +26,7 @@ object DialogHelper {
             }
 
             setPositiveButton(R1.string.confirm_dialog) { _, _ ->
-                db.removePurchaseItemFromDb(id)
+                db.removePurchaseFromDb(id)
                 if(mainActivity!=null) mainActivity!!.fillAdapter("")
             }
 //            setNeutralButton("Neutral") { _, _ ->

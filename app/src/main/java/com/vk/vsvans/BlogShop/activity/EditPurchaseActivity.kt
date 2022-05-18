@@ -87,12 +87,14 @@ class EditPurchaseActivity : AppCompatActivity(),FragmentCloseInterface {
             dbManager.openDb()
             job?.cancel()
             job = CoroutineScope(Dispatchers.Main).launch{
-                purchases=dbManager.readPurchasesItemFromDb(idPurchase)
+                purchases=dbManager.readOnePurchaseFromDb(idPurchase)
                 if(!purchases.isEmpty()){
                     rootElement.apply {
                         edDescription.setText(purchases[0].description)
                         edTitle.setText(purchases[0].title)
                     }
+                    val purchaseItems=dbManager.readPurchaseItems(idPurchase)
+                    (rootElement.vpPurchaseItems.adapter as CardItemPurchaseRcAdapter).update(purchaseItems)
                 }
             }
         }else {
@@ -141,9 +143,16 @@ class EditPurchaseActivity : AppCompatActivity(),FragmentCloseInterface {
             job = CoroutineScope(Dispatchers.Main).launch{
                if(dbManager!=null) {
                    if(idPurchase>0){
-                       dbManager.updatePurchaseItem(idPurchase,edTitle.text.toString(),edDescription.text.toString())
+                       dbManager.updatePurchase(idPurchase,edTitle.text.toString(),edDescription.text.toString())
                    }else{
                        dbManager.insertPurchaseToDb(edTitle.text.toString(),edDescription.text.toString())
+                   }
+                   for(pit:PurchaseItem in (vpPurchaseItems.adapter as CardItemPurchaseRcAdapter).mainArray){
+                       if(pit.id==0){
+                           dbManager.insertPurchaseItem(pit)
+                       }else{
+                           dbManager.updatePurchaseItem(pit)
+                       }
                    }
                }
                 onBackPressed()
@@ -164,12 +173,12 @@ class EditPurchaseActivity : AppCompatActivity(),FragmentCloseInterface {
 
     @RequiresApi(Build.VERSION_CODES.Q)
     fun onClickGetPurchaseItems(view:View){
-        val newList=ArrayList<PurchaseItem>()
-        val pit=PurchaseItem()
-        pit.price=1000.0
-        pit.quantity=1.234
-        pit.summa=3000.0
-        newList.add(pit)
+        val newList=(rootElement.vpPurchaseItems.adapter as CardItemPurchaseRcAdapter).mainArray
+//        val pit=PurchaseItem()
+//        pit.price=1000.0
+//        pit.quantity=1.234
+//        pit.summa=3000.0
+//        newList.add(pit)
         purchaseItemFragment= PurchaseItemListFragment(this,newList)
        // purchaseItemFragment!!.updateAdapter(cardItemPurchaseAdapter.mainArray)
         openPurchaseItemFragment()

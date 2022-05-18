@@ -131,6 +131,7 @@ class PurchaseItemListFragment(private val fragCloseInterface:FragmentCloseInter
 
             addProductItem?.setOnMenuItemClickListener {
                 val pit=PurchaseItem()
+                //новая запись
                 pit.id=0
                 pit.idPurchase=(activity as EditPurchaseActivity).idPurchase
                 DialogHelper.showPurchaseItemInputDialog(activity as EditPurchaseActivity,pit,
