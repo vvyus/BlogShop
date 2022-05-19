@@ -26,7 +26,7 @@ object DialogHelper {
             }
 
             setPositiveButton(R1.string.confirm_dialog) { _, _ ->
-                db.removePurchaseFromDb(id)
+                db.removePurchase(id)
                 if(mainActivity!=null) mainActivity!!.fillAdapter("")
             }
 //            setNeutralButton("Neutral") { _, _ ->

@@ -36,8 +36,7 @@ class EditPurchaseActivity : AppCompatActivity(),FragmentCloseInterface {
     val dbManager= DbManager(this)
 
     var idPurchase =0
-
-    private var purchases=ArrayList<Purchase>()
+    private var purchase:Purchase? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +44,7 @@ class EditPurchaseActivity : AppCompatActivity(),FragmentCloseInterface {
         setContentView(rootElement.root)
         val intent=getIntent()
         idPurchase=intent.getIntExtra(R.string.PURCHASE_ID.toString(), 0)
-        initPurchases()
+        initPurchase()
         init()
         //initToolbar()
     }
@@ -82,23 +81,25 @@ class EditPurchaseActivity : AppCompatActivity(),FragmentCloseInterface {
 //            }
 //        }
 //    }
-    private fun initPurchases(){
+    private fun initPurchase(){
         if(idPurchase>0) {
             dbManager.openDb()
             job?.cancel()
             job = CoroutineScope(Dispatchers.Main).launch{
-                purchases=dbManager.readOnePurchaseFromDb(idPurchase)
-                if(!purchases.isEmpty()){
+                purchase=dbManager.readOnePurchase(idPurchase)
+                if(purchase!=null){
                     rootElement.apply {
-                        edDescription.setText(purchases[0].content)
-                        edTitle.setText(purchases[0].title)
+                        edDescription.setText(purchase!!.content)
+                        edTitle.setText(purchase!!.title)
+                        edSummaPurchase.setText(purchase!!.summa.toString())
                     }
                     val purchaseItems=dbManager.readPurchaseItems(idPurchase)
                     (rootElement.vpPurchaseItems.adapter as CardItemPurchaseRcAdapter).update(purchaseItems)
                 }
             }
         }else {
-            purchases.clear()
+            //idPurchase==0
+            purchase= Purchase()
         }
     }
 
@@ -142,25 +143,32 @@ class EditPurchaseActivity : AppCompatActivity(),FragmentCloseInterface {
             job?.cancel()
             job = CoroutineScope(Dispatchers.Main).launch{
                if(dbManager!=null) {
-                   var content=""
+//                   var content=""
+//                   var summa=0.0
+//                   for(pit:PurchaseItem in (vpPurchaseItems.adapter as CardItemPurchaseRcAdapter).mainArray){
+//                       content+=pit.getContent()+"\n\n"
+//                       summa+=pit.summa
+//                   }
+                   //if(purchase==null) purchase=Purchase()
+                   purchase!!.content=edDescription.text.toString()
+                   purchase!!.title=edTitle.text.toString()
+                   purchase!!.summa=edSummaPurchase.text.toString().toDouble()
+                   if(idPurchase>0){
+                       //dbManager.updatePurchase(idPurchase,edTitle.text.toString(),edDescription.text.toString())
+                       dbManager.updatePurchase(purchase!!)
+                   }else{
+                       idPurchase= dbManager.insertPurchase(purchase!!)!!
+                       purchase!!.id=idPurchase
+                   }
                    for(pit:PurchaseItem in (vpPurchaseItems.adapter as CardItemPurchaseRcAdapter).mainArray){
+                       pit.idPurchase=idPurchase
                        if(pit.id==0){
+                           //set idPurchase when new Purchase
                            dbManager.insertPurchaseItem(pit)
                        }else{
                            dbManager.updatePurchaseItem(pit)
                        }
-                       content+=pit.getContent()+"\n\n"
                    }
-                   if(purchases.isEmpty()) purchases.add(Purchase())
-                   purchases[0].content=content
-                   purchases[0].title=edTitle.text.toString()
-                   if(idPurchase>0){
-                       //dbManager.updatePurchase(idPurchase,edTitle.text.toString(),edDescription.text.toString())
-                       dbManager.updatePurchase(purchases[0])
-                   }else{
-                       dbManager.insertPurchase(purchases[0])
-                   }
-
                }
                 onBackPressed()
             }
@@ -205,6 +213,15 @@ class EditPurchaseActivity : AppCompatActivity(),FragmentCloseInterface {
     override fun onFragClose(list: ArrayList<PurchaseItem>) {
         rootElement.scrollViewMain.visibility=View.VISIBLE
         cardItemPurchaseAdapter.update(list)
+        var summa=0.0
+        var content=""
+        for(pit:PurchaseItem in list){
+            summa+=pit.summa
+            content+=pit.getContent()+"\n\n"
+        }
+        // store from fragment in edit form
+        rootElement.edSummaPurchase.setText(summa.toString())
+        rootElement.edDescription.setText(content)
     }
 
 

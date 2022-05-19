@@ -57,15 +57,17 @@ class DbManager(context: Context) {
     }
 
     //    PURCHASES
-    suspend fun insertPurchase(purchase:Purchase) = withContext(Dispatchers.IO){
+    suspend fun insertPurchase(purchase:Purchase) :Int?= withContext(Dispatchers.IO){
         val values = ContentValues().apply {
             put(DbName.COLUMN_NAME_TITLE, purchase.title)
             put(DbName.COLUMN_NAME_CONTENT, purchase.content)
+            put(DbName.COLUMN_NAME_SUMMA_PURCHASES, purchase.summa)
             val time= UtilsHelper.getCurrentDate()
             put(DbName.COLUMN_NAME_TIME, time)
 
         }
-        db?.insert(DbName.TABLE_NAME,null, values)
+        val id=db?.insert(DbName.TABLE_NAME,null, values)
+        return@withContext id?.toInt()
     }
 
     suspend fun updatePurchase(purchase:Purchase) = withContext(Dispatchers.IO){
@@ -75,18 +77,19 @@ class DbManager(context: Context) {
 
             put(DbName.COLUMN_NAME_TITLE, purchase.title)
             put(DbName.COLUMN_NAME_CONTENT, purchase.content)
+            put(DbName.COLUMN_NAME_SUMMA_PURCHASES, purchase.summa)
             //put(DbName.COLUMN_NAME_TIME, time)
         }
         db?.update(DbName.TABLE_NAME, values, selection, null)
     }
 
-    fun removePurchaseFromDb(id: Int){
+    fun removePurchase(id: Int){
         val selection = BaseColumns._ID + "=$id"
         db?.delete(DbName.TABLE_NAME,selection, null)
     }
 
     @SuppressLint("Range")
-    suspend fun readPurchasesFromDb(searchText:String): ArrayList<Purchase> = withContext(Dispatchers.IO) {
+    suspend fun readPurchases(searchText:String): ArrayList<Purchase> = withContext(Dispatchers.IO) {
         val dataList = ArrayList<Purchase>()
         val selection = "${DbName.COLUMN_NAME_TITLE} like ?"
         val cursor = db?.query(
@@ -102,21 +105,23 @@ class DbManager(context: Context) {
                 cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
             val time =
                 cursor.getLong(cursor.getColumnIndex(DbName.COLUMN_NAME_TIME))
-            val item = Purchase()
-            item.title = dataTitle
-            item.content = dataContent
-            item.id = dataId
-            item.time = time
-            dataList.add(item)
+            val dataSumma =
+                cursor.getDouble(cursor.getColumnIndex(DbName.COLUMN_NAME_SUMMA_PURCHASES))
+            val purchase = Purchase()
+            purchase.title = dataTitle
+            purchase.content = dataContent
+            purchase.id = dataId
+            purchase.time = time
+            purchase.summa=dataSumma
+            dataList.add(purchase)
         }
         cursor.close()
         return@withContext dataList
     }
 
         @SuppressLint("Range")
-        suspend fun readOnePurchaseFromDb(id:Int): ArrayList<Purchase> = withContext(Dispatchers.IO) {
+        suspend fun readOnePurchase(id:Int): Purchase = withContext(Dispatchers.IO) {
      //  fun readPurchasesItemFromDb(id:Int): ArrayList<Purchase>  {
-            val dataList = ArrayList<Purchase>()
 
             val selection = BaseColumns._ID + " =?"
             //arrayOf(id.toString())
@@ -127,8 +132,9 @@ class DbManager(context: Context) {
                 selection, arrayOf(id.toString()),
                 null, null, null
             )
-
+            val purchase = Purchase()
             while (cursor?.moveToNext()!!) {
+
                 val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_TITLE))
                 val dataContent =
                     cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_CONTENT))
@@ -136,17 +142,22 @@ class DbManager(context: Context) {
                     cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
                 val time =
                     cursor.getLong(cursor.getColumnIndex(DbName.COLUMN_NAME_TIME))
-                val item = Purchase()
-                item.title = dataTitle
-                item.content = dataContent
-                item.id = dataId
-                item.time = time
-                dataList.add(item)
+                val dataSumma =
+                    cursor.getDouble(cursor.getColumnIndex(DbName.COLUMN_NAME_SUMMA_PURCHASES))
+
+                purchase.title = dataTitle
+                purchase.content = dataContent
+                purchase.id = dataId
+                purchase.time = time
+                purchase.summa=dataSumma
+
+                break
+
             }
             //if(readDataCallback!=null)readDataCallback.readData(dataList)
 
             cursor.close()
-            return@withContext dataList
+            return@withContext purchase
             //return dataList
         }
 
@@ -168,17 +179,17 @@ class DbManager(context: Context) {
         )
 
         while (cursor?.moveToNext()!!) {
-            val dataPrice = cursor.getLong(cursor.getColumnIndex(DbName.COLUMN_NAME_PRICE))
+            val dataPrice = cursor.getDouble(cursor.getColumnIndex(DbName.COLUMN_NAME_PRICE))
             val dataQuantity =
-                cursor.getLong(cursor.getColumnIndex(DbName.COLUMN_NAME_QUANTITY))
+                cursor.getDouble(cursor.getColumnIndex(DbName.COLUMN_NAME_QUANTITY))
             val dataSumma =
-                cursor.getLong(cursor.getColumnIndex(DbName.COLUMN_NAME_SUMMA))
+                cursor.getDouble(cursor.getColumnIndex(DbName.COLUMN_NAME_SUMMA))
             val dataId =
                 cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
             val item = PurchaseItem()
-            item.price = dataPrice.toDouble()
-            item.quantity = dataQuantity.toDouble()
-            item.summa = dataSumma.toDouble()
+            item.price = dataPrice
+            item.quantity = dataQuantity
+            item.summa = dataSumma
             item.id = dataId
             item.idPurchase = id
             dataList.add(item)

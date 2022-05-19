@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         job?.cancel()
         job = CoroutineScope(Dispatchers.Main).launch{
-            val list = dbManager.readPurchasesFromDb(text)
+            val list = dbManager.readPurchases(text)
             adapter.updateAdapter(list)
         }
 
