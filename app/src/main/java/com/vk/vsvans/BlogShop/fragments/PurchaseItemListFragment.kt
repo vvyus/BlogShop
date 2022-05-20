@@ -3,7 +3,6 @@ package com.vk.vsvans.BlogShop.fragments
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
@@ -14,22 +13,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.vk.vsvans.BlogShop.activity.EditPurchaseActivity
 
-import com.vk.vsvans.BlogShop.databinding.ListProductFragBinding
 import com.vk.vsvans.BlogShop.interfaces.AdapterCallback
 import com.vk.vsvans.BlogShop.interfaces.FragmentCloseInterface
 import com.vk.vsvans.BlogShop.interfaces.ItemTouchMoveCallBack
 import com.vk.vsvans.BlogShop.R
-import com.vk.vsvans.BlogShop.adapters.CardItemPurchaseRcAdapter
 import com.vk.vsvans.BlogShop.adapters.PurchaseItemRcAdapter
 import com.vk.vsvans.BlogShop.dialogs.DialogHelper
 import com.vk.vsvans.BlogShop.interfaces.IUpdatePurchaseItemList
 
 import com.vk.vsvans.BlogShop.model.PurchaseItem
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 
 //!реклама
 //class PurchaseItemListFragment(private val fragCloseInterface: FragmentCloseInterface, private val newList:ArrayList<PurchaseItem>?) : BaseMobAdFrag(),
@@ -41,7 +35,7 @@ class PurchaseItemListFragment(private val fragCloseInterface:FragmentCloseInter
 //    val dragCallback= ItemTouchMoveCallBack(adapter)
 //    val touchHelper=ItemTouchHelper(dragCallback)
     private var job: Job?=null
-    private var addProductItem:MenuItem?=null
+    //private var addPurchaseItem:MenuItem?=null
     private lateinit var tb:Toolbar
     //val TAG="MyLog"
 //    lateinit var binding:ListProductFragBinding
@@ -56,7 +50,7 @@ class PurchaseItemListFragment(private val fragCloseInterface:FragmentCloseInter
 //    }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
       // super.onCreateView(inflater, container, savedInstanceState)
-    val view: View = inflater.inflate(R.layout.list_product_frag, container,false)
+    val view: View = inflater.inflate(R.layout.list_purchase_item_frag, container,false)
     return view
 }
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -111,9 +105,10 @@ class PurchaseItemListFragment(private val fragCloseInterface:FragmentCloseInter
     private fun setUpToolbar(){
 //        binding.apply {
 
-            tb.inflateMenu(R.menu.menu_choose_product_item)
-            val deleteImageItem = tb.menu.findItem(R.id.id_delete_item_product)
-            addProductItem = tb.menu.findItem(R.id.id_add_item_product)
+            tb.inflateMenu(R.menu.menu_choose_purchase_item)
+            val deletePurchaseItem = tb.menu.findItem(R.id.id_delete_item_purchase)
+        val editPurchaseItem = tb.menu.findItem(R.id.id_edit_item_purchase)
+            val addPurchaseItem = tb.menu.findItem(R.id.id_add_item_purchase)
             // кнопка home <- слушатель
             tb.setNavigationOnClickListener {
 // просто this будет ссылаться на binding класс поэтому this@ImageListFrag
@@ -123,13 +118,26 @@ class PurchaseItemListFragment(private val fragCloseInterface:FragmentCloseInter
 //            showInterAd()
             }
 
-            deleteImageItem.setOnMenuItemClickListener {
+        editPurchaseItem.setOnMenuItemClickListener {
+            val pit=adapter.getItem()
+            if(pit!=PurchaseItem()){
+                DialogHelper.showPurchaseItemInputDialog(activity as EditPurchaseActivity,pit,
+                    object:IUpdatePurchaseItemList{
+                        override fun onUpdatePurchaseItemList(pit: PurchaseItem) {
+                            adapter.setPurchaseItem(pit, adapter.selected_position)
+                        }
+
+                    })
+            }
+            true
+        }
+            deletePurchaseItem.setOnMenuItemClickListener {
                 adapter.updateAdapter(ArrayList(), true)
                 (activity as EditPurchaseActivity).clearResultArray()
                 true
             }
 
-            addProductItem?.setOnMenuItemClickListener {
+            addPurchaseItem?.setOnMenuItemClickListener {
                 val pit=PurchaseItem()
                 //новая запись
                 pit.id=0

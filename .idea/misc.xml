@@ -22,6 +22,7 @@
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/drawer_main_menu.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/input_purchase_item.xml" value="0.253125" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/item_list_product_frag.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/item_purchase_list_frag_frag.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/list_product_frag.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/main_content.xml" value="0.4326171875" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/nav_header_main.xml" value="0.25416666666666665" />
@@ -33,6 +34,7 @@
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/menu/bottom_main_menu.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/menu/drawer_main_menu.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/menu/menu_choose_product_item.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/menu/menu_choose_purchase_item.xml" value="0.11302083333333333" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/menu/menu_edit_purchase.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/menu/menu_new.xml" value="0.25416666666666665" />
       </map>

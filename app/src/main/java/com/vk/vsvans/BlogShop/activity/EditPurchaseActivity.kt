@@ -161,9 +161,9 @@ class EditPurchaseActivity : AppCompatActivity(),FragmentCloseInterface {
                        purchase!!.id=idPurchase
                    }
                    for(pit:PurchaseItem in (vpPurchaseItems.adapter as CardItemPurchaseRcAdapter).mainArray){
-                       pit.idPurchase=idPurchase
                        if(pit.id==0){
                            //set idPurchase when new Purchase
+                           pit.idPurchase=idPurchase
                            dbManager.insertPurchaseItem(pit)
                        }else{
                            dbManager.updatePurchaseItem(pit)

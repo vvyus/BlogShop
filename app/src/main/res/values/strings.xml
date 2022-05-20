@@ -23,8 +23,10 @@
     <string name="PURCHASE_ID">PURCHASE_ID</string>
     <string name="delete_item">Удаление элемента</string>
     <string name="delete_item_message">Удалить выбранный элемент?</string>
-    <string name="confirm_dialog">Да</string>
+    <string name="confirm_dialog">Сохранить</string>
     <string name="cancel_dialog">Отменить</string>
+    <string name="yes_dialog">Да</string>
+    <string name="no_dialog">Нет</string>
     <string name="quantity">Количество</string>
     <string name="quantity_hint">Укажите количество</string>
     <string name="summa">Сумма</string>

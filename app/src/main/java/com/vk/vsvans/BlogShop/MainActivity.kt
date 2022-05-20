@@ -13,9 +13,12 @@ import com.vk.vsvans.BlogShop.activity.EditPurchaseActivity
 import com.vk.vsvans.BlogShop.adapters.PurchaseRcAdapter
 import com.vk.vsvans.BlogShop.databinding.ActivityMainBinding
 import com.vk.vsvans.BlogShop.dialogs.DialogHelper
+import com.vk.vsvans.BlogShop.interfaces.IDeleteItem
+import com.vk.vsvans.BlogShop.interfaces.IUpdatePurchaseItemList
 import com.vk.vsvans.BlogShop.interfaces.OnClickItemCallback
 import com.vk.vsvans.BlogShop.model.DbManager
 import com.vk.vsvans.BlogShop.model.Purchase
+import com.vk.vsvans.BlogShop.model.PurchaseItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -125,7 +128,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     val id=adapter.getPurchaseId()
                     if(id>0) {
                         //dbManager.removePurchaseItemFromDb(id)
-                        DialogHelper.showPurchaseDeleteItemDialog(dbManager,id)
+                        DialogHelper.showPurchaseDeleteItemDialog(this@MainActivity,id,object:
+                            IDeleteItem {
+                            override fun onDeleteItem(id: Int) {
+                                dbManager.removePurchase(id)
+                                fillAdapter("")
+                            }
+
+                        })
                     }
                 }
                 }//when

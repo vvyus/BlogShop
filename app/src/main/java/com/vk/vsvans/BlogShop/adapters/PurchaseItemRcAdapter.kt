@@ -2,6 +2,7 @@ package com.vk.vsvans.BlogShop.adapters
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Color
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
@@ -11,8 +12,6 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.vk.vsvans.BlogShop.R
-import com.vk.vsvans.BlogShop.activity.EditPurchaseActivity
-import com.vk.vsvans.BlogShop.databinding.ItemListProductFragBinding
 import com.vk.vsvans.BlogShop.interfaces.AdapterCallback
 import com.vk.vsvans.BlogShop.interfaces.ItemTouchMoveCallBack
 import com.vk.vsvans.BlogShop.model.PurchaseItem
@@ -21,9 +20,12 @@ class PurchaseItemRcAdapter(val adapterCallback: AdapterCallback): RecyclerView.
     ItemTouchMoveCallBack.ItemTouchAdapter{
 // для доступа из ImageListFrag
     val mainArray=ArrayList<PurchaseItem>()
+    var selected_position =RecyclerView.NO_POSITION;
+    var selected_color =0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PurchaseItemHolder {
-        val view=LayoutInflater.from(parent.context).inflate(R.layout.item_list_product_frag,parent,false)
+        selected_color=parent.context.resources.getColor(R.color.color_red)
+        val view=LayoutInflater.from(parent.context).inflate(R.layout.item_purchase_list_frag_frag,parent,false)
 //        val viewBinding=
 //            ItemListProductFragBinding.inflate(LayoutInflater.from(parent.context),parent,false)
 //        return PurchaseItemHolder(viewBinding,parent.context,this)
@@ -33,10 +35,25 @@ class PurchaseItemRcAdapter(val adapterCallback: AdapterCallback): RecyclerView.
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onBindViewHolder(holder: PurchaseItemHolder, position: Int) {
         holder.setData(mainArray[position])
+        holder.itemView.setOnClickListener{
+
+            if (selected_position != holder.getAdapterPosition()) {
+                notifyItemChanged(selected_position)
+            }else{
+                //if(clickItemCallback!=null) clickItemCallback!!.onClickItem(getPurchaseId())
+            }
+            selected_position = holder.adapterPosition
+            notifyItemChanged(selected_position)
+        }
+        holder.itemView.setBackgroundColor(if (selected_position == position) selected_color else Color.TRANSPARENT)
     }
 
     override fun getItemCount(): Int {
         return mainArray.size
+    }
+
+    fun getItem():PurchaseItem{
+        if(selected_position ==RecyclerView.NO_POSITION) return PurchaseItem() else return mainArray[selected_position]
     }
 
 //    class PurchaseItemHolder(val viewBinding: ItemListProductFragBinding, val context: Context, val adapter: PurchaseItemRcAdapter) : RecyclerView.ViewHolder(viewBinding.root) {
@@ -81,7 +98,7 @@ class PurchaseItemHolder(val view: View, val context: Context, val adapter:Purch
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setSingleImage(purchaseItem:PurchaseItem, pos:Int){
+    fun setPurchaseItem(purchaseItem:PurchaseItem, pos:Int){
         mainArray[pos]=purchaseItem;
         notifyDataSetChanged()
     }
