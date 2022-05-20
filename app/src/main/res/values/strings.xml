@@ -31,4 +31,5 @@
     <string name="quantity_hint">Укажите количество</string>
     <string name="summa">Сумма</string>
     <string name="summa_hint">Укажите сумму</string>
+    <string name="no_selected_item">Не выбрана позиция!</string>
 </resources>

@@ -227,6 +227,11 @@ class DbManager(context: Context) {
         db?.insert(DbName.TABLE_NAME_PURCHASE_ITEMS,null, values)
     }
 
+    fun removePurchaseItem(pit: PurchaseItem){
+        val selection = BaseColumns._ID + "=${pit.id}"
+        db?.delete(DbName.TABLE_NAME_PURCHASE_ITEMS,selection, null)
+    }
+
     fun closeDb(){
         myDbHelper.close()
     }

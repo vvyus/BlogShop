@@ -10,6 +10,7 @@ import com.vk.vsvans.BlogShop.adapters.CardItemPurchaseRcAdapter
 import com.vk.vsvans.BlogShop.databinding.ActivityEditPurchaseBinding
 import com.vk.vsvans.BlogShop.fragments.PurchaseItemListFragment
 import com.vk.vsvans.BlogShop.interfaces.FragmentCloseInterface
+import com.vk.vsvans.BlogShop.interfaces.IFragmentCallBack
 import com.vk.vsvans.BlogShop.mainActivity
 import com.vk.vsvans.BlogShop.model.DbManager
 import com.vk.vsvans.BlogShop.model.Purchase
@@ -19,7 +20,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-class EditPurchaseActivity : AppCompatActivity(),FragmentCloseInterface {
+class EditPurchaseActivity : AppCompatActivity(),FragmentCloseInterface,IFragmentCallBack {
 
     lateinit var rootElement: ActivityEditPurchaseBinding
     //private val dialog= DialogSpinnerHelper()
@@ -37,6 +38,7 @@ class EditPurchaseActivity : AppCompatActivity(),FragmentCloseInterface {
 
     var idPurchase =0
     private var purchase:Purchase? = null
+    private var listDeletedPurchaseItems=ArrayList<PurchaseItem>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -169,12 +171,20 @@ class EditPurchaseActivity : AppCompatActivity(),FragmentCloseInterface {
                            dbManager.updatePurchaseItem(pit)
                        }
                    }
-               }
+                   for(pit:PurchaseItem in listDeletedPurchaseItems){
+                       dbManager.removePurchaseItem(pit)
+                   }
+                   listDeletedPurchaseItems=ArrayList<PurchaseItem>()
+               }//dbManager
                 onBackPressed()
             }
         }
 
 //        dbManager.publishAd(fillAd())
+    }
+
+    fun deletePurchaseItem(pit:PurchaseItem){
+       dbManager.removePurchaseItem(pit)
     }
 
     fun onClickCancelPurchase(view: View) {
@@ -194,7 +204,7 @@ class EditPurchaseActivity : AppCompatActivity(),FragmentCloseInterface {
 //        pit.quantity=1.234
 //        pit.summa=3000.0
 //        newList.add(pit)
-        purchaseItemFragment= PurchaseItemListFragment(this,newList)
+        purchaseItemFragment= PurchaseItemListFragment(this,this,newList)
        // purchaseItemFragment!!.updateAdapter(cardItemPurchaseAdapter.mainArray)
         openPurchaseItemFragment()
     }
@@ -222,6 +232,11 @@ class EditPurchaseActivity : AppCompatActivity(),FragmentCloseInterface {
         // store from fragment in edit form
         rootElement.edSummaPurchase.setText(summa.toString())
         rootElement.edDescription.setText(content)
+    }
+
+    override fun onFragmentCallBack(pit: PurchaseItem) {
+        //dbManager.removePurchaseItem(pit)
+        listDeletedPurchaseItems.add(pit)
     }
 
 

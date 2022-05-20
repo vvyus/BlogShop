@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
@@ -13,13 +14,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.vk.vsvans.BlogShop.activity.EditPurchaseActivity
 
-import com.vk.vsvans.BlogShop.interfaces.AdapterCallback
-import com.vk.vsvans.BlogShop.interfaces.FragmentCloseInterface
-import com.vk.vsvans.BlogShop.interfaces.ItemTouchMoveCallBack
 import com.vk.vsvans.BlogShop.R
 import com.vk.vsvans.BlogShop.adapters.PurchaseItemRcAdapter
 import com.vk.vsvans.BlogShop.dialogs.DialogHelper
-import com.vk.vsvans.BlogShop.interfaces.IUpdatePurchaseItemList
+import com.vk.vsvans.BlogShop.interfaces.*
 
 import com.vk.vsvans.BlogShop.model.PurchaseItem
 
@@ -28,7 +26,7 @@ import kotlinx.coroutines.Job
 //!реклама
 //class PurchaseItemListFragment(private val fragCloseInterface: FragmentCloseInterface, private val newList:ArrayList<PurchaseItem>?) : BaseMobAdFrag(),
 //    AdapterCallback {
-class PurchaseItemListFragment(private val fragCloseInterface:FragmentCloseInterface,private val newList:ArrayList<PurchaseItem>?) : Fragment(),AdapterCallback {
+class PurchaseItemListFragment(private val fragCloseInterface:FragmentCloseInterface,val fragCallBack: IFragmentCallBack,private val newList:ArrayList<PurchaseItem>?) : Fragment(),AdapterCallback {
 
     //lateinit var rootElement:ListImageFragBinding
     lateinit var adapter: PurchaseItemRcAdapter
@@ -132,8 +130,18 @@ class PurchaseItemListFragment(private val fragCloseInterface:FragmentCloseInter
             true
         }
             deletePurchaseItem.setOnMenuItemClickListener {
-                adapter.updateAdapter(ArrayList(), true)
-                (activity as EditPurchaseActivity).clearResultArray()
+                val pit=adapter.getItem()
+                if(pit!=PurchaseItem() && adapter.getPosition()!=-1){
+                    DialogHelper.showPurchaseDeleteItemDialog(activity as EditPurchaseActivity,pit.id,
+                        object:IDeleteItem{
+                            override fun onDeleteItem(id: Int) {
+                                    adapter.deletePurchaseItem()
+                            }
+
+                        })
+                }else {
+                   Toast.makeText(activity,R.string.no_selected_item, Toast.LENGTH_LONG).show()
+                }
                 true
             }
 
@@ -177,8 +185,12 @@ class PurchaseItemListFragment(private val fragCloseInterface:FragmentCloseInter
     // вызывается из фрагмента при очистке списка выбранных картинок
 
 
-    override fun onItemDelete() {
-        setAddImageButton()
+    override fun onItemDelete(pit:PurchaseItem) {
+        if(fragCallBack!=null) fragCallBack.onFragmentCallBack(pit)
+//        if(activity!=null){
+//            (activity as EditPurchaseActivity).deletePurchaseItem(pit)
+//        }
+        //setAddImageButton()
     }
 
 //!реклама
