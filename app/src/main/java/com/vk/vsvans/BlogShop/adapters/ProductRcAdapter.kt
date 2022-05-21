@@ -66,6 +66,9 @@ class ProductRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVie
         if(selected_position!=RecyclerView.NO_POSITION) {
              productArray.removeAt(selected_position)
             notifyItemRemoved(selected_position)
+            //reset selected position and selectedId in activity
+            selected_position=RecyclerView.NO_POSITION
+            if(clickItemCallback!=null) clickItemCallback!!.onClickItem(getProductId())
             //adapterCallback.onItemDelete(pit)
         }
     }

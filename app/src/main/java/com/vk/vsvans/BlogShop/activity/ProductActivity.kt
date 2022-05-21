@@ -115,6 +115,8 @@ class ProductActivity : AppCompatActivity() {
                         object: IDeleteItem {
                             override fun onDeleteItem(id: Int) {
                                 adapter.deleteProductItem()
+                                //reset selectedId
+                                //selectedId=0
                                 dbManager.removeProduct(id)
                             }
 
