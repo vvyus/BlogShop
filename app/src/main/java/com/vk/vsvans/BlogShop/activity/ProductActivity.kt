@@ -1,10 +1,18 @@
 package com.vk.vsvans.BlogShop.activity
 
+import android.app.SearchManager
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
+import android.view.View
+import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
+import androidx.core.view.MenuItemCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.vk.vsvans.BlogShop.R
@@ -33,6 +41,7 @@ class ProductActivity : AppCompatActivity() {
     val dbManager= DbManager(this)
     private var job: Job? = null
     private var selectedId=0
+    private lateinit var searchView:SearchView
     val TAG="MyLog"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,7 +80,12 @@ class ProductActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
+        //super.onBackPressed()
+        if (!searchView.isIconified()) {
+            searchView.onActionViewCollapsed();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     fun fillAdapter(text: String){
@@ -91,6 +105,45 @@ class ProductActivity : AppCompatActivity() {
             val deleteProductItem =tb.menu.findItem(R.id.id_delete_item_product)
             val editProductItem = tb.menu.findItem(R.id.id_edit_item_product)
             val addProductItem = tb.menu.findItem(R.id.id_add_item_product)
+
+            val searchItem: MenuItem =tb.menu.findItem(R.id.action_search)
+            if (searchItem != null) {
+                searchView = MenuItemCompat.getActionView(searchItem) as SearchView
+                searchView.setOnCloseListener(object : SearchView.OnCloseListener {
+                    override fun onClose(): Boolean {
+                        return true
+                    }
+                })
+
+                val searchPlate =        searchView.findViewById(androidx.appcompat.R.id.search_src_text) as EditText
+                searchPlate.hint = "Search"
+                val searchPlateView: View =
+                    searchView.findViewById(androidx.appcompat.R.id.search_plate)
+                searchPlateView.setBackgroundColor(
+                    ContextCompat.getColor(
+                        this@ProductActivity,
+                        android.R.color.transparent
+                    )
+                )
+
+                searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                    override fun onQueryTextSubmit(query: String?): Boolean {
+// do your logic here                Toast.makeText(applicationContext, query, Toast.LENGTH_SHORT).show()
+                        return false
+                    }
+
+                    override fun onQueryTextChange(newText: String?): Boolean {
+                        if (newText != null) {
+                            fillAdapter(newText)
+                        }
+                        return true
+                    }
+                })
+
+                val searchManager =
+                    getSystemService(Context.SEARCH_SERVICE) as SearchManager
+                searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+            }//search_item
 
             addProductItem?.setOnMenuItemClickListener {
                 val product= Product()
