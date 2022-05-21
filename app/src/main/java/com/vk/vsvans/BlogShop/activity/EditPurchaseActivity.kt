@@ -91,7 +91,7 @@ class EditPurchaseActivity : AppCompatActivity(),FragmentCloseInterface,IFragmen
                 purchase=dbManager.readOnePurchase(idPurchase)
                 if(purchase!=null){
                     rootElement.apply {
-                        edDescription.setText(purchase!!.content)
+                        edContent.setText(purchase!!.content)
                         edTitle.setText(purchase!!.title)
                         edSummaPurchase.setText(purchase!!.summa.toString())
                     }
@@ -152,7 +152,7 @@ class EditPurchaseActivity : AppCompatActivity(),FragmentCloseInterface,IFragmen
 //                       summa+=pit.summa
 //                   }
                    //if(purchase==null) purchase=Purchase()
-                   purchase!!.content=edDescription.text.toString()
+                   purchase!!.content=edContent.text.toString()
                    purchase!!.title=edTitle.text.toString()
                    purchase!!.summa=edSummaPurchase.text.toString().toDouble()
                    if(idPurchase>0){
@@ -174,7 +174,7 @@ class EditPurchaseActivity : AppCompatActivity(),FragmentCloseInterface,IFragmen
                    for(pit:PurchaseItem in listDeletedPurchaseItems){
                        dbManager.removePurchaseItem(pit)
                    }
-                   listDeletedPurchaseItems=ArrayList<PurchaseItem>()
+                   //listDeletedPurchaseItems=ArrayList<PurchaseItem>()
                }//dbManager
                 onBackPressed()
             }
@@ -192,6 +192,7 @@ class EditPurchaseActivity : AppCompatActivity(),FragmentCloseInterface,IFragmen
     }
 
     override fun onBackPressed() {
+        listDeletedPurchaseItems=ArrayList<PurchaseItem>()
         if(mainActivity!=null)mainActivity!!.fillAdapter("")
         super.onBackPressed()
     }
@@ -231,7 +232,7 @@ class EditPurchaseActivity : AppCompatActivity(),FragmentCloseInterface,IFragmen
         }
         // store from fragment in edit form
         rootElement.edSummaPurchase.setText(summa.toString())
-        rootElement.edDescription.setText(content)
+        rootElement.edContent.setText(content)
     }
 
     override fun onFragmentCallBack(pit: PurchaseItem) {

@@ -7,10 +7,13 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import com.vk.vsvans.BlogShop.activity.EditPurchaseActivity
+import com.vk.vsvans.BlogShop.activity.ProductActivity
 import com.vk.vsvans.BlogShop.interfaces.IDeleteItem
+import com.vk.vsvans.BlogShop.interfaces.IUpdateProductItemList
 import com.vk.vsvans.BlogShop.interfaces.IUpdatePurchaseItemList
 import com.vk.vsvans.BlogShop.mainActivity
 import com.vk.vsvans.BlogShop.model.DbManager
+import com.vk.vsvans.BlogShop.model.Product
 import com.vk.vsvans.BlogShop.model.PurchaseItem
 import com.vk.vsvans.BlogShop.R as R1
 
@@ -79,4 +82,34 @@ object DialogHelper {
 
 
     }
+
+    fun showProductInputDialog(context: Context, product: Product, iupdateProductItemList: IUpdateProductItemList) {
+        val customDialog = AlertDialog.Builder(context, 0).create()
+        val inflater: LayoutInflater =(context as ProductActivity).layoutInflater
+
+        val view: View = inflater.inflate(R1.layout.input_product_item, null)
+        customDialog.setView(view)
+        val rootView=view.rootView
+
+        val edTitle=rootView.findViewById<EditText>(R1.id.edTitleProduct)
+        edTitle.setText(product.title.toString())
+
+        val btnOk=rootView.findViewById<Button>(R1.id.btnOk)
+        btnOk.setOnClickListener {
+            product.title=edTitle.text.toString()
+            // (context as EditPurchaseActivity).up
+            if(iupdateProductItemList!=null)iupdateProductItemList.onUpdateProductItemList(product)
+            customDialog.dismiss()
+        }
+
+        val btnCancel=view.rootView.findViewById<Button>(R1.id.btnCancel)
+        btnCancel.setOnClickListener {
+            customDialog.dismiss()
+        }
+
+        customDialog.show()
+
+
+    }
+
 }

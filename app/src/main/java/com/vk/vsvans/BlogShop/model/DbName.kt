@@ -2,7 +2,7 @@ package com.vk.vsvans.BlogShop.model
 import android.provider.BaseColumns
 
 object DbName {
-        const val DATABASE_VERSION = 8
+        const val DATABASE_VERSION = 9
         const val DATABASE_NAME = "BlogShopDb.db"
   // Table Purchase
         const val TABLE_NAME = "Purchases"
@@ -41,4 +41,16 @@ object DbName {
                 "$COLUMN_NAME_QUANTITY DOUBLE,$COLUMN_NAME_SUMMA DOUBLE,$COLUMN_NAME_PRODUCT_ID INTEGER,$COLUMN_NAME_PRODUCT_NAME TEXT"+
                 ")"
         const val SQL_DELETE_TABLE_PURCHASE_ITEMS= "DROP TABLE IF EXISTS $TABLE_NAME_PURCHASE_ITEMS"
+
+    // TABLE PRODUCTS
+    const val TABLE_NAME_PRODUCTS = "Products"
+    const val COLUMN_NAME_TITLE_PRODUCTS = "title"
+    const val COLUMN_NAME_BCOLOR_PRODUCTS = "bcolor"
+    const val COLUMN_NAME_FCOLOR_PRODUCTS = "fcolor"
+
+    const val CREAT_TABLE_PRODUCTS = "CREATE TABLE IF NOT EXISTS $TABLE_NAME_PRODUCTS (" +
+            "${BaseColumns._ID} INTEGER PRIMARY KEY,$COLUMN_NAME_TITLE_PRODUCTS TEXT,$COLUMN_NAME_BCOLOR_PRODUCTS INTEGER" +
+            ",$COLUMN_NAME_FCOLOR_PRODUCTS INTEGER)"
+    const val SQL_DELETE_TABLE_PRODUCTS = "DROP TABLE IF EXISTS $TABLE_NAME_PRODUCTS"
+
 }

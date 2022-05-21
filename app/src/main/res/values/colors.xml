@@ -12,6 +12,7 @@
     <color name="color_red">#D52417</color>
     <color name="green_main_light">#16BF54</color>
     <color name="green_main">#008577</color>
+    <color name="gray_light">#F0F0F0</color>
     <color name="gray">#E6E6E6</color>
     <color name="gray_dark">#CDCDCD</color>
     <color name="yellow">#FFEB3B</color>

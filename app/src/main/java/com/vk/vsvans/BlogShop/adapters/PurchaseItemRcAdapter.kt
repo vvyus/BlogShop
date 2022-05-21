@@ -7,9 +7,7 @@ import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
 import android.widget.TextView
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.vk.vsvans.BlogShop.R
@@ -26,7 +24,7 @@ class PurchaseItemRcAdapter(val adapterCallback: AdapterCallback): RecyclerView.
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PurchaseItemHolder {
         selected_color=parent.context.resources.getColor(R.color.color_red)
-        val view=LayoutInflater.from(parent.context).inflate(R.layout.item_purchase_list_frag_frag,parent,false)
+        val view=LayoutInflater.from(parent.context).inflate(R.layout.item_purchase_list_frag,parent,false)
 //        val viewBinding=
 //            ItemListProductFragBinding.inflate(LayoutInflater.from(parent.context),parent,false)
 //        return PurchaseItemHolder(viewBinding,parent.context,this)

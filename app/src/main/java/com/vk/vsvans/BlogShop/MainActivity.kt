@@ -10,6 +10,7 @@ import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.navigation.NavigationView
 import com.vk.vsvans.BlogShop.activity.EditPurchaseActivity
+import com.vk.vsvans.BlogShop.activity.ProductActivity
 import com.vk.vsvans.BlogShop.adapters.PurchaseRcAdapter
 import com.vk.vsvans.BlogShop.databinding.ActivityMainBinding
 import com.vk.vsvans.BlogShop.dialogs.DialogHelper
@@ -137,6 +138,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
                         })
                     }
+                }
+                R.id.id_product->{
+                    val intent= Intent(this@MainActivity, ProductActivity::class.java)
+                    intent.putExtra(R.string.PURCHASE_ID.toString(),0)
+                    // сообщаем системе о запуске активити
+                    startActivity(intent)
+                    //Toast.makeText(this@MainActivity,"Pressed new purchase", Toast.LENGTH_LONG).show()
                 }
                 }//when
             true

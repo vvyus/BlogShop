@@ -190,7 +190,7 @@
                         </LinearLayout>
 
                         <TextView
-                            android:id="@+id/tvTitleDescription"
+                            android:id="@+id/tvTitleContent"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
@@ -201,7 +201,7 @@
                             android:textStyle="bold" />
 
                         <EditText
-                            android:id="@+id/edDescription"
+                            android:id="@+id/edContent"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@null"
