@@ -51,8 +51,9 @@ class DbManager(context: Context) {
         return@withContext dataList
     }
 
-    suspend fun updateProduct(product:Product) = withContext(Dispatchers.IO){
-        val id=product.id
+    //suspend fun updateProduct(product:Product) = withContext(Dispatchers.IO){
+    fun updateProduct(product:Product){
+    val id=product.id
         val selection = BaseColumns._ID + "=$id"
         val values = ContentValues().apply {
 

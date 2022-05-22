@@ -2,7 +2,6 @@ package com.vk.vsvans.BlogShop.activity
 
 import android.app.SearchManager
 import android.content.Context
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
@@ -14,20 +13,15 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuItemCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.vk.vsvans.BlogShop.R
 import com.vk.vsvans.BlogShop.adapters.ProductRcAdapter
-import com.vk.vsvans.BlogShop.adapters.PurchaseItemRcAdapter
-import com.vk.vsvans.BlogShop.databinding.ActivityMainBinding
 import com.vk.vsvans.BlogShop.databinding.ActivityProductBinding
 import com.vk.vsvans.BlogShop.dialogs.DialogHelper
 import com.vk.vsvans.BlogShop.interfaces.IDeleteItem
 import com.vk.vsvans.BlogShop.interfaces.IUpdateProductItemList
-import com.vk.vsvans.BlogShop.interfaces.IUpdatePurchaseItemList
 import com.vk.vsvans.BlogShop.interfaces.OnClickItemCallback
 import com.vk.vsvans.BlogShop.model.DbManager
 import com.vk.vsvans.BlogShop.model.Product
-import com.vk.vsvans.BlogShop.model.PurchaseItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -59,6 +53,39 @@ class ProductActivity : AppCompatActivity() {
                 if(id>0) {
                     // may be delete item
                     selectedId=id
+                }
+            }
+
+            override fun onEditItem() {
+                val product= adapter.getProduct()
+                if (product != null) {
+                    DialogHelper.showProductInputDialog(this@ProductActivity,product,
+                        object: IUpdateProductItemList {
+                            override fun onUpdateProductItemList(product: Product) {
+                                // add single product
+                                adapter.updateAdapterEdit(product)
+                                dbManager.updateProduct(product)
+                            }
+
+                        }
+                    )
+                }
+            }
+
+            override fun onDeleteItem() {
+                if(selectedId>0){
+                    DialogHelper.showPurchaseDeleteItemDialog(this@ProductActivity,selectedId,
+                        object: IDeleteItem {
+                            override fun onDeleteItem(id: Int) {
+                                adapter.deleteProductItem()
+                                //reset selectedId
+                                //selectedId=0
+                                dbManager.removeProduct(id)
+                            }
+
+                        })
+                }else {
+                    Toast.makeText(this@ProductActivity,R.string.no_selected_item, Toast.LENGTH_LONG).show()
                 }
             }
         })
@@ -102,8 +129,6 @@ class ProductActivity : AppCompatActivity() {
         rootElement.apply {
 
             tb.inflateMenu(R.menu.menu_choose_product_item)
-            val deleteProductItem =tb.menu.findItem(R.id.id_delete_item_product)
-            val editProductItem = tb.menu.findItem(R.id.id_edit_item_product)
             val addProductItem = tb.menu.findItem(R.id.id_add_item_product)
 
             val searchItem: MenuItem =tb.menu.findItem(R.id.action_search)
@@ -153,7 +178,7 @@ class ProductActivity : AppCompatActivity() {
                     object: IUpdateProductItemList {
                         override fun onUpdateProductItemList(product: Product) {
                             // add single product
-                            adapter.updateAdapter(product)
+                            adapter.updateAdapterInsert(product)
                             dbManager.insertProduct(product)
                         }
 
@@ -162,27 +187,11 @@ class ProductActivity : AppCompatActivity() {
                 true
             }
 
-            deleteProductItem.setOnMenuItemClickListener {
-                if(selectedId>0){
-                    DialogHelper.showPurchaseDeleteItemDialog(this@ProductActivity,selectedId,
-                        object: IDeleteItem {
-                            override fun onDeleteItem(id: Int) {
-                                adapter.deleteProductItem()
-                                //reset selectedId
-                                //selectedId=0
-                                dbManager.removeProduct(id)
-                            }
-
-                        })
-                }else {
-                    Toast.makeText(this@ProductActivity,R.string.no_selected_item, Toast.LENGTH_LONG).show()
-                }
-                true
-            }
 
             tb.setNavigationOnClickListener {
                 onBackPressed()
             }
         }
-    }
+    }//setupToolbar
+
 }

@@ -41,6 +41,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 startActivity(intent)
             }
         }
+
+        override fun onEditItem() {}
+
+        override fun onDeleteItem() {}
     })
 
     override fun onCreate(savedInstanceState: Bundle?) {

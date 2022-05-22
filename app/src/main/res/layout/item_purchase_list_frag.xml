@@ -72,7 +72,7 @@
                 app:layout_constraintEnd_toEndOf="@+id/tvContent">
 
                 <ImageButton
-                    android:id="@+id/imEditImage"
+                    android:id="@+id/imEditProduct"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -82,7 +82,7 @@
                     app:srcCompat="@drawable/ic_edit_purchase" />
 
                 <ImageButton
-                    android:id="@+id/imDelete"
+                    android:id="@+id/imDeleteProduct"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
