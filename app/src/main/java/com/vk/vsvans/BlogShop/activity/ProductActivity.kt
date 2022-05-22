@@ -133,8 +133,11 @@ class ProductActivity : AppCompatActivity() {
             object: IUpdateProductItemList {
                 override fun onUpdateProductItemList(product: Product) {
                     // add single product
-                    adapter.updateAdapterInsert(product)
-                    dbManager.insertProduct(product)
+                    val id=dbManager.insertProduct(product)
+                    if (id != null) {
+                        product.id=id
+                        adapter.updateAdapterInsert(product)
+                    }
                 }
 
             }

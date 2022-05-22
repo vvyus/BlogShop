@@ -19,12 +19,13 @@ class DbManager(context: Context) {
     }
     // PRODUCT
     // suspend fun insertProduct( product:Product) = withContext(Dispatchers.IO){
-    fun insertProduct( product:Product){
+    fun insertProduct( product:Product):Int?{
         val values = ContentValues().apply {
 
             put(DbName.COLUMN_NAME_TITLE_PRODUCTS, product.title)
         }
-        db?.insert(DbName.TABLE_NAME_PRODUCTS,null, values)
+        val id=db?.insert(DbName.TABLE_NAME_PRODUCTS,null, values)
+        return id?.toInt()
     }
 
     @SuppressLint("Range")
