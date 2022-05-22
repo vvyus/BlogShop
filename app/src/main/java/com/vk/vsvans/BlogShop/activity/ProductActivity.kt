@@ -125,11 +125,26 @@ class ProductActivity : AppCompatActivity() {
 
     }
 
+    fun onClickAddProduct(view: View){
+        val product= Product()
+        //новая запись
+        product.id=0
+        DialogHelper.showProductInputDialog(this@ProductActivity,product,
+            object: IUpdateProductItemList {
+                override fun onUpdateProductItemList(product: Product) {
+                    // add single product
+                    adapter.updateAdapterInsert(product)
+                    dbManager.insertProduct(product)
+                }
+
+            }
+        )
+    }
+
     private fun setUpToolbar() {
         rootElement.apply {
 
             tb.inflateMenu(R.menu.menu_choose_product_item)
-            val addProductItem = tb.menu.findItem(R.id.id_add_item_product)
 
             val searchItem: MenuItem =tb.menu.findItem(R.id.action_search)
             if (searchItem != null) {
@@ -153,7 +168,6 @@ class ProductActivity : AppCompatActivity() {
 
                 searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                     override fun onQueryTextSubmit(query: String?): Boolean {
-// do your logic here                Toast.makeText(applicationContext, query, Toast.LENGTH_SHORT).show()
                         return false
                     }
 
@@ -170,24 +184,7 @@ class ProductActivity : AppCompatActivity() {
                 searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
             }//search_item
 
-            addProductItem?.setOnMenuItemClickListener {
-                val product= Product()
-                //новая запись
-                product.id=0
-                DialogHelper.showProductInputDialog(this@ProductActivity,product,
-                    object: IUpdateProductItemList {
-                        override fun onUpdateProductItemList(product: Product) {
-                            // add single product
-                            adapter.updateAdapterInsert(product)
-                            dbManager.insertProduct(product)
-                        }
-
-                    }
-                )
-                true
-            }
-
-
+            // GO BACK
             tb.setNavigationOnClickListener {
                 onBackPressed()
             }

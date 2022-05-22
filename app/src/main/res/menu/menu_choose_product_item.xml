@@ -2,13 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     >
-    
-    <item android:title="Add"
-        android:id="@+id/id_add_item_product"
-        android:icon="@drawable/ic_add_item_product"
-        android:orderInCategory="100"
-        app:showAsAction="ifRoom"
-        />
+
     <item
         android:id="@+id/action_search"
         android:icon="@drawable/ic_search"
