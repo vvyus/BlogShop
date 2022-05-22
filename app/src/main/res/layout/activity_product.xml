@@ -43,6 +43,7 @@
             android:onClick="onClickAddProduct"
             app:srcCompat="@drawable/ic_add"
             app:backgroundTint="@color/white"
-            tools:ignore="VectorDrawableCompat" />
+            app:tint="@color/green_main"
+             />
     </FrameLayout>
 </LinearLayout>

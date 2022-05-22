@@ -159,7 +159,7 @@ class ProductActivity : AppCompatActivity() {
                 })
 
                 val searchPlate =        searchView.findViewById(androidx.appcompat.R.id.search_src_text) as EditText
-                searchPlate.hint = "Search"
+                searchPlate.hint = getString(R.string.search_hint)
                 val searchPlateView: View =
                     searchView.findViewById(androidx.appcompat.R.id.search_plate)
                 searchPlateView.setBackgroundColor(
