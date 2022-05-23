@@ -141,7 +141,7 @@ class PurchaseItemListFragment(private val fragCloseInterface:FragmentCloseInter
     private fun setUpToolbar(){
 //        binding.apply {
 
-            tb.inflateMenu(R.menu.menu_choose_purchase_item)
+            //tb.inflateMenu(R.menu.menu_choose_purchase_item)
             // кнопка home <- слушатель
             tb.setNavigationOnClickListener {
                 // просто this будет ссылаться на binding класс поэтому this@ImageListFrag

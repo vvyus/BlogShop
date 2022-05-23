@@ -12,6 +12,7 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.vk.vsvans.BlogShop.R
+import com.vk.vsvans.BlogShop.databinding.ItemPurchaseListFragBinding
 import com.vk.vsvans.BlogShop.interfaces.ItemTouchMoveCallBack
 import com.vk.vsvans.BlogShop.interfaces.OnClickItemCallback
 import com.vk.vsvans.BlogShop.model.PurchaseItem
@@ -25,11 +26,11 @@ class PurchaseItemRcAdapter(val clickItemCallback: OnClickItemCallback?): Recycl
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PurchaseItemHolder {
         selected_color=parent.context.resources.getColor(R.color.color_red)
-        val view=LayoutInflater.from(parent.context).inflate(R.layout.item_purchase_list_frag,parent,false)
-//        val viewBinding=
-//            ItemListProductFragBinding.inflate(LayoutInflater.from(parent.context),parent,false)
-//        return PurchaseItemHolder(viewBinding,parent.context,this)
-        return PurchaseItemHolder(view,clickItemCallback)
+//        val view=LayoutInflater.from(parent.context).inflate(R.layout.item_purchase_list_frag,parent,false)
+//        return PurchaseItemHolder(view,clickItemCallback)
+        val viewBinding= ItemPurchaseListFragBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        return PurchaseItemHolder(viewBinding,clickItemCallback)
+
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -106,40 +107,27 @@ class PurchaseItemRcAdapter(val clickItemCallback: OnClickItemCallback?): Recycl
         selected_position=RecyclerView.NO_POSITION
         if(clickItemCallback!=null) clickItemCallback!!.onClickItem(getPurchaseItemId())
     }
-//    class PurchaseItemHolder(val viewBinding: ItemListProductFragBinding, val context: Context, val adapter: PurchaseItemRcAdapter) : RecyclerView.ViewHolder(viewBinding.root) {
-class PurchaseItemHolder(val view: View,val clickItemCallback: OnClickItemCallback?) : RecyclerView.ViewHolder(view) {
+
+        class PurchaseItemHolder(val viewBinding: ItemPurchaseListFragBinding, val clickItemCallback: OnClickItemCallback?) : RecyclerView.ViewHolder(viewBinding.root) {
+//    class PurchaseItemHolder(val view: View,val clickItemCallback: OnClickItemCallback?) : RecyclerView.ViewHolder(view) {
 
 
         @RequiresApi(Build.VERSION_CODES.Q)
         fun setData(purchaseItem:PurchaseItem){
-            val tvContent=view.findViewById<TextView>(R.id.tvContentPurchaseItem)
-            tvContent.text =purchaseItem.getContent()
-            val tvTitle=view.findViewById<TextView>(R.id.tvTitlePurchaseItem)
-            tvTitle.text="Позиция- ${adapterPosition+1}"
-            val imEditPurchaseItem=view.findViewById<ImageButton>(R.id.imEditPurchaseItem)
-            imEditPurchaseItem.setOnClickListener{
-                if(clickItemCallback!=null) clickItemCallback!!.onEditItem()
+            viewBinding.apply {
+                //val tvContent = view.findViewById<TextView>(R.id.tvContentPurchaseItem)
+                tvContentPurchaseItem.text = purchaseItem.getContent()
+                //val tvTitle = view.findViewById<TextView>(R.id.tvTitlePurchaseItem)
+                tvTitlePurchaseItem.text = "Позиция- ${adapterPosition + 1}"
+                //val imEditPurchaseItem = view.findViewById<ImageButton>(R.id.imEditPurchaseItem)
+                imEditPurchaseItem.setOnClickListener {
+                    if (clickItemCallback != null) clickItemCallback!!.onEditItem()
+                }
+                //val imDeletePurchaseItem = view.findViewById<ImageButton>(R.id.imDeletePurchaseItem)
+                imDeletePurchaseItem.setOnClickListener {
+                    if (clickItemCallback != null) clickItemCallback!!.onDeleteItem()
+                }
             }
-            val imDeletePurchaseItem=view.findViewById<ImageButton>(R.id.imDeletePurchaseItem)
-            imDeletePurchaseItem.setOnClickListener{
-                if(clickItemCallback!=null) clickItemCallback!!.onDeleteItem()
-            }
-//            viewBinding.tvContent.text=purchaseItem.getContent()
-
-//            viewBinding.imEditImage.setOnClickListener{
-//            }
-//
-//            val imDelete=itemView.findViewById<ImageButton>(R.id.imDelete)
-//            imDelete.setOnClickListener{
-//                //(context as EditPurchaseActivity).listResultArray.removeAt(adapterPosition)
-//
-//                adapter.mainArray.removeAt(adapterPosition)
-//                adapter.notifyItemRemoved(adapterPosition)
-//                adapter.adapterCallback.onItemDelete()
-//                for(i in 0 until adapter.mainArray.size) adapter.notifyItemChanged(i)
-//
-//            }
-//            viewBinding.tvTitle.text=context.resources.getStringArray(R.array.title_array)[adapterPosition]
 
         }
 
