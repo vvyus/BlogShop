@@ -18,6 +18,7 @@ import com.vk.vsvans.BlogShop.R
 import com.vk.vsvans.BlogShop.adapters.PurchaseItemRcAdapter
 import com.vk.vsvans.BlogShop.dialogs.DialogHelper
 import com.vk.vsvans.BlogShop.interfaces.*
+import com.vk.vsvans.BlogShop.model.Product
 
 import com.vk.vsvans.BlogShop.model.PurchaseItem
 
@@ -35,7 +36,8 @@ class PurchaseItemListFragment(private val fragCloseInterface:FragmentCloseInter
     private var job: Job?=null
     //private var addPurchaseItem:MenuItem?=null
     private lateinit var tb:Toolbar
-    //val TAG="MyLog"
+    val TAG="MyLog"
+    private var selectedId=0
 //    lateinit var binding:ListProductFragBinding
 
 //    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -55,7 +57,43 @@ class PurchaseItemListFragment(private val fragCloseInterface:FragmentCloseInter
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         super.onViewCreated(view, savedInstanceState)
-        adapter= PurchaseItemRcAdapter(this)
+        adapter= PurchaseItemRcAdapter(object: OnClickItemCallback {
+            override fun onClickItem(id:Int) {
+                if(id>0) {
+                    // may be delete item
+                    selectedId=id
+                }
+            }
+
+            override fun onEditItem() {
+                val pit= adapter.getPurchaseItem()
+                if (pit != null) {
+                    DialogHelper.showPurchaseItemInputDialog(activity as EditPurchaseActivity,pit,
+                    object:IUpdatePurchaseItemList{
+                        override fun onUpdatePurchaseItemList(pit: PurchaseItem) {
+                           // adapter.setPurchaseItem(pit, adapter.selected_position)
+                            adapter.updateAdapterEdit(pit)
+                            //(activity as EditPurchaseActivity).dbManager.updatePurchaseItem(pit)
+                        }
+
+                    })
+                }
+            }
+
+            override fun onDeleteItem() {
+                if(selectedId>0){
+                    DialogHelper.showPurchaseDeleteItemDialog(activity as EditPurchaseActivity,selectedId,
+                        object: IDeleteItem {
+                            override fun onDeleteItem(id: Int) {
+                                adapter.deleteProductItem()
+                            }
+
+                        })
+                }else {
+                    Toast.makeText(activity as EditPurchaseActivity,R.string.no_selected_item, Toast.LENGTH_LONG).show()
+                }
+            }
+        })
         val dragCallback= ItemTouchMoveCallBack(adapter)
         val touchHelper=ItemTouchHelper(dragCallback)
         //устанавливаем тоолбар
@@ -68,7 +106,7 @@ class PurchaseItemListFragment(private val fragCloseInterface:FragmentCloseInter
         rcView.adapter = adapter
 
         if (newList != null) {
-            adapter.updateAdapter(newList,true)
+            adapter.updateAdapter(newList)
 
         }
 //        binding.apply {
@@ -104,75 +142,17 @@ class PurchaseItemListFragment(private val fragCloseInterface:FragmentCloseInter
 //        binding.apply {
 
             tb.inflateMenu(R.menu.menu_choose_purchase_item)
-            val deletePurchaseItem = tb.menu.findItem(R.id.id_delete_item_purchase)
-        val editPurchaseItem = tb.menu.findItem(R.id.id_edit_item_purchase)
-            val addPurchaseItem = tb.menu.findItem(R.id.id_add_item_purchase)
             // кнопка home <- слушатель
             tb.setNavigationOnClickListener {
-// просто this будет ссылаться на binding класс поэтому this@ImageListFrag
-//!реклама
-            activity?.supportFragmentManager?.beginTransaction()?.remove(this@PurchaseItemListFragment)?.commit()
-//!реклама
-//            showInterAd()
+                // просто this будет ссылаться на binding класс поэтому this@ImageListFrag
+                //!реклама
+                activity?.supportFragmentManager?.beginTransaction()?.remove(this@PurchaseItemListFragment)?.commit()
+                //!реклама
+                //            showInterAd()
             }
 
-        editPurchaseItem.setOnMenuItemClickListener {
-            val pit=adapter.getItem()
-            if(pit!=PurchaseItem()){
-                DialogHelper.showPurchaseItemInputDialog(activity as EditPurchaseActivity,pit,
-                    object:IUpdatePurchaseItemList{
-                        override fun onUpdatePurchaseItemList(pit: PurchaseItem) {
-                            adapter.setPurchaseItem(pit, adapter.selected_position)
-                        }
-
-                    })
-            }
-            true
-        }
-            deletePurchaseItem.setOnMenuItemClickListener {
-                val pit=adapter.getItem()
-                if(pit!=PurchaseItem() && adapter.getPosition()!=-1){
-                    DialogHelper.showPurchaseDeleteItemDialog(activity as EditPurchaseActivity,pit.id,
-                        object:IDeleteItem{
-                            override fun onDeleteItem(id: Int) {
-                                    adapter.deletePurchaseItem()
-                            }
-
-                        })
-                }else {
-                   Toast.makeText(activity,R.string.no_selected_item, Toast.LENGTH_LONG).show()
-                }
-                true
-            }
-
-            addPurchaseItem?.setOnMenuItemClickListener {
-                val pit=PurchaseItem()
-                //новая запись
-                pit.id=0
-                pit.idPurchase=(activity as EditPurchaseActivity).idPurchase
-                DialogHelper.showPurchaseItemInputDialog(activity as EditPurchaseActivity,pit,
-                    object:IUpdatePurchaseItemList{
-                        override fun onUpdatePurchaseItemList(pit: PurchaseItem) {
-                            val list=ArrayList<PurchaseItem>()
-                            list.add(pit)
-                            adapter.updateAdapter(list, false)
-                            //adapter.notifyDataSetChanged()
-                        }
-
-                    }
-                )
-                true
- //           }
-        }
     }
 
-
-    fun updateAdapter(purchaseItemList:ArrayList<PurchaseItem>){
-        //картинки уже есть просто обновить корутна не нужна
-        // true переписываем массив в адаптере
-        //adapter.updateAdapter(purchaseItemList,true)
-        //setAddImageButton()
-    }
 
     fun setAddImageButton(){
 //        if(adapter.mainArray.size <ImagePicker.MAX_IMAGE_COUNT){

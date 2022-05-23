@@ -1,21 +1,22 @@
 package com.vk.vsvans.BlogShop.adapters
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.graphics.Color
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.vk.vsvans.BlogShop.R
-import com.vk.vsvans.BlogShop.interfaces.AdapterCallback
 import com.vk.vsvans.BlogShop.interfaces.ItemTouchMoveCallBack
+import com.vk.vsvans.BlogShop.interfaces.OnClickItemCallback
 import com.vk.vsvans.BlogShop.model.PurchaseItem
 
-class PurchaseItemRcAdapter(val adapterCallback: AdapterCallback): RecyclerView.Adapter<PurchaseItemRcAdapter.PurchaseItemHolder>() ,
+class PurchaseItemRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerView.Adapter<PurchaseItemRcAdapter.PurchaseItemHolder>() ,
     ItemTouchMoveCallBack.ItemTouchAdapter{
 // для доступа из ImageListFrag
     val mainArray=ArrayList<PurchaseItem>()
@@ -28,7 +29,7 @@ class PurchaseItemRcAdapter(val adapterCallback: AdapterCallback): RecyclerView.
 //        val viewBinding=
 //            ItemListProductFragBinding.inflate(LayoutInflater.from(parent.context),parent,false)
 //        return PurchaseItemHolder(viewBinding,parent.context,this)
-        return PurchaseItemHolder(view,parent.context,this)
+        return PurchaseItemHolder(view,clickItemCallback)
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -36,35 +37,93 @@ class PurchaseItemRcAdapter(val adapterCallback: AdapterCallback): RecyclerView.
         holder.setData(mainArray[position])
         holder.itemView.setOnClickListener{
 
+            notifyItemChanged(selected_position)
             if (selected_position != holder.getAdapterPosition()) {
-                notifyItemChanged(selected_position)
+                selectItem(holder.adapterPosition)
             }else{
-                //if(clickItemCallback!=null) clickItemCallback!!.onClickItem(getPurchaseId())
+                unSelectItem()
             }
-            selected_position = holder.adapterPosition
             notifyItemChanged(selected_position)
         }
         holder.itemView.setBackgroundColor(if (selected_position == position) selected_color else Color.TRANSPARENT)
+        val llButtons=holder.itemView.findViewById<LinearLayout>(R.id.llButtonsPurchaseItem)
+        llButtons.visibility=if (selected_position == position) View.VISIBLE else View.GONE
     }
 
     override fun getItemCount(): Int {
         return mainArray.size
     }
 
-    fun getItem():PurchaseItem{
-        if(selected_position ==RecyclerView.NO_POSITION) return PurchaseItem() else return mainArray[selected_position]
+    fun getPurchaseItem():PurchaseItem?{
+        if(mainArray.size!=0 && selected_position!=RecyclerView.NO_POSITION && selected_position<mainArray.size){
+            return mainArray[selected_position]
+        }else{
+            return null
+        }
     }
 
+    fun getPurchaseItemId():Int{
+        if(mainArray.size!=0 && selected_position!=RecyclerView.NO_POSITION && selected_position<mainArray.size){
+            return mainArray[selected_position].id
+        }else{
+            return 0
+        }
+    }
+
+    fun updateAdapter(newList:List<PurchaseItem>){
+        mainArray.clear()
+        mainArray.addAll(newList)
+        notifyDataSetChanged()
+    }
+
+    fun updateAdapterInsert(pit: PurchaseItem){
+        mainArray.add(pit)
+        notifyDataSetChanged()
+    }
+
+    fun updateAdapterEdit(pit: PurchaseItem){
+        if(selected_position!=RecyclerView.NO_POSITION) {
+            mainArray[selected_position]=pit
+            notifyDataSetChanged()
+        }
+    }
+
+    fun deleteProductItem(){
+        if(selected_position!=RecyclerView.NO_POSITION) {
+            mainArray.removeAt(selected_position)
+            notifyItemRemoved(selected_position)
+            //reset selected position and selectedId in activity
+            unSelectItem()
+        }
+    }
+
+    fun selectItem(position:Int){
+        selected_position=position
+        if(clickItemCallback!=null) clickItemCallback!!.onClickItem(getPurchaseItemId())
+    }
+
+    fun unSelectItem(){
+        selected_position=RecyclerView.NO_POSITION
+        if(clickItemCallback!=null) clickItemCallback!!.onClickItem(getPurchaseItemId())
+    }
 //    class PurchaseItemHolder(val viewBinding: ItemListProductFragBinding, val context: Context, val adapter: PurchaseItemRcAdapter) : RecyclerView.ViewHolder(viewBinding.root) {
-class PurchaseItemHolder(val view: View, val context: Context, val adapter:PurchaseItemRcAdapter) : RecyclerView.ViewHolder(view) {
+class PurchaseItemHolder(val view: View,val clickItemCallback: OnClickItemCallback?) : RecyclerView.ViewHolder(view) {
 
 
         @RequiresApi(Build.VERSION_CODES.Q)
         fun setData(purchaseItem:PurchaseItem){
-            val tvContent=view.findViewById<TextView>(R.id.tvContent)
+            val tvContent=view.findViewById<TextView>(R.id.tvContentPurchaseItem)
             tvContent.text =purchaseItem.getContent()
-            val tvTitle=view.findViewById<TextView>(R.id.tvTitle)
+            val tvTitle=view.findViewById<TextView>(R.id.tvTitlePurchaseItem)
             tvTitle.text="Позиция- ${adapterPosition+1}"
+            val imEditPurchaseItem=view.findViewById<ImageButton>(R.id.imEditPurchaseItem)
+            imEditPurchaseItem.setOnClickListener{
+                if(clickItemCallback!=null) clickItemCallback!!.onEditItem()
+            }
+            val imDeletePurchaseItem=view.findViewById<ImageButton>(R.id.imDeletePurchaseItem)
+            imDeletePurchaseItem.setOnClickListener{
+                if(clickItemCallback!=null) clickItemCallback!!.onDeleteItem()
+            }
 //            viewBinding.tvContent.text=purchaseItem.getContent()
 
 //            viewBinding.imEditImage.setOnClickListener{
@@ -84,39 +143,6 @@ class PurchaseItemHolder(val view: View, val context: Context, val adapter:Purch
 
         }
 
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun updateAdapter(list:ArrayList<PurchaseItem>, needClear:Boolean){
-        if(needClear){
-            mainArray.clear()
-        }
-        mainArray.addAll(list)
-        notifyDataSetChanged()
-        //adapterCallback.onItemDelete()
-    }
-    fun getPosition():Int{
-        if(selected_position!=RecyclerView.NO_POSITION) return selected_position
-        else return -1
-    }
-    fun deletePurchaseItem():Boolean{
-        if(selected_position!=RecyclerView.NO_POSITION) {
-            val pit=getItem()
-            mainArray.removeAt(selected_position)
-            notifyItemRemoved(selected_position)
-            adapterCallback.onItemDelete(pit)
-            return true
-        }else{
-            return false
-           // Toast.makeText()
-        }
-    }
-
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun setPurchaseItem(purchaseItem:PurchaseItem, pos:Int){
-        mainArray[pos]=purchaseItem;
-        notifyDataSetChanged()
     }
 
     override fun onMove(startPos: Int, targetPos: Int) {

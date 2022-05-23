@@ -253,7 +253,8 @@ class DbManager(context: Context) {
     }
 
     @SuppressLint("Range")
-    suspend fun updatePurchaseItem(purchaseItem:PurchaseItem) = withContext(Dispatchers.IO){
+ //   suspend fun updatePurchaseItem(purchaseItem:PurchaseItem) = withContext(Dispatchers.IO){
+    fun updatePurchaseItem(purchaseItem:PurchaseItem){
         val id:Int=purchaseItem.id
         val selection = BaseColumns._ID + "=$id"
         val values = ContentValues().apply {
@@ -266,8 +267,10 @@ class DbManager(context: Context) {
         }
         db?.update(DbName.TABLE_NAME_PURCHASE_ITEMS, values, selection, null)
     }
+
     @SuppressLint("Range")
-    suspend fun insertPurchaseItem(purchaseItem:PurchaseItem) = withContext(Dispatchers.IO){
+    //suspend fun insertPurchaseItem(purchaseItem:PurchaseItem) = withContext(Dispatchers.IO){
+    fun insertPurchaseItem(purchaseItem:PurchaseItem):Int?{
         val values = ContentValues().apply {
             put(DbName.COLUMN_NAME_PRICE, purchaseItem.price)
             put(DbName.COLUMN_NAME_QUANTITY, purchaseItem.quantity)
@@ -275,11 +278,12 @@ class DbManager(context: Context) {
             put(DbName.COLUMN_NAME_PURCHASE_ID, purchaseItem.idPurchase)
 
         }
-        db?.insert(DbName.TABLE_NAME_PURCHASE_ITEMS,null, values)
+        val id=db?.insert(DbName.TABLE_NAME_PURCHASE_ITEMS,null, values)
+        return id?.toInt()
     }
 
-    fun removePurchaseItem(pit: PurchaseItem){
-        val selection = BaseColumns._ID + "=${pit.id}"
+    fun removePurchaseItem(id: Int){
+        val selection = BaseColumns._ID + "=${id}"
         db?.delete(DbName.TABLE_NAME_PURCHASE_ITEMS,selection, null)
     }
 

@@ -8,9 +8,11 @@ import androidx.appcompat.app.AppCompatActivity
 import com.vk.vsvans.BlogShop.R
 import com.vk.vsvans.BlogShop.adapters.CardItemPurchaseRcAdapter
 import com.vk.vsvans.BlogShop.databinding.ActivityEditPurchaseBinding
+import com.vk.vsvans.BlogShop.dialogs.DialogHelper
 import com.vk.vsvans.BlogShop.fragments.PurchaseItemListFragment
 import com.vk.vsvans.BlogShop.interfaces.FragmentCloseInterface
 import com.vk.vsvans.BlogShop.interfaces.IFragmentCallBack
+import com.vk.vsvans.BlogShop.interfaces.IUpdatePurchaseItemList
 import com.vk.vsvans.BlogShop.mainActivity
 import com.vk.vsvans.BlogShop.model.DbManager
 import com.vk.vsvans.BlogShop.model.Purchase
@@ -61,28 +63,7 @@ class EditPurchaseActivity : AppCompatActivity(),FragmentCloseInterface,IFragmen
         dbManager.closeDb()
         job?.cancel()
     }
-//    private fun initToolbar(){
-//        rootElement.apply {
-//            val savePurchaseItem = tb.menu.findItem(R.id.id_save_purchase)
-//            savePurchaseItem.setOnMenuItemClickListener {
-//                job?.cancel()
-//                job = CoroutineScope(Dispatchers.Main).launch{
-//                    if(dbManager!=null) {
-//                        if(idPurchase>0){
-//                            dbManager.updatePurchaseItem(idPurchase,edTitle.text.toString(),edDescription.text.toString())
-//                        }else{
-//                            dbManager.insertPurchaseToDb(edTitle.text.toString(),edDescription.text.toString())
-//                        }
-//                    }
-//                    onBackPressed()
-//                }
-//                true
-//            }
-//            tb.setNavigationOnClickListener {
-//                onBackPressed()
-//            }
-//        }
-//    }
+
     private fun initPurchase(){
         if(idPurchase>0) {
             dbManager.openDb()
@@ -172,7 +153,7 @@ class EditPurchaseActivity : AppCompatActivity(),FragmentCloseInterface,IFragmen
                        }
                    }
                    for(pit:PurchaseItem in listDeletedPurchaseItems){
-                       dbManager.removePurchaseItem(pit)
+                       dbManager.removePurchaseItem(pit.id)
                    }
                    //listDeletedPurchaseItems=ArrayList<PurchaseItem>()
                }//dbManager
@@ -184,7 +165,7 @@ class EditPurchaseActivity : AppCompatActivity(),FragmentCloseInterface,IFragmen
     }
 
     fun deletePurchaseItem(pit:PurchaseItem){
-       dbManager.removePurchaseItem(pit)
+       dbManager.removePurchaseItem(pit.id)
     }
 
     fun onClickCancelPurchase(view: View) {
@@ -218,6 +199,28 @@ class EditPurchaseActivity : AppCompatActivity(),FragmentCloseInterface,IFragmen
         }else {
             // если выбран один элемент после на кнопку,не из адаптера, фрагмент не создавался
 
+        }
+    }
+
+    fun onClickAddPurchaseItem(view: View){
+        if(purchaseItemFragment!=null){
+            val pit=PurchaseItem()
+            //новая запись
+            pit.id=0
+            pit.idPurchase=idPurchase
+            DialogHelper.showPurchaseItemInputDialog(this@EditPurchaseActivity,pit,
+                object: IUpdatePurchaseItemList {
+                    override fun onUpdatePurchaseItemList(pit: PurchaseItem) {
+                        purchaseItemFragment!!.adapter.updateAdapterInsert(pit)
+//                        val id=dbManager.insertPurchaseItem(pit)
+//                        if (id != null) {
+//                            pit.id=id
+//                            purchaseItemFragment!!.adapter.updateAdapterInsert(pit)
+//                        }
+                    }
+
+                }
+            )
         }
     }
 

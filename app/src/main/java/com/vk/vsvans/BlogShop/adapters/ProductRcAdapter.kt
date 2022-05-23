@@ -106,7 +106,7 @@ class ProductRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVie
     class ProductHolder(val binding: ItemProductListBinding,val clickItemCallback: OnClickItemCallback?): RecyclerView.ViewHolder(binding.root) {
         fun setData(product:Product){
             binding.apply {
-                tvTitle.text=product.title
+                tvProductName.text=product.title
                 imEditProduct.setOnClickListener{
                     if(clickItemCallback!=null) clickItemCallback!!.onEditItem()
                 }
