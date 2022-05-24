@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.Toolbar
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -40,7 +41,7 @@ class PurchaseItemListFragment(private val fragCloseInterface:FragmentCloseInter
     lateinit var binding:ListPurchaseItemFragBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding= ListPurchaseItemFragBinding.inflate(layoutInflater)
+        binding= ListPurchaseItemFragBinding.inflate(layoutInflater,container,false)
 
 //!реклама
 //        adView=binding.adView
@@ -79,7 +80,8 @@ class PurchaseItemListFragment(private val fragCloseInterface:FragmentCloseInter
                     DialogHelper.showPurchaseDeleteItemDialog(activity as EditPurchaseActivity,selectedId,
                         object: IDeleteItem {
                             override fun onDeleteItem(id: Int) {
-                                adapter.deleteProductItem()
+                                fragCallBack.onFragmentCallBack(adapter.getPurchaseItem()!!)
+                                adapter.deletePurchaseItem()
                             }
 
                         })
@@ -126,6 +128,7 @@ class PurchaseItemListFragment(private val fragCloseInterface:FragmentCloseInter
         }
 
     }
+
 
 //!реклама
 /*

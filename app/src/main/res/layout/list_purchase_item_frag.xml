@@ -2,11 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/llparent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     >
-
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/tb"
@@ -15,29 +15,24 @@
         android:background="@color/white"
         android:minHeight="?attr/actionBarSize"
         android:theme="@style/ActionBarCustom"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="?attr/homeAsUpIndicator" />
+
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rcViewSelectPurchaseItem"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/gray_dark"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvTest" />
+        android:layout_height="match_parent">
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rcViewSelectPurchaseItem"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/gray_dark"
+                />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabAddPurchaseItem"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/fab_margin"
             android:onClick="onClickAddPurchaseItem"
@@ -46,3 +41,4 @@
             app:tint="@color/green_main" />
     </FrameLayout>
 </LinearLayout>
+

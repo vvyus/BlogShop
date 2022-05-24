@@ -89,7 +89,7 @@ class PurchaseItemRcAdapter(val clickItemCallback: OnClickItemCallback?): Recycl
         }
     }
 
-    fun deleteProductItem(){
+    fun deletePurchaseItem(){
         if(selected_position!=RecyclerView.NO_POSITION) {
             mainArray.removeAt(selected_position)
             notifyItemRemoved(selected_position)

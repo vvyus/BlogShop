@@ -73,25 +73,23 @@
                 app:layout_constraintEnd_toEndOf="@+id/tvContentPurchaseItem">
 
                 <ImageButton
-                    android:id="@+id/imEditPurchaseItem"
+                    android:id="@+id/imDeletePurchaseItem"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="16dp"
                     android:background="@android:drawable/screen_background_light_transparent"
-                    android:visibility="visible"
-                    app:srcCompat="@drawable/ic_edit_purchase" />
+                    app:srcCompat="@drawable/ic_delete_purchase" />
 
                 <ImageButton
-                    android:id="@+id/imDeletePurchaseItem"
+                    android:id="@+id/imEditPurchaseItem"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="5dp"
                     android:background="@android:drawable/screen_background_light_transparent"
-                    android:visibility="visible"
-                    app:srcCompat="@drawable/ic_delete_purchase" />
+                    app:srcCompat="@drawable/ic_edit_purchase" />
             </LinearLayout>
 
             <ProgressBar

@@ -15,6 +15,7 @@ import com.vk.vsvans.BlogShop.interfaces.IFragmentCallBack
 import com.vk.vsvans.BlogShop.interfaces.IUpdatePurchaseItemList
 import com.vk.vsvans.BlogShop.mainActivity
 import com.vk.vsvans.BlogShop.model.DbManager
+import com.vk.vsvans.BlogShop.model.DbName
 import com.vk.vsvans.BlogShop.model.Purchase
 import com.vk.vsvans.BlogShop.model.PurchaseItem
 import kotlinx.coroutines.CoroutineScope
@@ -122,6 +123,7 @@ class EditPurchaseActivity : AppCompatActivity(),FragmentCloseInterface,IFragmen
     }
 
     fun onClickSavePurchase(view: View){
+        var remove=true
         rootElement.apply {
             job?.cancel()
             job = CoroutineScope(Dispatchers.Main).launch{
@@ -143,6 +145,7 @@ class EditPurchaseActivity : AppCompatActivity(),FragmentCloseInterface,IFragmen
                        idPurchase= dbManager.insertPurchase(purchase!!)!!
                        purchase!!.id=idPurchase
                    }
+
                    for(pit:PurchaseItem in (vpPurchaseItems.adapter as CardItemPurchaseRcAdapter).mainArray){
                        if(pit.id==0){
                            //set idPurchase when new Purchase
@@ -155,25 +158,24 @@ class EditPurchaseActivity : AppCompatActivity(),FragmentCloseInterface,IFragmen
                    for(pit:PurchaseItem in listDeletedPurchaseItems){
                        dbManager.removePurchaseItem(pit.id)
                    }
-                   //listDeletedPurchaseItems=ArrayList<PurchaseItem>()
+                   listDeletedPurchaseItems=ArrayList<PurchaseItem>()
                }//dbManager
-                onBackPressed()
+
             }
+            onBackPressed()
         }
 
 //        dbManager.publishAd(fillAd())
     }
 
-    fun deletePurchaseItem(pit:PurchaseItem){
-       dbManager.removePurchaseItem(pit.id)
-    }
 
     fun onClickCancelPurchase(view: View) {
+        listDeletedPurchaseItems=ArrayList<PurchaseItem>()
         onBackPressed()
     }
 
     override fun onBackPressed() {
-        listDeletedPurchaseItems=ArrayList<PurchaseItem>()
+        //listDeletedPurchaseItems=ArrayList<PurchaseItem>()
         if(mainActivity!=null)mainActivity!!.fillAdapter("")
         super.onBackPressed()
     }
@@ -212,11 +214,6 @@ class EditPurchaseActivity : AppCompatActivity(),FragmentCloseInterface,IFragmen
                 object: IUpdatePurchaseItemList {
                     override fun onUpdatePurchaseItemList(pit: PurchaseItem) {
                         purchaseItemFragment!!.adapter.updateAdapterInsert(pit)
-//                        val id=dbManager.insertPurchaseItem(pit)
-//                        if (id != null) {
-//                            pit.id=id
-//                            purchaseItemFragment!!.adapter.updateAdapterInsert(pit)
-//                        }
                     }
 
                 }
