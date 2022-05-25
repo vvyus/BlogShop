@@ -6,8 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import com.vk.vsvans.BlogShop.activity.EditPurchaseActivity
 import com.vk.vsvans.BlogShop.activity.ProductActivity
+import com.vk.vsvans.BlogShop.helper.SpinnerHelper
 import com.vk.vsvans.BlogShop.interfaces.IDeleteItem
 import com.vk.vsvans.BlogShop.interfaces.IUpdateProductItemList
 import com.vk.vsvans.BlogShop.interfaces.IUpdatePurchaseItemList
@@ -15,9 +17,14 @@ import com.vk.vsvans.BlogShop.mainActivity
 import com.vk.vsvans.BlogShop.model.DbManager
 import com.vk.vsvans.BlogShop.model.Product
 import com.vk.vsvans.BlogShop.model.PurchaseItem
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import com.vk.vsvans.BlogShop.R as R1
 
 object DialogHelper {
+    var job: Job? = null
     fun showPurchaseDeleteItemDialog(context: Context, id:Int, ideleteItem:IDeleteItem) {
         val alertDialog = AlertDialog.Builder(context)
 
@@ -62,6 +69,16 @@ object DialogHelper {
         edPrice.setText(pit.summa.toString())
         edQuantity.setText(pit.quantity.toString())
         edSumma.setText(pit.summa.toString())
+
+        val tvProduct=rootView.findViewById<TextView>(R1.id.tvProduct)
+        tvProduct.setOnClickListener {
+            val dialog=DialogSpinnerHelper()
+            job?.cancel()
+            job = CoroutineScope(Dispatchers.Main).launch {
+                val listProduct = SpinnerHelper.getAllProduct(context)
+                dialog.showSpinnerProductDialog(context, listProduct, tvProduct)
+            }
+        }
 
         val btnOk=rootView.findViewById<Button>(R1.id.btnOk)
         btnOk.setOnClickListener {

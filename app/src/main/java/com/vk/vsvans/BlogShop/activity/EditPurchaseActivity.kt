@@ -220,7 +220,7 @@ class EditPurchaseActivity : AppCompatActivity() {
 
         }
     }
-
+// добавить новую позицию покупки
     fun onClickAddPurchaseItem(view: View){
         if(purchaseItemFragment!=null){
             val pit=PurchaseItem()

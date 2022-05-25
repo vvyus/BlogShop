@@ -33,4 +33,6 @@
     <string name="summa_hint">Укажите сумму</string>
     <string name="no_selected_item">Не выбрана позиция!</string>
     <string name="search_hint">Найти...</string>
+    <string name="product">Товар</string>
+    <string name="select_product">Выберите товар</string>
 </resources>
