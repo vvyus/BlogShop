@@ -97,25 +97,6 @@ class EditPurchaseActivity : AppCompatActivity() {
         listResultArray.clear()
     }
 
-    //onClick выбран в activity_edit_ads
-    fun onClickSelectCountry(view:View){
-//        val listCountry=CityHelper.getAllCountries(this)
-//        dialog.showSpinnerDialog(this,listCountry,rootElement.tvCountry)
-//        if(rootElement.tvCity.text.toString()!=getString(R.string.select_city)){
-//            rootElement.tvCity.text=getString(R.string.select_city)
-//        }
-    }
-
-    fun onClickSelectCity(view:View){
-//        val selectedCountry=rootElement.tvCountry.text.toString()
-//        if(selectedCountry!=getString(R.string.select_country)) {
-//            val listCity = CityHelper.getAllCities(selectedCountry, this)
-//            dialog.showSpinnerDialog(this, listCity, rootElement.tvCity)
-//        }else{
-//            Toast.makeText(this,getString(R.string.no_country_selected),Toast.LENGTH_LONG).show()
-//        }
-    }
-
     fun onClickSelectCategory(view:View){
 //        val listCategory=resources.getStringArray(R.array.Category).toMutableList() as ArrayList
 //        dialog.showSpinnerDialog(this,listCategory,rootElement.tvCategory)
@@ -209,6 +190,7 @@ class EditPurchaseActivity : AppCompatActivity() {
        // purchaseItemFragment!!.updateAdapter(cardItemPurchaseAdapter.mainArray)
         openPurchaseItemFragment()
     }
+
     private fun openPurchaseItemFragment() {
         if(purchaseItemFragment!=null){
             rootElement.scrollViewMain.visibility=View.GONE

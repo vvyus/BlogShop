@@ -18,7 +18,7 @@ object SpinnerHelper {
             return tempList
         }
         for(selection:Product in list){
-            if(selection.title.lowercase().startsWith(searchText.lowercase())){
+            if(selection.name.lowercase().startsWith(searchText.lowercase())){
                 tempList.add(selection)
             }
         }

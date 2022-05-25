@@ -2,7 +2,7 @@ package com.vk.vsvans.BlogShop.model
 import android.provider.BaseColumns
 
 object DbName {
-        const val DATABASE_VERSION = 9
+        const val DATABASE_VERSION = 10
         const val DATABASE_NAME = "BlogShopDb.db"
   // Table Purchase
         const val TABLE_NAME = "Purchases"
@@ -44,7 +44,7 @@ object DbName {
 
     // TABLE PRODUCTS
     const val TABLE_NAME_PRODUCTS = "Products"
-    const val COLUMN_NAME_TITLE_PRODUCTS = "title"
+    const val COLUMN_NAME_TITLE_PRODUCTS = "name"
     const val COLUMN_NAME_BCOLOR_PRODUCTS = "bcolor"
     const val COLUMN_NAME_FCOLOR_PRODUCTS = "fcolor"
 

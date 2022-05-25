@@ -33,10 +33,11 @@ class DialogSpinnerProductRcAdapter(var tvSelection: TextView, var dialog: Alert
         private var itemText=""
         private var itemProduct:Product?=null
         fun setData(product:Product){
-            val text=product.title
+            val text=product.name
             val tvSpItem=itemView.findViewById<TextView>(R.id.tvSpItem)
             tvSpItem.text=text
             itemText=text
+            itemProduct=product
             // присваиваем onClick выбранному элементу
             itemView.setOnClickListener(this)
         }
@@ -44,7 +45,7 @@ class DialogSpinnerProductRcAdapter(var tvSelection: TextView, var dialog: Alert
         override fun onClick(v: View?) {
             //(tvSelection as EditAdsAct).rootElement.tvCountry.setText(itemText)
             tvSelection.text=itemText
-            tvSelection.tag=itemProduct
+            tvSelection.setTag(itemProduct)
             dialog.dismiss()
         }
     }

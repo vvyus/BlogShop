@@ -10,7 +10,7 @@ class PurchaseItem {
     var productName=""
 
     fun getContent():String {
-        val str="Цена ${this.price}\nКол ${this.quantity}\nСумма ${this.summa}"
+        val str="Товар ${this.productName}\nЦена ${this.price}\nКол ${this.quantity}\nСумма ${this.summa}"
         return str
     }
 }

@@ -22,7 +22,7 @@ class DbManager(context: Context) {
     fun insertProduct( product:Product):Int?{
         val values = ContentValues().apply {
 
-            put(DbName.COLUMN_NAME_TITLE_PRODUCTS, product.title)
+            put(DbName.COLUMN_NAME_TITLE_PRODUCTS, product.name)
         }
         val id=db?.insert(DbName.TABLE_NAME_PRODUCTS,null, values)
         return id?.toInt()
@@ -42,7 +42,7 @@ class DbManager(context: Context) {
             val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_TITLE_PRODUCTS))
             val product = Product()
             product.id = dataId
-            product.title = dataTitle
+            product.name = dataTitle
             dataList.add(product)
         }
 
@@ -58,7 +58,7 @@ class DbManager(context: Context) {
         val selection = BaseColumns._ID + "=$id"
         val values = ContentValues().apply {
 
-            put(DbName.COLUMN_NAME_TITLE_PRODUCTS, product.title)
+            put(DbName.COLUMN_NAME_TITLE_PRODUCTS, product.name)
         }
         db?.update(DbName.TABLE_NAME_PRODUCTS, values, selection, null)
     }
@@ -237,12 +237,17 @@ class DbManager(context: Context) {
                 cursor.getDouble(cursor.getColumnIndex(DbName.COLUMN_NAME_SUMMA))
             val dataId =
                 cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
+            val idProduct = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_PRODUCT_ID))
+            var productName = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_PRODUCT_NAME))
+            if(productName==null) productName=""
             val item = PurchaseItem()
             item.price = dataPrice
             item.quantity = dataQuantity
             item.summa = dataSumma
             item.id = dataId
             item.idPurchase = id
+            item.idProduct=idProduct
+            item.productName=productName
             dataList.add(item)
         }
         //if(readDataCallback!=null)readDataCallback.readData(dataList)
@@ -258,7 +263,8 @@ class DbManager(context: Context) {
         val id:Int=purchaseItem.id
         val selection = BaseColumns._ID + "=$id"
         val values = ContentValues().apply {
-
+            put(DbName.COLUMN_NAME_PRODUCT_NAME, purchaseItem.productName)
+            put(DbName.COLUMN_NAME_PRODUCT_ID, purchaseItem.idProduct)
             put(DbName.COLUMN_NAME_PRICE, purchaseItem.price)
             put(DbName.COLUMN_NAME_QUANTITY, purchaseItem.quantity)
             put(DbName.COLUMN_NAME_SUMMA, purchaseItem.summa)
@@ -272,6 +278,8 @@ class DbManager(context: Context) {
     suspend fun insertPurchaseItem(purchaseItem:PurchaseItem):Int? = withContext(Dispatchers.IO){
     //fun insertPurchaseItem(purchaseItem:PurchaseItem):Int?{
         val values = ContentValues().apply {
+            put(DbName.COLUMN_NAME_PRODUCT_NAME, purchaseItem.productName)
+            put(DbName.COLUMN_NAME_PRODUCT_ID, purchaseItem.idProduct)
             put(DbName.COLUMN_NAME_PRICE, purchaseItem.price)
             put(DbName.COLUMN_NAME_QUANTITY, purchaseItem.quantity)
             put(DbName.COLUMN_NAME_SUMMA, purchaseItem.summa)

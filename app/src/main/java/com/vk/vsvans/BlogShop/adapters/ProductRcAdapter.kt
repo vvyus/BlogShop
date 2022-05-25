@@ -1,7 +1,6 @@
 package com.vk.vsvans.BlogShop.adapters
 
 import android.graphics.Color
-import android.opengl.Visibility
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,11 +8,8 @@ import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.vk.vsvans.BlogShop.R
 import com.vk.vsvans.BlogShop.databinding.ItemProductListBinding
-import com.vk.vsvans.BlogShop.databinding.PurchaseListItemBinding
 import com.vk.vsvans.BlogShop.interfaces.OnClickItemCallback
 import com.vk.vsvans.BlogShop.model.Product
-import com.vk.vsvans.BlogShop.model.Purchase
-import kotlinx.coroutines.NonDisposableHandle.parent
 
 class ProductRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerView.Adapter<ProductRcAdapter.ProductHolder>() {
     val productArray=ArrayList<Product>()
@@ -106,7 +102,7 @@ class ProductRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVie
     class ProductHolder(val binding: ItemProductListBinding,val clickItemCallback: OnClickItemCallback?): RecyclerView.ViewHolder(binding.root) {
         fun setData(product:Product){
             binding.apply {
-                tvProductName.text=product.title
+                tvProductName.text=product.name
                 imEditProduct.setOnClickListener{
                     if(clickItemCallback!=null) clickItemCallback!!.onEditItem()
                 }

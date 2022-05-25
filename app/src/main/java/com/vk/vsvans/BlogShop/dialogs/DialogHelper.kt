@@ -13,8 +13,6 @@ import com.vk.vsvans.BlogShop.helper.SpinnerHelper
 import com.vk.vsvans.BlogShop.interfaces.IDeleteItem
 import com.vk.vsvans.BlogShop.interfaces.IUpdateProductItemList
 import com.vk.vsvans.BlogShop.interfaces.IUpdatePurchaseItemList
-import com.vk.vsvans.BlogShop.mainActivity
-import com.vk.vsvans.BlogShop.model.DbManager
 import com.vk.vsvans.BlogShop.model.Product
 import com.vk.vsvans.BlogShop.model.PurchaseItem
 import kotlinx.coroutines.CoroutineScope
@@ -71,6 +69,7 @@ object DialogHelper {
         edSumma.setText(pit.summa.toString())
 
         val tvProduct=rootView.findViewById<TextView>(R1.id.tvProduct)
+        tvProduct.setText(pit.productName)
         tvProduct.setOnClickListener {
             val dialog=DialogSpinnerHelper()
             job?.cancel()
@@ -85,6 +84,11 @@ object DialogHelper {
             pit.price=edPrice.text.toString().toDouble()
             pit.quantity=edQuantity.text.toString().toDouble()
             pit.summa=edSumma.text.toString().toDouble()
+            val product=tvProduct.tag as Product
+            if(product!=null) {
+                pit.idProduct=product.id
+                pit.productName=product.name
+            }
            // (context as EditPurchaseActivity).up
             if(iupdatePurchaseItemList!=null)iupdatePurchaseItemList.onUpdatePurchaseItemList(pit)
             customDialog.dismiss()
@@ -109,11 +113,11 @@ object DialogHelper {
         val rootView=view.rootView
 
         val edTitle=rootView.findViewById<EditText>(R1.id.edTitleProduct)
-        edTitle.setText(product.title.toString())
+        edTitle.setText(product.name.toString())
 
         val btnOk=rootView.findViewById<Button>(R1.id.btnOk)
         btnOk.setOnClickListener {
-            product.title=edTitle.text.toString()
+            product.name=edTitle.text.toString()
             // (context as EditPurchaseActivity).up
             if(iupdateProductItemList!=null)iupdateProductItemList.onUpdateProductItemList(product)
             customDialog.dismiss()
