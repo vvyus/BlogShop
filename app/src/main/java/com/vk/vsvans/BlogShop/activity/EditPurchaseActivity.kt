@@ -10,12 +10,12 @@ import com.vk.vsvans.BlogShop.adapters.CardItemPurchaseRcAdapter
 import com.vk.vsvans.BlogShop.databinding.ActivityEditPurchaseBinding
 import com.vk.vsvans.BlogShop.dialogs.DialogHelper
 import com.vk.vsvans.BlogShop.fragments.PurchaseItemListFragment
-import com.vk.vsvans.BlogShop.interfaces.FragmentCloseInterface
+import com.vk.vsvans.BlogShop.interfaces.IFragmentCloseInterface
 import com.vk.vsvans.BlogShop.interfaces.IFragmentCallBack
 import com.vk.vsvans.BlogShop.interfaces.IUpdatePurchaseItemList
+import com.vk.vsvans.BlogShop.interfaces.OnClickItemCallback
 import com.vk.vsvans.BlogShop.mainActivity
 import com.vk.vsvans.BlogShop.model.DbManager
-import com.vk.vsvans.BlogShop.model.DbName
 import com.vk.vsvans.BlogShop.model.Purchase
 import com.vk.vsvans.BlogShop.model.PurchaseItem
 import kotlinx.coroutines.CoroutineScope
@@ -23,7 +23,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-class EditPurchaseActivity : AppCompatActivity(),FragmentCloseInterface,IFragmentCallBack {
+class EditPurchaseActivity : AppCompatActivity() {
 
     lateinit var rootElement: ActivityEditPurchaseBinding
     //private val dialog= DialogSpinnerHelper()
@@ -183,12 +183,29 @@ class EditPurchaseActivity : AppCompatActivity(),FragmentCloseInterface,IFragmen
     @RequiresApi(Build.VERSION_CODES.Q)
     fun onClickGetPurchaseItems(view:View){
         val newList=(rootElement.vpPurchaseItems.adapter as CardItemPurchaseRcAdapter).mainArray
-//        val pit=PurchaseItem()
-//        pit.price=1000.0
-//        pit.quantity=1.234
-//        pit.summa=3000.0
-//        newList.add(pit)
-        purchaseItemFragment= PurchaseItemListFragment(this,this,newList)
+
+        purchaseItemFragment= PurchaseItemListFragment(object: IFragmentCloseInterface {
+            override fun onFragClose(list: ArrayList<PurchaseItem>) {
+                rootElement.scrollViewMain.visibility=View.VISIBLE
+                cardItemPurchaseAdapter.update(list)
+                var summa=0.0
+                var content=""
+                for(pit:PurchaseItem in list){
+                    summa+=pit.summa
+                    content+=pit.getContent()+"\n\n"
+                }
+                // store from fragment in edit form
+                rootElement.edSummaPurchase.setText(summa.toString())
+                rootElement.edContent.setText(content)
+            }
+            },
+            object: IFragmentCallBack {
+                override fun onFragmentCallBack(pit: PurchaseItem) {
+                    //dbManager.removePurchaseItem(pit)
+                    listDeletedPurchaseItems.add(pit)
+                }
+                                      },
+            newList) //PurchaseItemListFragment
        // purchaseItemFragment!!.updateAdapter(cardItemPurchaseAdapter.mainArray)
         openPurchaseItemFragment()
     }
@@ -221,24 +238,4 @@ class EditPurchaseActivity : AppCompatActivity(),FragmentCloseInterface,IFragmen
         }
     }
 
-    override fun onFragClose(list: ArrayList<PurchaseItem>) {
-        rootElement.scrollViewMain.visibility=View.VISIBLE
-        cardItemPurchaseAdapter.update(list)
-        var summa=0.0
-        var content=""
-        for(pit:PurchaseItem in list){
-            summa+=pit.summa
-            content+=pit.getContent()+"\n\n"
-        }
-        // store from fragment in edit form
-        rootElement.edSummaPurchase.setText(summa.toString())
-        rootElement.edContent.setText(content)
-    }
-
-    override fun onFragmentCallBack(pit: PurchaseItem) {
-        //dbManager.removePurchaseItem(pit)
-        listDeletedPurchaseItems.add(pit)
-    }
-
-
-}
+}//activity

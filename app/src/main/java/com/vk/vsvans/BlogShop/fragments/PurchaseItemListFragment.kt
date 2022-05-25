@@ -7,8 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.appcompat.widget.Toolbar
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,7 +25,7 @@ import kotlinx.coroutines.Job
 //!реклама
 //class PurchaseItemListFragment(private val fragCloseInterface: FragmentCloseInterface, private val newList:ArrayList<PurchaseItem>?) : BaseMobAdFrag(),
 //    AdapterCallback {
-class PurchaseItemListFragment(private val fragCloseInterface:FragmentCloseInterface,val fragCallBack: IFragmentCallBack,private val newList:ArrayList<PurchaseItem>?) : Fragment() {
+class PurchaseItemListFragment(private val fragCloseInterface:IFragmentCloseInterface, val fragCallBack: IFragmentCallBack, private val newList:ArrayList<PurchaseItem>?) : Fragment() {
 
     //    lateinit var rootElement: ListPurchaseItemFragBinding
     lateinit var adapter: PurchaseItemRcAdapter
@@ -76,7 +74,7 @@ class PurchaseItemListFragment(private val fragCloseInterface:FragmentCloseInter
             }
 
             override fun onDeleteItem() {
-                if(selectedId>0){
+                if(selectedId>=0){
                     DialogHelper.showPurchaseDeleteItemDialog(activity as EditPurchaseActivity,selectedId,
                         object: IDeleteItem {
                             override fun onDeleteItem(id: Int) {
