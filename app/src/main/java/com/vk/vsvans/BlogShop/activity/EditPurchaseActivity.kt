@@ -2,6 +2,7 @@ package com.vk.vsvans.BlogShop.activity
 
 import android.os.Build
 import android.os.Bundle
+import android.text.SpannableString
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -18,6 +19,8 @@ import com.vk.vsvans.BlogShop.mainActivity
 import com.vk.vsvans.BlogShop.model.DbManager
 import com.vk.vsvans.BlogShop.model.Purchase
 import com.vk.vsvans.BlogShop.model.PurchaseItem
+import com.vk.vsvans.BlogShop.utils.makeSpannableString
+import com.vk.vsvans.BlogShop.utils.plus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -116,7 +119,7 @@ class EditPurchaseActivity : AppCompatActivity() {
 //                       summa+=pit.summa
 //                   }
                    //if(purchase==null) purchase=Purchase()
-                   purchase!!.content=edContent.text.toString()
+                   purchase!!.content= edContent.text.toString()
                    purchase!!.title=edTitle.text.toString()
                    purchase!!.summa=edSummaPurchase.text.toString().toDouble()
                    if(idPurchase>0){
@@ -170,7 +173,7 @@ class EditPurchaseActivity : AppCompatActivity() {
                 rootElement.scrollViewMain.visibility=View.VISIBLE
                 cardItemPurchaseAdapter.update(list)
                 var summa=0.0
-                var content=""
+                var content:SpannableString="".makeSpannableString()
                 for(pit:PurchaseItem in list){
                     summa+=pit.summa
                     content+=pit.getContent()+"\n\n"

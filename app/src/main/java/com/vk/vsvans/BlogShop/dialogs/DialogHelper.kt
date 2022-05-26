@@ -64,12 +64,14 @@ object DialogHelper {
         val edPrice=rootView.findViewById<EditText>(R1.id.edPriceItem)
         val edQuantity=rootView.findViewById<EditText>(R1.id.edQuantityItem)
         val edSumma=rootView.findViewById<EditText>(R1.id.edSummaItem)
-        edPrice.setText(pit.summa.toString())
+        edPrice.setText(pit.price.toString())
         edQuantity.setText(pit.quantity.toString())
         edSumma.setText(pit.summa.toString())
 
         val tvProduct=rootView.findViewById<TextView>(R1.id.tvProduct)
-        tvProduct.setText(pit.productName)
+        if(!pit.productName.isEmpty()){
+            tvProduct.setText(pit.productName)
+        }
         tvProduct.setOnClickListener {
             val dialog=DialogSpinnerHelper()
             job?.cancel()
@@ -84,8 +86,9 @@ object DialogHelper {
             pit.price=edPrice.text.toString().toDouble()
             pit.quantity=edQuantity.text.toString().toDouble()
             pit.summa=edSumma.text.toString().toDouble()
-            val product=tvProduct.tag as Product
-            if(product!=null) {
+
+            if(tvProduct.tag!=null) {
+                val product=tvProduct.tag as Product
                 pit.idProduct=product.id
                 pit.productName=product.name
             }

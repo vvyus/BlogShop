@@ -1,6 +1,7 @@
 package com.vk.vsvans.BlogShop.adapters
 
 import android.annotation.SuppressLint
+import android.text.SpannableString
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,7 +36,7 @@ class CardItemPurchaseRcAdapter: RecyclerView.Adapter<CardItemPurchaseRcAdapter.
     class ImageHolder(itemView: View) :RecyclerView.ViewHolder(itemView) {
         lateinit var tvItem: TextView
 
-        fun setDate(text:String) {
+        fun setDate(text:SpannableString) {
             tvItem=itemView.findViewById(R.id.tvItem)
             tvItem.text =text
         }

@@ -117,13 +117,10 @@ class PurchaseItemRcAdapter(val clickItemCallback: OnClickItemCallback?): Recycl
             viewBinding.apply {
                 //val tvContent = view.findViewById<TextView>(R.id.tvContentPurchaseItem)
                 tvContentPurchaseItem.text = purchaseItem.getContent()
-                //val tvTitle = view.findViewById<TextView>(R.id.tvTitlePurchaseItem)
                 tvTitlePurchaseItem.text = "Позиция- ${adapterPosition + 1}"
-                //val imEditPurchaseItem = view.findViewById<ImageButton>(R.id.imEditPurchaseItem)
                 imEditPurchaseItem.setOnClickListener {
                     if (clickItemCallback != null) clickItemCallback!!.onEditItem()
                 }
-                //val imDeletePurchaseItem = view.findViewById<ImageButton>(R.id.imDeletePurchaseItem)
                 imDeletePurchaseItem.setOnClickListener {
                     if (clickItemCallback != null) clickItemCallback!!.onDeleteItem()
                 }
