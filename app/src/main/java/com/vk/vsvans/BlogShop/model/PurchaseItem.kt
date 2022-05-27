@@ -17,13 +17,14 @@ class PurchaseItem {
     var summa:Double=0.00
     var productName=""
 
-    fun getContent(): SpannableString {
+    fun getContent(title_color:Int): SpannableString {
         val delim="\n"
         val indent=" ".repeat(4)//4==приерно==1поз в строке
-        val product_title= getSpannableTitle("Товар")
-        val price_title=   getSpannableTitle("Цена")
-        val quan_title=    getSpannableTitle("Кол")
-        val summa_title=   getSpannableTitle("Сумма")
+        val product_title= getSpannableTitle("Товар",title_color)
+        val price_title=   getSpannableTitle("Цена",title_color)
+        val quan_title=    getSpannableTitle("Кол",title_color)
+        val summa_title=   getSpannableTitle("Сумма",title_color)
+
         val product_value=getSpannableValue("${this.productName}")
         val price_value=getSpannableValue("${this.price}".format("%12.2f"))
         val quan_value=getSpannableValue("${this.quantity}".format("%12.2f"))
@@ -35,13 +36,13 @@ class PurchaseItem {
                 summa_title+ indent.repeat(2)+summa_value
         return str
     }
-    private fun getSpannableTitle(str:String): SpannableString {
+    private fun getSpannableTitle(str:String,title_color:Int): SpannableString {
         val title=spannable{
             str.makeSpannableString()
                 .makeBold()
                 .makeUnderline()
                 .makeSize(1.2f)
-                .makeColor(Color.BLUE)
+                .makeColor(title_color)
                // .makeBackground(Color.WHITE)
         }
         return title

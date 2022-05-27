@@ -2,10 +2,12 @@ package com.vk.vsvans.BlogShop.activity
 
 import android.os.Build
 import android.os.Bundle
+import android.text.Html
 import android.text.SpannableString
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.vk.vsvans.BlogShop.R
 import com.vk.vsvans.BlogShop.adapters.CardItemPurchaseRcAdapter
 import com.vk.vsvans.BlogShop.databinding.ActivityEditPurchaseBinding
@@ -46,6 +48,9 @@ class EditPurchaseActivity : AppCompatActivity() {
     private var purchase:Purchase? = null
     private var listDeletedPurchaseItems=ArrayList<PurchaseItem>()
 
+    //var content_temp:SpannableString="".makeSpannableString()
+
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         rootElement= ActivityEditPurchaseBinding.inflate(layoutInflater)
@@ -68,6 +73,7 @@ class EditPurchaseActivity : AppCompatActivity() {
         job?.cancel()
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     private fun initPurchase(){
         if(idPurchase>0) {
             dbManager.openDb()
@@ -76,7 +82,7 @@ class EditPurchaseActivity : AppCompatActivity() {
                 purchase=dbManager.readOnePurchase(idPurchase)
                 if(purchase!=null){
                     rootElement.apply {
-                        edContent.setText(purchase!!.content)
+                        //content_temp=Html.fromHtml(purchase!!.content_html,0).makeSpannableString()
                         edTitle.setText(purchase!!.title)
                         edSummaPurchase.setText(purchase!!.summa.toString())
                     }
@@ -106,6 +112,7 @@ class EditPurchaseActivity : AppCompatActivity() {
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     fun onClickSavePurchase(view: View){
         var remove=true
         rootElement.apply {
@@ -119,9 +126,19 @@ class EditPurchaseActivity : AppCompatActivity() {
 //                       summa+=pit.summa
 //                   }
                    //if(purchase==null) purchase=Purchase()
-                   purchase!!.content= edContent.text.toString()
+                   val title_color=getColor(R.color.green_main)
+                   var content_temp="".makeSpannableString()
+
+                   var summa=0.0
+                    for(pit:PurchaseItem in cardItemPurchaseAdapter.mainArray){
+                       content_temp+=pit.getContent(title_color)+"\n\n"
+                       summa+=pit.summa
+                   }
+                   edSummaPurchase.setText(summa.toString())
+                   purchase!!.content= content_temp.toString()
+                   purchase!!.content_html=Html.toHtml(content_temp,0)
                    purchase!!.title=edTitle.text.toString()
-                   purchase!!.summa=edSummaPurchase.text.toString().toDouble()
+                   purchase!!.summa=summa
                    if(idPurchase>0){
                        //dbManager.updatePurchase(idPurchase,edTitle.text.toString(),edDescription.text.toString())
                        dbManager.updatePurchase(purchase!!)
@@ -153,11 +170,13 @@ class EditPurchaseActivity : AppCompatActivity() {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.N)
     fun onClickCancelPurchase(view: View) {
         listDeletedPurchaseItems=ArrayList<PurchaseItem>()
         onBackPressed()
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onBackPressed() {
         //listDeletedPurchaseItems=ArrayList<PurchaseItem>()
         if(mainActivity!=null)mainActivity!!.fillAdapter("")
@@ -172,17 +191,8 @@ class EditPurchaseActivity : AppCompatActivity() {
             override fun onFragClose(list: ArrayList<PurchaseItem>) {
                 rootElement.scrollViewMain.visibility=View.VISIBLE
                 cardItemPurchaseAdapter.update(list)
-                var summa=0.0
-                var content:SpannableString="".makeSpannableString()
-                for(pit:PurchaseItem in list){
-                    summa+=pit.summa
-                    content+=pit.getContent()+"\n\n"
-                }
-                // store from fragment in edit form
-                rootElement.edSummaPurchase.setText(summa.toString())
-                rootElement.edContent.setText(content)
             }
-            },
+        },
             object: IFragmentCallBack {
                 override fun onFragmentCallBack(pit: PurchaseItem) {
                     //dbManager.removePurchaseItem(pit)

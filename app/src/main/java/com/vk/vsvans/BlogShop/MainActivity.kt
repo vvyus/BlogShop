@@ -1,10 +1,12 @@
 package com.vk.vsvans.BlogShop
 
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -69,6 +71,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         dbManager.closeDb()
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     fun fillAdapter(text: String){
 
         job?.cancel()

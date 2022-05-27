@@ -10,6 +10,7 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.vk.vsvans.BlogShop.R
 import com.vk.vsvans.BlogShop.databinding.ItemPurchaseListFragBinding
@@ -23,13 +24,15 @@ class PurchaseItemRcAdapter(val clickItemCallback: OnClickItemCallback?): Recycl
     val mainArray=ArrayList<PurchaseItem>()
     var selected_position =RecyclerView.NO_POSITION;
     var selected_color =0
-
+var title_color=0
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PurchaseItemHolder {
-        selected_color=parent.context.resources.getColor(R.color.color_red)
+        selected_color=ContextCompat.getColor(parent.context,R.color.color_red)
+        title_color=ContextCompat.getColor(parent.context,R.color.green_main)
+
 //        val view=LayoutInflater.from(parent.context).inflate(R.layout.item_purchase_list_frag,parent,false)
 //        return PurchaseItemHolder(view,clickItemCallback)
         val viewBinding= ItemPurchaseListFragBinding.inflate(LayoutInflater.from(parent.context),parent,false)
-        return PurchaseItemHolder(viewBinding,clickItemCallback)
+        return PurchaseItemHolder(viewBinding,clickItemCallback,title_color)
 
     }
 
@@ -108,7 +111,7 @@ class PurchaseItemRcAdapter(val clickItemCallback: OnClickItemCallback?): Recycl
         if(clickItemCallback!=null) clickItemCallback!!.onClickItem(getPurchaseItemId())
     }
 
-        class PurchaseItemHolder(val viewBinding: ItemPurchaseListFragBinding, val clickItemCallback: OnClickItemCallback?) : RecyclerView.ViewHolder(viewBinding.root) {
+        class PurchaseItemHolder(val viewBinding: ItemPurchaseListFragBinding, val clickItemCallback: OnClickItemCallback?,val title_color:Int) : RecyclerView.ViewHolder(viewBinding.root) {
 //    class PurchaseItemHolder(val view: View,val clickItemCallback: OnClickItemCallback?) : RecyclerView.ViewHolder(view) {
 
 
@@ -116,7 +119,7 @@ class PurchaseItemRcAdapter(val clickItemCallback: OnClickItemCallback?): Recycl
         fun setData(purchaseItem:PurchaseItem){
             viewBinding.apply {
                 //val tvContent = view.findViewById<TextView>(R.id.tvContentPurchaseItem)
-                tvContentPurchaseItem.text = purchaseItem.getContent()
+                tvContentPurchaseItem.text = purchaseItem.getContent(title_color)
                 tvTitlePurchaseItem.text = "Позиция- ${adapterPosition + 1}"
                 imEditPurchaseItem.setOnClickListener {
                     if (clickItemCallback != null) clickItemCallback!!.onEditItem()

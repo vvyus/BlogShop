@@ -4,8 +4,14 @@ import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
+import android.os.Build
 import android.provider.BaseColumns
+import android.text.Html
+import android.text.Spannable
+import android.text.SpannableString
+import androidx.annotation.RequiresApi
 import com.vk.vsvans.BlogShop.helper.UtilsHelper
+import com.vk.vsvans.BlogShop.utils.makeSpannableString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -108,10 +114,12 @@ class DbManager(context: Context) {
     }
 
     //    PURCHASES
+    @RequiresApi(Build.VERSION_CODES.N)
     suspend fun insertPurchase(purchase:Purchase) :Int?= withContext(Dispatchers.IO){
         val values = ContentValues().apply {
             put(DbName.COLUMN_NAME_TITLE, purchase.title)
             put(DbName.COLUMN_NAME_CONTENT, purchase.content)
+            put(DbName.COLUMN_NAME_CONTENT_HTML, purchase.content_html)
             put(DbName.COLUMN_NAME_SUMMA_PURCHASES, purchase.summa)
             val time= UtilsHelper.getCurrentDate()
             put(DbName.COLUMN_NAME_TIME, time)
@@ -121,7 +129,9 @@ class DbManager(context: Context) {
         return@withContext id?.toInt()
     }
 
-    suspend fun updatePurchase(purchase:Purchase) = withContext(Dispatchers.IO){
+    @RequiresApi(Build.VERSION_CODES.N)
+ //   suspend fun updatePurchase(purchase:Purchase) = withContext(Dispatchers.IO){
+    fun updatePurchase(purchase:Purchase) {
         val id=purchase.id
         val selection = BaseColumns._ID + "=$id"
         val values = ContentValues().apply {
@@ -129,6 +139,7 @@ class DbManager(context: Context) {
             put(DbName.COLUMN_NAME_TITLE, purchase.title)
             put(DbName.COLUMN_NAME_CONTENT, purchase.content)
             put(DbName.COLUMN_NAME_SUMMA_PURCHASES, purchase.summa)
+            put(DbName.COLUMN_NAME_CONTENT_HTML,purchase.content_html)
             //put(DbName.COLUMN_NAME_TIME, time)
         }
         db?.update(DbName.TABLE_NAME, values, selection, null)
@@ -139,6 +150,7 @@ class DbManager(context: Context) {
         db?.delete(DbName.TABLE_NAME,selection, null)
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     @SuppressLint("Range")
     suspend fun readPurchases(searchText:String): ArrayList<Purchase> = withContext(Dispatchers.IO) {
         val dataList = ArrayList<Purchase>()
@@ -152,6 +164,8 @@ class DbManager(context: Context) {
             val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_TITLE))
             val dataContent =
                 cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_CONTENT))
+            val dataContentHtml =
+                cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_CONTENT_HTML))
             val dataId =
                 cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
             val time =
@@ -161,6 +175,8 @@ class DbManager(context: Context) {
             val purchase = Purchase()
             purchase.title = dataTitle
             purchase.content = dataContent
+
+            purchase.content_html= dataContentHtml
             purchase.id = dataId
             purchase.time = time
             purchase.summa=dataSumma
@@ -170,6 +186,7 @@ class DbManager(context: Context) {
         return@withContext dataList
     }
 
+        @RequiresApi(Build.VERSION_CODES.N)
         @SuppressLint("Range")
         suspend fun readOnePurchase(id:Int): Purchase = withContext(Dispatchers.IO) {
      //  fun readPurchasesItemFromDb(id:Int): ArrayList<Purchase>  {
@@ -189,6 +206,8 @@ class DbManager(context: Context) {
                 val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_TITLE))
                 val dataContent =
                     cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_CONTENT))
+                val dataContentHtml =
+                    cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_CONTENT_HTML))
                 val dataId =
                     cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
                 val time =
@@ -198,6 +217,7 @@ class DbManager(context: Context) {
 
                 purchase.title = dataTitle
                 purchase.content = dataContent
+                purchase.content_html = dataContentHtml
                 purchase.id = dataId
                 purchase.time = time
                 purchase.summa=dataSumma

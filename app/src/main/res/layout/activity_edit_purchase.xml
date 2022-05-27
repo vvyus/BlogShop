@@ -189,41 +189,6 @@
 
                         </LinearLayout>
 
-                        <TextView
-                            android:id="@+id/tvTitleContent"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:layout_marginTop="10dp"
-                            android:text="@string/description"
-                            android:visibility="gone"
-                            android:textColor="@color/green_main"
-                            android:textStyle="bold" />
-
-                        <EditText
-                            android:id="@+id/edContent"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@null"
-                            android:ems="10"
-                            android:hint="@string/description_hint"
-                            android:visibility="gone"
-                            android:inputType="textMultiLine"
-                            android:padding="10dp"
-                            android:textColorHint="@color/gray_dark" />
-
-                        <LinearLayout
-                            android:id="@+id/divider7"
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginStart="10dp"
-                            android:layout_marginEnd="10dp"
-                            android:layout_marginBottom="5dp"
-                            android:visibility="gone"
-                            android:background="@color/green_main"
-                            android:orientation="horizontal">
-
-                        </LinearLayout>
                     </LinearLayout>
 
                     <LinearLayout
