@@ -16,6 +16,7 @@ import com.vk.vsvans.BlogShop.activity.ProductActivity
 import com.vk.vsvans.BlogShop.adapters.PurchaseRcAdapter
 import com.vk.vsvans.BlogShop.databinding.ActivityMainBinding
 import com.vk.vsvans.BlogShop.dialogs.DialogHelper
+import com.vk.vsvans.BlogShop.fns.import_checks
 import com.vk.vsvans.BlogShop.interfaces.IDeleteItem
 import com.vk.vsvans.BlogShop.interfaces.IUpdatePurchaseItemList
 import com.vk.vsvans.BlogShop.interfaces.OnClickItemCallback
@@ -60,6 +61,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         bottomMenuOnClick()
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onResume() {
         super.onResume()
         dbManager.openDb()
@@ -138,6 +140,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         //dbManager.removePurchaseItemFromDb(id)
                         DialogHelper.showPurchaseDeleteItemDialog(this@MainActivity,id,object:
                             IDeleteItem {
+                            @RequiresApi(Build.VERSION_CODES.N)
                             override fun onDeleteItem(id: Int) {
                                 dbManager.removePurchase(id)
                                 fillAdapter("")
@@ -152,6 +155,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     // сообщаем системе о запуске активити
                     startActivity(intent)
                     //Toast.makeText(this@MainActivity,"Pressed new purchase", Toast.LENGTH_LONG).show()
+                }
+                R.id.id_import_checks->{
+                    import_checks.doImport()
                 }
                 }//when
             true
