@@ -20,7 +20,7 @@
     <string name="title">Заголовок</string>
     <string name="select_category">Выберите категорию</string>
     <string name="category">Категория</string>
-    <string name="PURCHASE_ID">PURCHASE_ID</string>
+
     <string name="delete_item">Удаление элемента</string>
     <string name="delete_item_message">Удалить выбранный элемент?</string>
     <string name="confirm_dialog">Ввод</string>

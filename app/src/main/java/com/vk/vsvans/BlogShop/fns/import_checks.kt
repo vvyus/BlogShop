@@ -1,6 +1,7 @@
 package com.vk.vsvans.BlogShop.fns
 
 import android.os.Environment
+import com.vk.vsvans.BlogShop.utils.DateTimeFormatter
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.BufferedReader
@@ -8,7 +9,7 @@ import java.io.File
 import java.io.IOException
 
 object import_checks {
-    fun doImport(){
+   suspend fun doImport(){
         val path= Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath
         val files= File(path).listFiles()
 
@@ -32,6 +33,7 @@ object import_checks {
                                     if(receipt!=null) {
                                         val user = receipt.getString("user")
                                         val dateTime = receipt.getString("dateTime")
+                                        val date=DateTimeFormatter.parseDateTimeQrString(dateTime)
                                         val totalSum = receipt.getLong("totalSum") / 100.0
                                         val fiscalDocumentNumber =
                                             receipt.getString("fiscalDocumentNumber") //fd

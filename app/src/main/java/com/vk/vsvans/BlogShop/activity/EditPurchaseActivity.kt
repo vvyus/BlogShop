@@ -21,6 +21,7 @@ import com.vk.vsvans.BlogShop.mainActivity
 import com.vk.vsvans.BlogShop.model.DbManager
 import com.vk.vsvans.BlogShop.model.Purchase
 import com.vk.vsvans.BlogShop.model.PurchaseItem
+import com.vk.vsvans.BlogShop.utils.UtilsHelper
 import com.vk.vsvans.BlogShop.utils.makeSpannableString
 import com.vk.vsvans.BlogShop.utils.plus
 import kotlinx.coroutines.CoroutineScope
@@ -134,11 +135,14 @@ class EditPurchaseActivity : AppCompatActivity() {
                        content_temp+=pit.getContent(title_color)+"\n\n"
                        summa+=pit.summa
                    }
-                   edSummaPurchase.setText(summa.toString())
+                   if(summa>0) {
+                       edSummaPurchase.setText(summa.toString())
+                       purchase!!.summa=summa
+                   }else purchase!!.summa= edSummaPurchase.text.toString().toDouble()
                    purchase!!.content= content_temp.toString()
                    purchase!!.content_html=Html.toHtml(content_temp,0)
                    purchase!!.title=edTitle.text.toString()
-                   purchase!!.summa=summa
+                   purchase!!.time=UtilsHelper.getCurrentDate()
                    if(idPurchase>0){
                        //dbManager.updatePurchase(idPurchase,edTitle.text.toString(),edDescription.text.toString())
                        dbManager.updatePurchase(purchase!!)

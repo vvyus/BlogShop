@@ -12,4 +12,5 @@ class Purchase {
     var time:Long = 0
     var id = 0
     var content_html=""
+    var idfns=""
 }

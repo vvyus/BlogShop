@@ -157,7 +157,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     //Toast.makeText(this@MainActivity,"Pressed new purchase", Toast.LENGTH_LONG).show()
                 }
                 R.id.id_import_checks->{
-                    import_checks.doImport()
+                    job?.cancel()
+                    job = CoroutineScope(Dispatchers.Main).launch{
+                        import_checks.doImport()
+
+                    }
                 }
                 }//when
             true

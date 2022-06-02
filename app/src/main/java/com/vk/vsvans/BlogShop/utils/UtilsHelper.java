@@ -1,4 +1,4 @@
-package com.vk.vsvans.BlogShop.helper;
+package com.vk.vsvans.BlogShop.utils;
 
 import android.graphics.Color;
 

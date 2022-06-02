@@ -6,12 +6,8 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.os.Build
 import android.provider.BaseColumns
-import android.text.Html
-import android.text.Spannable
-import android.text.SpannableString
 import androidx.annotation.RequiresApi
-import com.vk.vsvans.BlogShop.helper.UtilsHelper
-import com.vk.vsvans.BlogShop.utils.makeSpannableString
+import com.vk.vsvans.BlogShop.utils.UtilsHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -121,8 +117,9 @@ class DbManager(context: Context) {
             put(DbName.COLUMN_NAME_CONTENT, purchase.content)
             put(DbName.COLUMN_NAME_CONTENT_HTML, purchase.content_html)
             put(DbName.COLUMN_NAME_SUMMA_PURCHASES, purchase.summa)
-            val time= UtilsHelper.getCurrentDate()
-            put(DbName.COLUMN_NAME_TIME, time)
+            put(DbName.COLUMN_NAME_ID_FNS, purchase.idfns)
+            //val time= UtilsHelper.getCurrentDate()
+            put(DbName.COLUMN_NAME_TIME, purchase.time)
 
         }
         val id=db?.insert(DbName.TABLE_NAME,null, values)
@@ -140,7 +137,8 @@ class DbManager(context: Context) {
             put(DbName.COLUMN_NAME_CONTENT, purchase.content)
             put(DbName.COLUMN_NAME_SUMMA_PURCHASES, purchase.summa)
             put(DbName.COLUMN_NAME_CONTENT_HTML,purchase.content_html)
-            //put(DbName.COLUMN_NAME_TIME, time)
+            put(DbName.COLUMN_NAME_ID_FNS, purchase.idfns)
+            put(DbName.COLUMN_NAME_TIME, purchase.time)
         }
         db?.update(DbName.TABLE_NAME, values, selection, null)
     }
@@ -162,16 +160,14 @@ class DbManager(context: Context) {
 
         while (cursor?.moveToNext()!!) {
             val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_TITLE))
-            val dataContent =
-                cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_CONTENT))
-            val dataContentHtml =
-                cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_CONTENT_HTML))
-            val dataId =
-                cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
-            val time =
-                cursor.getLong(cursor.getColumnIndex(DbName.COLUMN_NAME_TIME))
-            val dataSumma =
-                cursor.getDouble(cursor.getColumnIndex(DbName.COLUMN_NAME_SUMMA_PURCHASES))
+            val dataContent = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_CONTENT))
+            val dataContentHtml = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_CONTENT_HTML))
+
+            val dataIdFns = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_ID_FNS))
+
+            val dataId = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
+            val time = cursor.getLong(cursor.getColumnIndex(DbName.COLUMN_NAME_TIME))
+            val dataSumma = cursor.getDouble(cursor.getColumnIndex(DbName.COLUMN_NAME_SUMMA_PURCHASES))
             val purchase = Purchase()
             purchase.title = dataTitle
             purchase.content = dataContent
@@ -180,6 +176,7 @@ class DbManager(context: Context) {
             purchase.id = dataId
             purchase.time = time
             purchase.summa=dataSumma
+            purchase.idfns=dataIdFns
             dataList.add(purchase)
         }
         cursor.close()
@@ -208,6 +205,8 @@ class DbManager(context: Context) {
                     cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_CONTENT))
                 val dataContentHtml =
                     cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_CONTENT_HTML))
+                val dataIdFns =
+                    cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_ID_FNS))
                 val dataId =
                     cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
                 val time =
@@ -221,7 +220,7 @@ class DbManager(context: Context) {
                 purchase.id = dataId
                 purchase.time = time
                 purchase.summa=dataSumma
-
+                purchase.idfns=dataIdFns
                 break
 
             }
@@ -231,6 +230,26 @@ class DbManager(context: Context) {
             return@withContext purchase
             //return dataList
         }
+
+    @SuppressLint("Range")
+    suspend fun readPurchaseFns(idFns:String): Int = withContext(Dispatchers.IO) {
+        val selection = "${DbName.COLUMN_NAME_ID_FNS} like ?"
+        val cursor = db?.query(
+            DbName.TABLE_NAME,
+            null,
+            selection, arrayOf(idFns),
+            null, null, null
+        )
+        var Id:Int=0
+        if(cursor?.moveToNext()!!) {
+            Id = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
+        }
+        //if(readDataCallback!=null)readDataCallback.readData(dataList)
+
+        cursor.close()
+        return@withContext Id
+        //return dataList
+    }
 
     // PurchaseItem
 
