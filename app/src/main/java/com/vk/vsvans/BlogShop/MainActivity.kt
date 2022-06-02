@@ -115,6 +115,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     private fun bottomMenuOnClick()=with(rootElement){
         mainContent.bNavView.setOnItemSelectedListener {
             when(it.itemId){
@@ -159,8 +160,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 R.id.id_import_checks->{
                     job?.cancel()
                     job = CoroutineScope(Dispatchers.Main).launch{
-                        import_checks.doImport()
-
+                        import_checks.doImport(this@MainActivity)
+                        fillAdapter("")
                     }
                 }
                 }//when

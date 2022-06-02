@@ -127,20 +127,8 @@ class EditPurchaseActivity : AppCompatActivity() {
 //                       summa+=pit.summa
 //                   }
                    //if(purchase==null) purchase=Purchase()
-                   val title_color=getColor(R.color.green_main)
-                   var content_temp="".makeSpannableString()
-
-                   var summa=0.0
-                    for(pit:PurchaseItem in cardItemPurchaseAdapter.mainArray){
-                       content_temp+=pit.getContent(title_color)+"\n\n"
-                       summa+=pit.summa
-                   }
-                   if(summa>0) {
-                       edSummaPurchase.setText(summa.toString())
-                       purchase!!.summa=summa
-                   }else purchase!!.summa= edSummaPurchase.text.toString().toDouble()
-                   purchase!!.content= content_temp.toString()
-                   purchase!!.content_html=Html.toHtml(content_temp,0)
+                   //здесь то что редактируется а не пришло из фрагмента
+                   purchase!!.summa= edSummaPurchase.text.toString().toDouble()
                    purchase!!.title=edTitle.text.toString()
                    purchase!!.time=UtilsHelper.getCurrentDate()
                    if(idPurchase>0){
@@ -191,10 +179,22 @@ class EditPurchaseActivity : AppCompatActivity() {
     fun onClickGetPurchaseItems(view:View){
         val newList=(rootElement.vpPurchaseItems.adapter as CardItemPurchaseRcAdapter).mainArray
 
-        purchaseItemFragment= PurchaseItemListFragment(object: IFragmentCloseInterface {
+        purchaseItemFragment= PurchaseItemListFragment(
+            object: IFragmentCloseInterface {
+            // при закрытии фрагмента
             override fun onFragClose(list: ArrayList<PurchaseItem>) {
                 rootElement.scrollViewMain.visibility=View.VISIBLE
                 cardItemPurchaseAdapter.update(list)
+                var summa=0.0
+                val title_color=getColor(R.color.green_main)
+                var content_temp="".makeSpannableString()
+                for(pit:PurchaseItem in list){
+                    content_temp+=pit.getContent(title_color)+"\n\n"
+                    summa+=pit.summa
+                }
+                purchase!!.content= content_temp.toString()
+                purchase!!.content_html=Html.toHtml(content_temp,0)
+                rootElement.edSummaPurchase.setText(summa.toString())
             }
         },
             object: IFragmentCallBack {
