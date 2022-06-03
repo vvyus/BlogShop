@@ -7,6 +7,7 @@ import android.text.Html
 import androidx.annotation.RequiresApi
 import com.vk.vsvans.BlogShop.MainActivity
 import com.vk.vsvans.BlogShop.R
+import com.vk.vsvans.BlogShop.model.Product
 import com.vk.vsvans.BlogShop.model.Purchase
 import com.vk.vsvans.BlogShop.model.PurchaseItem
 import com.vk.vsvans.BlogShop.utils.DateTimeUtils
@@ -24,6 +25,17 @@ object import_checks {
        val separator=(context as MainActivity).resources.getString(R.string.SEPARATOR)
        val db=(context as MainActivity).dbManager
        val title_color=(context as MainActivity).getColor(R.color.green_main)
+       var fn=""
+       var fd=""
+       var fp=""
+       var totalSum =0.0
+       var user=""
+       var dateTime=""
+       var idPurchase=0
+       var purchase:Purchase?=null
+       var pit:PurchaseItem?=null
+       var idFns=""
+       var dateTimeLong:Long?=0
         val path= Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath
         val files= File(path).listFiles()
 
@@ -46,55 +58,63 @@ object import_checks {
                                     val receipt = document.getJSONObject("receipt")
                                     if(receipt!=null) {
 
-                                        val user = receipt.getString("user")
-                                        val dateTime = receipt.getString("dateTime")
-
-                                        val totalSum = receipt.getLong("totalSum") / 100.0
-                                        val fn = receipt.getString("fiscalDriveNumber")//fn
-                                        val fd = receipt.getString("fiscalDocumentNumber") //fd
-                                        val fp = receipt.getString("fiscalSign")//fp
+                                        user = receipt.getString("user")
+                                        dateTime = receipt.getString("dateTime")
+                                        totalSum = receipt.getLong("totalSum") / 100.0
+                                        fn = receipt.getString("fiscalDriveNumber")//fn
+                                        fd = receipt.getString("fiscalDocumentNumber") //fd
+                                        fp = receipt.getString("fiscalSign")//fp
                                         println("Result is ${user} ${dateTime} ${totalSum} fd=${fd} fn=${fn} fp=${fp}")
-                                        val idFns=fn+separator+fd+separator+fp+separator+dateTime
-                                        val purchase=Purchase()
-                                        var idPurchase=db.readPurchaseFns(idFns)
+                                        idFns=fn+separator+fd+separator+fp+separator+dateTime
+                                        purchase=Purchase()
+                                        idPurchase=db.readPurchaseFns(idFns)
                                         if(idPurchase==0){
-
-                                            purchase.idfns=idFns
-                                            val dateTimeLong=DateTimeUtils.parseDateTimeQrString(dateTime)
-                                            if (dateTimeLong != null) {
-                                                purchase.time=dateTimeLong
-                                            }
-                                            purchase.summa=totalSum
-                                            purchase.title=user
-                                            idPurchase= db.insertPurchase(purchase)!!
+                                           idPurchase= db.insertPurchase(purchase!!)!!
                                         }
+                                        purchase!!.id=idPurchase
+                                        purchase!!.idfns=idFns
+                                        dateTimeLong=DateTimeUtils.parseDateTimeQrString(dateTime)
+                                        if (dateTimeLong != null) {
+                                            purchase!!.time= dateTimeLong as Long
+                                        }
+                                        purchase!!.summa=totalSum
+                                        purchase!!.title=user
+
                                         // print chek items
+                                        var content_temp="".makeSpannableString()
+                                        db.removePurchaseItems(idPurchase)
                                         val items = receipt.getJSONArray("items")
                                         if(items!=null){
-                                            var content_temp="".makeSpannableString()
-                                            db.removePurchaseItems(idPurchase)
                                             for (j in 0 until items.length()) {
                                                 val item = JSONObject(items[j].toString())
                                                 if(item!=null){
-                                                    var pit=PurchaseItem()
-                                                    val name = item.getString("name")
-                                                    val quantity = item.getLong("quantity")
-                                                    val sum = item.getLong("sum") / 100.0
-                                                    val price=item.getLong("price")/100.0
-                                                    println("${name}  ${quantity}  ${sum}")
-                                                    pit.idPurchase=idPurchase
-                                                    pit.price=price
-                                                    pit.quantity= quantity.toDouble()
-                                                    pit.summa=sum
-                                                    pit.productName=name
-                                                    db.insertPurchaseItem(pit)
-                                                    content_temp+=pit.getContent(title_color)+"\n\n"
+                                                    pit=PurchaseItem()
+                                                    pit!!.idPurchase=idPurchase
+                                                    pit!!.price=item.getLong("price")/100.0
+                                                    pit!!.quantity= item.getLong("quantity").toDouble()
+                                                    pit!!.summa=item.getLong("sum") / 100.0
+                                                    pit!!.productName=item.getString("name")
+                                                    content_temp+= pit!!.getContent(title_color)+"\n\n"
+                                                    println("${pit!!.productName}  ${pit!!.quantity}  ${pit!!.summa}")
+                                                    val product=Product()
+                                                    val list=db.readProductsTitle(pit!!.productName)
+                                                    var idproduct=0
+                                                    if(list.size==0){
+                                                        product.name=pit!!.productName
+                                                        product.title=pit!!.productName
+                                                        idproduct= db.insertProduct(product)!!
+                                                        pit!!.idProduct=idproduct
+                                                    }else{
+                                                        pit!!.idProduct=list[0].id
+                                                    }
+                                                    db.insertPurchaseItem(pit!!)
                                                 }
                                             }
-                                            purchase!!.content= content_temp.toString()
-                                            purchase!!.content_html= Html.toHtml(content_temp,0)
-                                            db.updatePurchase(purchase)
                                         }
+                                        purchase!!.content= content_temp.toString()
+                                        purchase!!.content_html= Html.toHtml(content_temp,0)
+                                        db.updatePurchase(purchase!!)
+
                                     }// if receipt
                                 } // if ticket
                             }// if document

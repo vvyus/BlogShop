@@ -120,7 +120,9 @@ object DialogHelper {
 
         val btnOk=rootView.findViewById<Button>(R1.id.btnOk)
         btnOk.setOnClickListener {
+            // редактируем name, title не трогаем
             product.name=edTitle.text.toString()
+            //product.title=edTitle.text.toString()//title синоним для поиска продуктов с чека фнс
             // (context as EditPurchaseActivity).up
             if(iupdateProductItemList!=null)iupdateProductItemList.onUpdateProductItemList(product)
             customDialog.dismiss()

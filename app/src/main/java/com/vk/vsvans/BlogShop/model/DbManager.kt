@@ -23,8 +23,8 @@ class DbManager(context: Context) {
     // suspend fun insertProduct( product:Product) = withContext(Dispatchers.IO){
     fun insertProduct( product:Product):Int?{
         val values = ContentValues().apply {
-
-            put(DbName.COLUMN_NAME_TITLE_PRODUCTS, product.name)
+            put(DbName.COLUMN_NAME_NAME_PRODUCTS, product.name)
+            put(DbName.COLUMN_NAME_TITLE_PRODUCTS, product.title)
         }
         val id=db?.insert(DbName.TABLE_NAME_PRODUCTS,null, values)
         return id?.toInt()
@@ -32,6 +32,30 @@ class DbManager(context: Context) {
 
     @SuppressLint("Range")
     suspend fun readProducts(searchText:String): ArrayList<Product> = withContext(Dispatchers.IO) {
+        val dataList = ArrayList<Product>()
+        val selection = "${DbName.COLUMN_NAME_NAME_PRODUCTS} like ?"
+        val cursor = db?.query(
+            DbName.TABLE_NAME_PRODUCTS, null, selection, arrayOf("%$searchText%"),
+            null, null, null
+        )
+
+        while (cursor?.moveToNext()!!) {
+            val dataId = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
+            val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_TITLE_PRODUCTS))
+            val dataName = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_NAME_PRODUCTS))
+            val product = Product()
+            product.id = dataId
+            product.name = dataName
+            product.title=dataTitle
+            dataList.add(product)
+        }
+        cursor.close()
+        return@withContext dataList
+    }
+
+    @SuppressLint("Range")
+    // Используется при загрузке чеков поиск по вспом полю title для ручного ввода это пол пусто
+    suspend fun readProductsTitle(searchText:String): ArrayList<Product> = withContext(Dispatchers.IO) {
         val dataList = ArrayList<Product>()
         val selection = "${DbName.COLUMN_NAME_TITLE_PRODUCTS} like ?"
         val cursor = db?.query(
@@ -42,14 +66,13 @@ class DbManager(context: Context) {
         while (cursor?.moveToNext()!!) {
             val dataId = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
             val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_TITLE_PRODUCTS))
+            val dataName = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_NAME_PRODUCTS))
             val product = Product()
             product.id = dataId
-            product.name = dataTitle
+            product.name = dataName
+            product.title=dataTitle
             dataList.add(product)
         }
-
-        //if(readDataCallback!=null)readDataCallback.readData(dataList)
-
         cursor.close()
         return@withContext dataList
     }
@@ -59,8 +82,8 @@ class DbManager(context: Context) {
     val id=product.id
         val selection = BaseColumns._ID + "=$id"
         val values = ContentValues().apply {
-
-            put(DbName.COLUMN_NAME_TITLE_PRODUCTS, product.name)
+            put(DbName.COLUMN_NAME_NAME_PRODUCTS, product.name)
+            put(DbName.COLUMN_NAME_TITLE_PRODUCTS, product.title)
         }
         db?.update(DbName.TABLE_NAME_PRODUCTS, values, selection, null)
     }
