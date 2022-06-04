@@ -3,6 +3,6 @@ package com.vk.vsvans.BlogShop.interfaces
 import android.graphics.Bitmap
 import com.vk.vsvans.BlogShop.model.PurchaseItem
 
-interface FragmentCloseInterface {
+interface IFragmentCloseInterface {
     fun onFragClose(list:ArrayList<PurchaseItem>)
 }

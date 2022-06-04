@@ -19,25 +19,31 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="?attr/homeAsUpIndicator" />
-
-    <TextView
-        android:id="@+id/tvTest"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textColor="@color/black"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tb" />
-
+        android:layout_height="match_parent"
+        >
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rcViewSelectPurchaseItem"
+        android:id="@+id/rcViewProductList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/gray_dark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvTest" />
+        app:layout_constraintTop_toBottomOf="@+id/tb" />
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabAdd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="@dimen/fab_margin"
+            android:onClick="onClickAddProduct"
+            app:srcCompat="@drawable/ic_add"
+            app:backgroundTint="@color/white"
+            app:tint="@color/green_main"
+             />
+    </FrameLayout>
 </LinearLayout>

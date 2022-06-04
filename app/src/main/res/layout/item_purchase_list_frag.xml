@@ -11,41 +11,45 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
         android:layout_marginEnd="5dp"
+        android:layout_marginBottom="5dp"
         app:cardCornerRadius="5dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            tools:ignore="WebViewLayout">
 
             <TextView
-                android:id="@+id/tvTitle"
+                android:id="@+id/tvTitlePurchaseItem"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
                 android:text="TextView"
                 android:textColor="@color/black"
-                app:layout_constraintEnd_toEndOf="@+id/tvContent"
+                app:layout_constraintEnd_toEndOf="@+id/tvContentPurchaseItem"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toEndOf="@+id/imDrag"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/tvContent"
+                android:id="@+id/tvContentPurchaseItem"
                 android:layout_width="0dp"
-                android:layout_height="200dp"
+                android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-
+android:lineSpacingExtra="5dp"
                 android:background="@color/gray"
+                android:padding="5dp"
                 android:scaleType="centerCrop"
                 android:text="text"
                 android:textColor="@color/black"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
 
-                app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvTitlePurchaseItem" />
 
             <ImageButton
                 android:id="@+id/imDrag"
@@ -59,6 +63,7 @@
                 app:srcCompat="@drawable/ic_drag" />
 
             <LinearLayout
+                android:id="@+id/llButtonsPurchaseItem"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="8dp"
@@ -66,27 +71,27 @@
                 android:background="@drawable/edit_product_item_bg"
                 android:gravity="center"
                 android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="@+id/tvContent"
-                app:layout_constraintEnd_toEndOf="@+id/tvContent">
+                app:layout_constraintBottom_toBottomOf="@+id/tvContentPurchaseItem"
+                app:layout_constraintEnd_toEndOf="@+id/tvContentPurchaseItem">
 
                 <ImageButton
-                    android:id="@+id/imEditImage"
+                    android:id="@+id/imDeletePurchaseItem"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="16dp"
                     android:background="@android:drawable/screen_background_light_transparent"
-                    app:srcCompat="@drawable/ic_edit_purchase" />
+                    app:srcCompat="@drawable/ic_delete_purchase" />
 
                 <ImageButton
-                    android:id="@+id/imDelete"
+                    android:id="@+id/imEditPurchaseItem"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="5dp"
                     android:background="@android:drawable/screen_background_light_transparent"
-                    app:srcCompat="@drawable/ic_delete_purchase" />
+                    app:srcCompat="@drawable/ic_edit_purchase" />
             </LinearLayout>
 
             <ProgressBar
@@ -95,10 +100,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="@+id/tvContent"
-                app:layout_constraintEnd_toEndOf="@+id/tvContent"
-                app:layout_constraintStart_toStartOf="@+id/tvContent"
-                app:layout_constraintTop_toBottomOf="@id/tvContent" />
+                app:layout_constraintBottom_toBottomOf="@+id/tvContentPurchaseItem"
+                app:layout_constraintEnd_toEndOf="@+id/tvContentPurchaseItem"
+                app:layout_constraintStart_toStartOf="@+id/tvContentPurchaseItem"
+                app:layout_constraintTop_toBottomOf="@id/tvContentPurchaseItem" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -106,9 +111,9 @@
                 android:layout_marginTop="2dp"
                 android:background="@color/green_main"
                 android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="@+id/tvTitle"
-                app:layout_constraintStart_toStartOf="@+id/tvTitle"
-                app:layout_constraintTop_toBottomOf="@+id/tvTitle"></LinearLayout>
+                app:layout_constraintEnd_toEndOf="@+id/tvTitlePurchaseItem"
+                app:layout_constraintStart_toStartOf="@+id/tvTitlePurchaseItem"
+                app:layout_constraintTop_toBottomOf="@+id/tvTitlePurchaseItem"></LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

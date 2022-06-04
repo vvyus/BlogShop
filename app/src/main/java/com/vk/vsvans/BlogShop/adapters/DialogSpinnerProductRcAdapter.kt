@@ -7,10 +7,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.vk.vsvans.BlogShop.R
+import com.vk.vsvans.BlogShop.model.Product
 
-class DialogSpinnerRcAdapter(var tvSelection: TextView, var dialog: AlertDialog) : RecyclerView.Adapter<DialogSpinnerRcAdapter.SpViewHolder>() {
+class DialogSpinnerProductRcAdapter(var tvSelection: TextView, var dialog: AlertDialog) : RecyclerView.Adapter<DialogSpinnerProductRcAdapter.SpViewHolder>() {
 
-    private val mainList=ArrayList<String>()
+    private val mainList=ArrayList<Product>()
     //private val context=context
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SpViewHolder {
@@ -30,11 +31,13 @@ class DialogSpinnerRcAdapter(var tvSelection: TextView, var dialog: AlertDialog)
     //var context для доступности в функциях класса аналог переменой класса контекст
     class SpViewHolder(itemView: View, var tvSelection: TextView, var dialog: AlertDialog) :RecyclerView.ViewHolder(itemView),View.OnClickListener {
         private var itemText=""
-
-        fun setData(text:String){
+        private var itemProduct:Product?=null
+        fun setData(product:Product){
+            val text=product.name
             val tvSpItem=itemView.findViewById<TextView>(R.id.tvSpItem)
             tvSpItem.text=text
             itemText=text
+            itemProduct=product
             // присваиваем onClick выбранному элементу
             itemView.setOnClickListener(this)
         }
@@ -42,11 +45,12 @@ class DialogSpinnerRcAdapter(var tvSelection: TextView, var dialog: AlertDialog)
         override fun onClick(v: View?) {
             //(tvSelection as EditAdsAct).rootElement.tvCountry.setText(itemText)
             tvSelection.text=itemText
+            tvSelection.setTag(itemProduct)
             dialog.dismiss()
         }
     }
 
-    fun updateAdapter(list:ArrayList<String>){
+    fun updateAdapter(list:ArrayList<Product>){
         mainList.clear()
         mainList.addAll(list)
         notifyDataSetChanged()

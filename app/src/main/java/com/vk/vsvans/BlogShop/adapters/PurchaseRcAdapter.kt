@@ -1,14 +1,18 @@
 package com.vk.vsvans.BlogShop.adapters
 
 import android.graphics.Color
+import android.os.Build
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.vk.vsvans.BlogShop.R
 import com.vk.vsvans.BlogShop.databinding.PurchaseListItemBinding
 import com.vk.vsvans.BlogShop.interfaces.OnClickItemCallback
 import com.vk.vsvans.BlogShop.model.Purchase
+import com.vk.vsvans.BlogShop.utils.makeSpannableString
 
 class PurchaseRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerView.Adapter<PurchaseRcAdapter.PurchaseHolder>() {
 
@@ -58,10 +62,11 @@ class PurchaseRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
 
     class PurchaseHolder(val binding:PurchaseListItemBinding): RecyclerView.ViewHolder(binding.root) {
 
+        @RequiresApi(Build.VERSION_CODES.N)
         fun setData(purchase:Purchase){
             binding.apply {
-                tvDescription.text=purchase.description
-                tvPrice.text= purchase.price.toString()
+                tvDescription.text= Html.fromHtml(purchase.content_html,0)
+                tvSummaPuchase.text= purchase.summa.toString()
                 tvTitle.text=purchase.title
                 //tvTitle.tag= com.vk.vsvans.BlogShop.helper.Tag(purchase.id,se)
             }

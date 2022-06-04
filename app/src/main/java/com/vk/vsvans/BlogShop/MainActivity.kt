@@ -1,21 +1,28 @@
 package com.vk.vsvans.BlogShop
 
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.navigation.NavigationView
 import com.vk.vsvans.BlogShop.activity.EditPurchaseActivity
+import com.vk.vsvans.BlogShop.activity.ProductActivity
 import com.vk.vsvans.BlogShop.adapters.PurchaseRcAdapter
 import com.vk.vsvans.BlogShop.databinding.ActivityMainBinding
 import com.vk.vsvans.BlogShop.dialogs.DialogHelper
+import com.vk.vsvans.BlogShop.fns.import_checks
+import com.vk.vsvans.BlogShop.interfaces.IDeleteItem
+import com.vk.vsvans.BlogShop.interfaces.IUpdatePurchaseItemList
 import com.vk.vsvans.BlogShop.interfaces.OnClickItemCallback
 import com.vk.vsvans.BlogShop.model.DbManager
 import com.vk.vsvans.BlogShop.model.Purchase
+import com.vk.vsvans.BlogShop.model.PurchaseItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -37,6 +44,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 startActivity(intent)
             }
         }
+
+        override fun onEditItem() {}
+
+        override fun onDeleteItem() {}
     })
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,6 +61,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         bottomMenuOnClick()
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onResume() {
         super.onResume()
         dbManager.openDb()
@@ -61,11 +73,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         dbManager.closeDb()
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     fun fillAdapter(text: String){
 
         job?.cancel()
         job = CoroutineScope(Dispatchers.Main).launch{
-            val list = dbManager.readPurchasesFromDb(text)
+            val list = dbManager.readPurchases(text)
             adapter.updateAdapter(list)
         }
 
@@ -102,6 +115,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     private fun bottomMenuOnClick()=with(rootElement){
         mainContent.bNavView.setOnItemSelectedListener {
             when(it.itemId){
@@ -125,7 +139,29 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     val id=adapter.getPurchaseId()
                     if(id>0) {
                         //dbManager.removePurchaseItemFromDb(id)
-                        DialogHelper.showPurchaseDeleteItemDialog(dbManager,id)
+                        DialogHelper.showPurchaseDeleteItemDialog(this@MainActivity,id,object:
+                            IDeleteItem {
+                            @RequiresApi(Build.VERSION_CODES.N)
+                            override fun onDeleteItem(id: Int) {
+                                dbManager.removePurchase(id)
+                                fillAdapter("")
+                            }
+
+                        })
+                    }
+                }
+                R.id.id_product->{
+                    val intent= Intent(this@MainActivity, ProductActivity::class.java)
+                    intent.putExtra(R.string.PURCHASE_ID.toString(),0)
+                    // сообщаем системе о запуске активити
+                    startActivity(intent)
+                    //Toast.makeText(this@MainActivity,"Pressed new purchase", Toast.LENGTH_LONG).show()
+                }
+                R.id.id_import_checks->{
+                    job?.cancel()
+                    job = CoroutineScope(Dispatchers.Main).launch{
+                        import_checks.doImport(this@MainActivity)
+                        fillAdapter("")
                     }
                 }
                 }//when

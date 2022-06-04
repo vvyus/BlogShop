@@ -2,24 +2,34 @@ package com.vk.vsvans.BlogShop.activity
 
 import android.os.Build
 import android.os.Bundle
+import android.text.Html
+import android.text.SpannableString
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.vk.vsvans.BlogShop.R
 import com.vk.vsvans.BlogShop.adapters.CardItemPurchaseRcAdapter
 import com.vk.vsvans.BlogShop.databinding.ActivityEditPurchaseBinding
+import com.vk.vsvans.BlogShop.dialogs.DialogHelper
 import com.vk.vsvans.BlogShop.fragments.PurchaseItemListFragment
-import com.vk.vsvans.BlogShop.interfaces.FragmentCloseInterface
+import com.vk.vsvans.BlogShop.interfaces.IFragmentCloseInterface
+import com.vk.vsvans.BlogShop.interfaces.IFragmentCallBack
+import com.vk.vsvans.BlogShop.interfaces.IUpdatePurchaseItemList
+import com.vk.vsvans.BlogShop.interfaces.OnClickItemCallback
 import com.vk.vsvans.BlogShop.mainActivity
 import com.vk.vsvans.BlogShop.model.DbManager
 import com.vk.vsvans.BlogShop.model.Purchase
 import com.vk.vsvans.BlogShop.model.PurchaseItem
+import com.vk.vsvans.BlogShop.utils.UtilsHelper
+import com.vk.vsvans.BlogShop.utils.makeSpannableString
+import com.vk.vsvans.BlogShop.utils.plus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-class EditPurchaseActivity : AppCompatActivity(),FragmentCloseInterface {
+class EditPurchaseActivity : AppCompatActivity() {
 
     lateinit var rootElement: ActivityEditPurchaseBinding
     //private val dialog= DialogSpinnerHelper()
@@ -36,18 +46,21 @@ class EditPurchaseActivity : AppCompatActivity(),FragmentCloseInterface {
     val dbManager= DbManager(this)
 
     var idPurchase =0
+    private var purchase:Purchase? = null
+    private var listDeletedPurchaseItems=ArrayList<PurchaseItem>()
 
-    private var purchases=ArrayList<Purchase>()
+    //var content_temp:SpannableString="".makeSpannableString()
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         rootElement= ActivityEditPurchaseBinding.inflate(layoutInflater)
         setContentView(rootElement.root)
         val intent=getIntent()
         idPurchase=intent.getIntExtra(R.string.PURCHASE_ID.toString(), 0)
-        initPurchases()
+        initPurchase()
         init()
-        initToolbar()
+        //initToolbar()
     }
 
     override fun onResume() {
@@ -60,73 +73,38 @@ class EditPurchaseActivity : AppCompatActivity(),FragmentCloseInterface {
         dbManager.closeDb()
         job?.cancel()
     }
-    private fun initToolbar(){
-        rootElement.apply {
-            val savePurchaseItem = tb.menu.findItem(R.id.id_save_purchase)
-            savePurchaseItem.setOnMenuItemClickListener {
-                job?.cancel()
-                job = CoroutineScope(Dispatchers.Main).launch{
-                    if(dbManager!=null) {
-                        if(idPurchase>0){
-                            dbManager.updatePurchaseItem(idPurchase,edTitle.text.toString(),edDescription.text.toString())
-                        }else{
-                            dbManager.insertPurchaseToDb(edTitle.text.toString(),edDescription.text.toString())
-                        }
-                    }
-                    onBackPressed()
-                }
-                true
-            }
-            tb.setNavigationOnClickListener {
-                onBackPressed()
-            }
-        }
-    }
-    private fun initPurchases(){
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun initPurchase(){
         if(idPurchase>0) {
             dbManager.openDb()
             job?.cancel()
             job = CoroutineScope(Dispatchers.Main).launch{
-                purchases=dbManager.readPurchasesItemFromDb(idPurchase)
-                if(!purchases.isEmpty()){
+                purchase=dbManager.readOnePurchase(idPurchase)
+                if(purchase!=null){
                     rootElement.apply {
-                        edDescription.setText(purchases[0].description)
-                        edTitle.setText(purchases[0].title)
+                        //content_temp=Html.fromHtml(purchase!!.content_html,0).makeSpannableString()
+                        edTitle.setText(purchase!!.title)
+                        edSummaPurchase.setText(purchase!!.summa.toString())
                     }
+                    val purchaseItems=dbManager.readPurchaseItems(idPurchase)
+                    (rootElement.vpPurchaseItems.adapter as CardItemPurchaseRcAdapter).update(purchaseItems)
                 }
             }
         }else {
-            purchases.clear()
+            //idPurchase==0
+            purchase= Purchase()
         }
     }
 
     private fun init(){
         cardItemPurchaseAdapter= CardItemPurchaseRcAdapter()
-        rootElement.vpimages.adapter=cardItemPurchaseAdapter
+        rootElement.vpPurchaseItems.adapter=cardItemPurchaseAdapter
 
     }
 
     fun clearResultArray(){
         listResultArray.clear()
-    }
-
-    //onClick выбран в activity_edit_ads
-    fun onClickSelectCountry(view:View){
-//        val listCountry=CityHelper.getAllCountries(this)
-//        dialog.showSpinnerDialog(this,listCountry,rootElement.tvCountry)
-//        if(rootElement.tvCity.text.toString()!=getString(R.string.select_city)){
-//            rootElement.tvCity.text=getString(R.string.select_city)
-//        }
-    }
-
-    fun onClickSelectCity(view:View){
-//        val selectedCountry=rootElement.tvCountry.text.toString()
-//        if(selectedCountry!=getString(R.string.select_country)) {
-//            val listCity = CityHelper.getAllCities(selectedCountry, this)
-//            dialog.showSpinnerDialog(this, listCity, rootElement.tvCity)
-//        }else{
-//            Toast.makeText(this,getString(R.string.no_country_selected),Toast.LENGTH_LONG).show()
-//        }
     }
 
     fun onClickSelectCategory(view:View){
@@ -135,41 +113,101 @@ class EditPurchaseActivity : AppCompatActivity(),FragmentCloseInterface {
 
     }
 
-    fun onClickPublishPurchase(view: View){
+    @RequiresApi(Build.VERSION_CODES.N)
+    fun onClickSavePurchase(view: View){
+        var remove=true
         rootElement.apply {
             job?.cancel()
             job = CoroutineScope(Dispatchers.Main).launch{
                if(dbManager!=null) {
+//                   var content=""
+//                   var summa=0.0
+//                   for(pit:PurchaseItem in (vpPurchaseItems.adapter as CardItemPurchaseRcAdapter).mainArray){
+//                       content+=pit.getContent()+"\n\n"
+//                       summa+=pit.summa
+//                   }
+                   //if(purchase==null) purchase=Purchase()
+                   //здесь то что редактируется а не пришло из фрагмента
+                   purchase!!.summa= edSummaPurchase.text.toString().toDouble()
+                   purchase!!.title=edTitle.text.toString()
+                   purchase!!.time=UtilsHelper.getCurrentDate()
                    if(idPurchase>0){
-                       dbManager.updatePurchaseItem(idPurchase,edTitle.text.toString(),edDescription.text.toString())
+                       //dbManager.updatePurchase(idPurchase,edTitle.text.toString(),edDescription.text.toString())
+                       dbManager.updatePurchase(purchase!!)
                    }else{
-                       dbManager.insertPurchaseToDb(edTitle.text.toString(),edDescription.text.toString())
+                       idPurchase= dbManager.insertPurchase(purchase!!)!!
+                       purchase!!.id=idPurchase
                    }
-               }
-                onBackPressed()
+
+                   for(pit:PurchaseItem in (vpPurchaseItems.adapter as CardItemPurchaseRcAdapter).mainArray){
+                       if(pit.id==0){
+                           //set idPurchase when new Purchase
+                           pit.idPurchase=idPurchase
+                           dbManager.insertPurchaseItem(pit)
+                       }else{
+                           dbManager.updatePurchaseItem(pit)
+                       }
+                   }
+                   for(pit:PurchaseItem in listDeletedPurchaseItems){
+                       dbManager.removePurchaseItem(pit.id)
+                   }
+                   listDeletedPurchaseItems=ArrayList<PurchaseItem>()
+               }//dbManager
+
             }
+            onBackPressed()
         }
 
 //        dbManager.publishAd(fillAd())
     }
 
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    fun onClickCancelPurchase(view: View) {
+        listDeletedPurchaseItems=ArrayList<PurchaseItem>()
+        onBackPressed()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onBackPressed() {
+        //listDeletedPurchaseItems=ArrayList<PurchaseItem>()
         if(mainActivity!=null)mainActivity!!.fillAdapter("")
         super.onBackPressed()
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
     fun onClickGetPurchaseItems(view:View){
-        val newList=ArrayList<PurchaseItem>()
-        val pit=PurchaseItem()
-        pit.price=1000.0
-        pit.quantity=1.234
-        pit.summa=3000.0
-        newList.add(pit)
-        purchaseItemFragment= PurchaseItemListFragment(this,newList)
+        val newList=(rootElement.vpPurchaseItems.adapter as CardItemPurchaseRcAdapter).mainArray
+
+        purchaseItemFragment= PurchaseItemListFragment(
+            object: IFragmentCloseInterface {
+            // при закрытии фрагмента
+            override fun onFragClose(list: ArrayList<PurchaseItem>) {
+                rootElement.scrollViewMain.visibility=View.VISIBLE
+                cardItemPurchaseAdapter.update(list)
+                var summa=0.0
+                val title_color=getColor(R.color.green_main)
+                var content_temp="".makeSpannableString()
+                for(pit:PurchaseItem in list){
+                    content_temp+=pit.getContent(title_color)+"\n\n"
+                    summa+=pit.summa
+                }
+                purchase!!.content= content_temp.toString()
+                purchase!!.content_html=Html.toHtml(content_temp,0)
+                rootElement.edSummaPurchase.setText(summa.toString())
+            }
+        },
+            object: IFragmentCallBack {
+                override fun onFragmentCallBack(pit: PurchaseItem) {
+                    //dbManager.removePurchaseItem(pit)
+                    listDeletedPurchaseItems.add(pit)
+                }
+                                      },
+            newList) //PurchaseItemListFragment
        // purchaseItemFragment!!.updateAdapter(cardItemPurchaseAdapter.mainArray)
         openPurchaseItemFragment()
     }
+
     private fun openPurchaseItemFragment() {
         if(purchaseItemFragment!=null){
             rootElement.scrollViewMain.visibility=View.GONE
@@ -181,10 +219,22 @@ class EditPurchaseActivity : AppCompatActivity(),FragmentCloseInterface {
 
         }
     }
+// добавить новую позицию покупки
+    fun onClickAddPurchaseItem(view: View){
+        if(purchaseItemFragment!=null){
+            val pit=PurchaseItem()
+            //новая запись
+            pit.id=0
+            pit.idPurchase=idPurchase
+            DialogHelper.showPurchaseItemInputDialog(this@EditPurchaseActivity,pit,
+                object: IUpdatePurchaseItemList {
+                    override fun onUpdatePurchaseItemList(pit: PurchaseItem) {
+                        purchaseItemFragment!!.adapter.updateAdapterInsert(pit)
+                    }
 
-    override fun onFragClose(list: ArrayList<PurchaseItem>) {
-        rootElement.scrollViewMain.visibility=View.VISIBLE
-        cardItemPurchaseAdapter.update(list)
+                }
+            )
+        }
     }
 
-}
+}//activity

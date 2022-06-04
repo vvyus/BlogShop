@@ -7,24 +7,37 @@
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable-v24/edit_image_bg_pressed.xml" value="0.2265" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable-v24/edit_image_button.xml" value="0.2265" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable-v24/edit_product_item_bg.xml" value="0.124" />
+        <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable-v24/ic_add.xml" value="0.2265" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable-v24/ic_add_item_product.xml" value="0.2265" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable-v24/ic_drag.xml" value="0.2265" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable/bottom_nav_selector.xml" value="0.2265" />
+        <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable/ic_add.xml" value="0.2265" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable/ic_delete_ad.xml" value="0.2265" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable/ic_delete_purchase.xml" value="0.2265" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable/ic_edit_purchase.xml" value="0.2265" />
+        <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable/ic_import.xml" value="0.2265" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2265" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable/ic_new_ads.xml" value="0.2265" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable/ic_new_purchase.xml" value="0.2265" />
+        <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable/ic_product.xml" value="0.2265" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable/ic_save.xml" value="0.2265" />
+        <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable/ic_search.xml" value="0.2265" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/activity_edit_purchase.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/activity_main.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/activity_product.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/drawer_main_menu.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/input_product_item.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/input_purchase_item.xml" value="0.253125" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/item_list_product_frag.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/item_product_item.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/item_product_list.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/item_purchase_list_frag.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/item_purchase_list_frag_frag.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/list_product_frag.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/list_purchase_item_frag.xml" value="0.2" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/main_content.xml" value="0.4326171875" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/nav_header_main.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/product_list_item.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/purchase_list_item.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/seller_layout.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/spinner_layout.xml" value="0.25416666666666665" />
@@ -33,6 +46,7 @@
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/menu/bottom_main_menu.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/menu/drawer_main_menu.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/menu/menu_choose_product_item.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/menu/menu_choose_purchase_item.xml" value="0.11302083333333333" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/menu/menu_edit_purchase.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/menu/menu_new.xml" value="0.25416666666666665" />
       </map>

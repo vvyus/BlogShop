@@ -10,20 +10,6 @@
     android:orientation="vertical"
     >
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/tb"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="@style/ActionBarCustom"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-
-        app:menu="@menu/menu_edit_purchase"
-        app:navigationIcon="?attr/homeAsUpIndicator" />
-
     <ScrollView
         android:id="@+id/scrollViewMain"
         android:layout_width="match_parent"
@@ -46,7 +32,7 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardItemPurchase"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="5dp">
 
@@ -57,9 +43,10 @@
 
 
                     <androidx.viewpager2.widget.ViewPager2
-                        android:id="@+id/vpimages"
+                        android:id="@+id/vpPurchaseItems"
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
+                        android:orientation="horizontal"
                         android:padding="5dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -88,157 +75,170 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardCategory"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="5dp">
 
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/tvTitleCategory"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="10dp"
-                        android:text="@string/category"
-                        android:textColor="@color/green_main"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvCategory"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:onClick="onClickSelectCategory"
-                        android:padding="10dp"
-                        android:text="@string/select_category"
-                        android:textColor="@color/black"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                    android:layout_height="match_parent">
 
                     <LinearLayout
-                        android:id="@+id/divider5"
+                        android:id="@+id/llEditPurchase"
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
-                        android:background="@color/green_main"
-                        android:orientation="horizontal"></LinearLayout>
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
-                    <TextView
-                        android:id="@+id/tvTitle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="10dp"
-                        android:text="@string/title"
-                        android:textColor="@color/green_main"
-                        android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/tvTitleCategory"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginTop="10dp"
+                            android:text="@string/category"
+                            android:textColor="@color/green_main"
+                            android:textStyle="bold" />
 
-                    <EditText
-                        android:id="@+id/edTitle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@null"
-                        android:ems="10"
-                        android:hint="@string/title_hint"
-                        android:inputType="textPersonName"
-                        android:padding="10dp"
-                        android:textColorHint="@color/gray_dark" />
+                        <TextView
+                            android:id="@+id/tvCategory"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:onClick="onClickSelectCategory"
+                            android:padding="10dp"
+                            android:text="@string/select_category"
+                            android:textColor="@color/black"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
 
-                    <LinearLayout
-                        android:id="@+id/divider1"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
-                        android:background="@color/green_main"
-                        android:orientation="horizontal">
+                        <LinearLayout
+                            android:id="@+id/divider5"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:background="@color/green_main"
+                            android:orientation="horizontal"></LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tvProductName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginTop="10dp"
+                            android:text="@string/title"
+                            android:textColor="@color/green_main"
+                            android:textStyle="bold" />
+
+                        <EditText
+                            android:id="@+id/edTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@null"
+                            android:ems="10"
+                            android:hint="@string/title_hint"
+                            android:inputType="textPersonName"
+                            android:padding="10dp"
+                            android:textColorHint="@color/gray_dark" />
+
+                        <LinearLayout
+                            android:id="@+id/divider1"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:background="@color/green_main"
+                            android:orientation="horizontal">
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tvTitleSumma"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginTop="10dp"
+                            android:text="@string/summa"
+                            android:textColor="@color/green_main"
+                            android:textStyle="bold" />
+
+
+                        <EditText
+                            android:id="@+id/edSummaPurchase"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@null"
+                            android:ems="10"
+                            android:hint="@string/summa_hint"
+                            android:inputType="number"
+                            android:padding="10dp"
+                            android:textColorHint="@color/gray_dark" />
+
+
+                        <LinearLayout
+                            android:id="@+id/divider6"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:background="@color/green_main"
+                            android:orientation="horizontal">
+
+                        </LinearLayout>
 
                     </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/tvTitlePrice"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="10dp"
-                        android:text="@string/price"
-                        android:textColor="@color/green_main"
-                        android:textStyle="bold" />
-
-
-                    <EditText
-                        android:id="@+id/etPrice"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@null"
-                        android:ems="10"
-                        android:hint="@string/price_hint"
-                        android:inputType="number"
-                        android:padding="10dp"
-                        android:textColorHint="@color/gray_dark" />
-
-
                     <LinearLayout
-                        android:id="@+id/divider6"
+                        android:id="@+id/llButtonPrchase"
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
-                        android:background="@color/green_main"
-                        android:orientation="horizontal">
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/llEditPurchase">
 
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"
+                            android:padding="20dp">
+
+                            <Button
+                                android:id="@+id/btnPurchaseCancel"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:backgroundTint="@color/white"
+                                android:onClick="onClickCancelPurchase"
+                                android:text="@string/cancel_dialog"
+                                android:textColor="@color/green_main" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"
+                            android:padding="20dp">
+
+                            <Button
+                                android:id="@+id/btnPurchaseSave"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:backgroundTint="@color/white"
+                                android:onClick="onClickSavePurchase"
+                                android:text="@string/publish"
+                                android:textColor="@color/green_main" />
+                        </LinearLayout>
                     </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/tvTitleDescription"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="10dp"
-                        android:text="@string/description"
-                        android:textColor="@color/green_main"
-                        android:textStyle="bold" />
-
-                    <EditText
-                        android:id="@+id/edDescription"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@null"
-                        android:ems="10"
-                        android:hint="@string/description_hint"
-                        android:inputType="textMultiLine"
-                        android:padding="10dp"
-                        android:textColorHint="@color/gray_dark" />
-
-                    <LinearLayout
-                        android:id="@+id/divider7"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginBottom="5dp"
-                        android:background="@color/green_main"
-                        android:orientation="horizontal">
-
-                    </LinearLayout>
-                </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.cardview.widget.CardView>
 
-            <Button
-                android:id="@+id/btPublish"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:backgroundTint="@color/white"
-                android:onClick="onClickPublishPurchase"
-                android:text="@string/publish"
-                android:textColor="@color/green_main" />
         </LinearLayout>
     </ScrollView>
 
