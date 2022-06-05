@@ -96,14 +96,17 @@ class ProductActivity : AppCompatActivity() {
                 product.id=0
                 product.idparent=parent.id
                 product.level=parent.level+1
+                parent.count=parent.count+1
                 DialogHelper.showProductInputDialog(this@ProductActivity,product,
                     object: IUpdateProductItemList {
                         override fun onUpdateProductItemList(product: Product) {
                             // add single product
+                            dbManager.updateProduct(parent)
                             val id=dbManager.insertProduct(product)
                             if (id != null) {
                                 product.id=id
                                 adapter.updateAdapterInsert(product)
+                                //adapter.updateAdapter(parent)
                             }
                         }
 

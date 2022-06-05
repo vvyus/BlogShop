@@ -28,6 +28,7 @@ class DbManager(context: Context) {
             put(DbName.COLUMN_NAME_IDPARENT_PRODUCTS, product.idparent)
             put(DbName.COLUMN_NAME_LEVEL_PRODUCTS, product.level)
             put(DbName.COLUMN_NAME_FULLPATH_PRODUCTS, product.fullpath)
+            put(DbName.COLUMN_NAME_COUNT_PRODUCTS, product.count)
         }
         val id=db?.insert(DbName.TABLE_NAME_PRODUCTS,null, values)
         return id?.toInt()
@@ -49,6 +50,7 @@ class DbManager(context: Context) {
             val idparent = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_IDPARENT_PRODUCTS))
             val level = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_LEVEL_PRODUCTS))
             val fullpath = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_FULLPATH_PRODUCTS))
+            val count = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_COUNT_PRODUCTS))
             val product = Product()
             product.id = dataId
             product.name = dataName
@@ -56,6 +58,7 @@ class DbManager(context: Context) {
             product.level = level?:0
             product.idparent = idparent?:0
             product.fullpath = fullpath?:""
+            product.count = count?:0
             dataList.add(product)
         }
         cursor.close()
@@ -79,7 +82,7 @@ class DbManager(context: Context) {
             val idparent = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_IDPARENT_PRODUCTS))
             val level = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_LEVEL_PRODUCTS))
             val fullpath = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_FULLPATH_PRODUCTS))
-
+            val count = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_COUNT_PRODUCTS))
             val product = Product()
             product.id = dataId
             product.name = dataName
@@ -87,7 +90,7 @@ class DbManager(context: Context) {
             product.level = level?:0
             product.idparent = idparent?:0
             product.fullpath = fullpath?:""
-
+            product.count = count?:0
             dataList.add(product)
         }
         cursor.close()
@@ -104,6 +107,7 @@ class DbManager(context: Context) {
             put(DbName.COLUMN_NAME_IDPARENT_PRODUCTS, product.idparent)
             put(DbName.COLUMN_NAME_LEVEL_PRODUCTS, product.level)
             put(DbName.COLUMN_NAME_FULLPATH_PRODUCTS, product.fullpath)
+            put(DbName.COLUMN_NAME_COUNT_PRODUCTS, product.count)
         }
         db?.update(DbName.TABLE_NAME_PRODUCTS, values, selection, null)
     }

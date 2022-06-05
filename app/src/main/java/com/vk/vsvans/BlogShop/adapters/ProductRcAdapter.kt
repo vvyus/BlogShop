@@ -8,6 +8,7 @@ import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.vk.vsvans.BlogShop.R
@@ -54,7 +55,6 @@ class ProductRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVie
         holder.itemView.setBackgroundColor(if (selected_position == position) selected_color else Color.TRANSPARENT)
         val llButtons=holder.itemView.findViewById<LinearLayout>(R.id.llButtons)
         llButtons.visibility=if (selected_position == position) View.VISIBLE else View.GONE
-        //binding.llButtons.visibility=if (selected_position == position) View.VISIBLE else View.GONE
         //!
         val parentid=productArray[position].idparent
         if(parentid==0 || parentid>0 && (nodeList.get(parentid) as Product).expanded) {
@@ -62,6 +62,9 @@ class ProductRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVie
         } else {
             holder.itemView.visibility=View.GONE
         }
+        val count=productArray[position].count
+        val expi=holder.itemView.findViewById<ImageView>(R.id.expandableIndicator)
+        expi.visibility=if(count>0) View.VISIBLE else View.GONE
         //
     }
 

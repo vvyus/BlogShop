@@ -9,4 +9,5 @@ class Product {
     var fullpath=""
     var level=0
     var expanded=false
+    var count=0
 }
