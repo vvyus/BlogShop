@@ -56,15 +56,21 @@ class ProductRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVie
         val llButtons=holder.itemView.findViewById<LinearLayout>(R.id.llButtons)
         llButtons.visibility=if (selected_position == position) View.VISIBLE else View.GONE
         //!
-        val parentid=productArray[position].idparent
+        val product=productArray[position]
+        val parentid=product.idparent
         if(parentid==0 || parentid>0 && (nodeList.get(parentid) as Product).expanded) {
             holder.itemView.visibility=View.VISIBLE
         } else {
             holder.itemView.visibility=View.GONE
         }
-        val count=productArray[position].count
+        val count=product.count
         val expi=holder.itemView.findViewById<ImageView>(R.id.expandableIndicator)
         expi.visibility=if(count>0) View.VISIBLE else View.GONE
+        if(product.expanded){
+            expi.setImageResource(R.drawable.ic_expand_less)
+        } else {
+            expi.setImageResource(R.drawable.ic_expand_more)
+        }
         //
     }
 
@@ -150,12 +156,12 @@ class ProductRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVie
                 }
                 expandableIndicator.setOnClickListener{
                     product.expanded=!product.expanded
-                    if(product.expanded){
-                        binding.expandableIndicator.setImageResource(R.drawable.ic_expand_less)
-
-                    } else {
-                        binding.expandableIndicator.setImageResource(R.drawable.ic_expand_more)
-                    }
+//                    if(product.expanded){
+//                        binding.expandableIndicator.setImageResource(R.drawable.ic_expand_less)
+//
+//                    } else {
+//                        binding.expandableIndicator.setImageResource(R.drawable.ic_expand_more)
+//                    }
                     if(clickItemCallback!=null) clickItemCallback!!.refreshItem()
                 }
             }
