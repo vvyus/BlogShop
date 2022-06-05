@@ -3,7 +3,6 @@ package com.vk.vsvans.BlogShop.adapters
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
-import android.opengl.Visibility
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
@@ -33,45 +32,65 @@ class ProductRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVie
         return ProductRcAdapter.ProductHolder(binding,clickItemCallback)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onBindViewHolder(holder: ProductHolder, position: Int) {
-        holder.setData(productArray[position],holder)
-        holder.itemView.setOnClickListener{
 
-            notifyItemChanged(selected_position)
-            if (selected_position != holder.getAdapterPosition()) {
-                selectItem(holder.adapterPosition)
-            }else{
-                unSelectItem()
+ //       if(product.id==1){
+            holder.setData(productArray[position],holder)
+            holder.itemView.setOnClickListener{
+
+                notifyItemChanged(selected_position)
+                if (selected_position != holder.getAdapterPosition()) {
+                    selectItem(holder.adapterPosition)
+                }else{
+                    unSelectItem()
+                }
+                notifyItemChanged(selected_position)
+
             }
-            notifyItemChanged(selected_position)
+            //
+            val product=productArray[position]
+            val leftMargin: Int = offset16 * product.level
 
-        }
-        //
-        val leftMargin: Int = offset16 * productArray[position].level
-        var p:ViewGroup.MarginLayoutParams=holder.itemView.getLayoutParams() as ViewGroup.MarginLayoutParams//
-        p.setMargins(leftMargin, 0, 0, 0)
+            //
+            holder.itemView.setBackgroundColor(if (selected_position == position) selected_color else Color.TRANSPARENT)
+            val llButtons=holder.itemView.findViewById<LinearLayout>(R.id.llButtons)
+            llButtons.visibility=if (selected_position == position) View.VISIBLE else View.GONE
+            //!
 
-        //
-        holder.itemView.setBackgroundColor(if (selected_position == position) selected_color else Color.TRANSPARENT)
-        val llButtons=holder.itemView.findViewById<LinearLayout>(R.id.llButtons)
-        llButtons.visibility=if (selected_position == position) View.VISIBLE else View.GONE
-        //!
-        val product=productArray[position]
-        val parentid=product.idparent
-        if(parentid==0 || parentid>0 && (nodeList.get(parentid) as Product).expanded) {
-            holder.itemView.visibility=View.VISIBLE
-        } else {
-            holder.itemView.visibility=View.GONE
-        }
-        val count=product.count
-        val expi=holder.itemView.findViewById<ImageView>(R.id.expandableIndicator)
-        expi.visibility=if(count>0) View.VISIBLE else View.GONE
-        if(product.expanded){
-            expi.setImageResource(R.drawable.ic_expand_less)
-        } else {
-            expi.setImageResource(R.drawable.ic_expand_more)
-        }
-        //
+            val parentid=product.idparent
+            if(parentid==0 || parentid>0 && (nodeList.get(parentid) as Product).expanded) {
+                holder.itemView.visibility=View.VISIBLE
+                //
+                holder.itemView.layoutParams =
+                    RecyclerView.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                    )
+                val lp=holder.itemView.getLayoutParams()
+                var p:ViewGroup.MarginLayoutParams=lp as ViewGroup.MarginLayoutParams//
+                p.setMargins(leftMargin, 0, 0, 0)
+
+            } else {
+                holder.itemView.visibility=View.GONE
+                holder.itemView.setLayoutParams(RecyclerView.LayoutParams(0, 0))
+            }
+
+            holder.itemView.requestLayout()
+            val count=product.count
+            val expi=holder.itemView.findViewById<ImageView>(R.id.expandableIndicator)
+            expi.visibility=if(count>0) View.VISIBLE else View.GONE
+            if(product.expanded){
+                expi.setImageResource(R.drawable.ic_expand_less)
+            } else {
+                expi.setImageResource(R.drawable.ic_expand_more)
+            }
+            expi.setOnClickListener {
+                  product.expanded = !product.expanded
+                this@ProductRcAdapter.notifyDataSetChanged()
+              }
+            //
+//        }//if
     }
 
     override fun getItemCount(): Int {
@@ -154,16 +173,10 @@ class ProductRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVie
                 imNewProduct.setOnClickListener{
                     if(clickItemCallback!=null) clickItemCallback!!.onNewItem(product)
                 }
-                expandableIndicator.setOnClickListener{
-                    product.expanded=!product.expanded
-//                    if(product.expanded){
-//                        binding.expandableIndicator.setImageResource(R.drawable.ic_expand_less)
-//
-//                    } else {
-//                        binding.expandableIndicator.setImageResource(R.drawable.ic_expand_more)
-//                    }
-                    if(clickItemCallback!=null) clickItemCallback!!.refreshItem()
-                }
+//                expandableIndicator.setOnClickListener{
+//                    product.expanded=!product.expanded
+//                    if(clickItemCallback!=null) clickItemCallback!!.refreshItem()
+//                }
             }
         }
     }
