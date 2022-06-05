@@ -25,6 +25,9 @@ class DbManager(context: Context) {
         val values = ContentValues().apply {
             put(DbName.COLUMN_NAME_NAME_PRODUCTS, product.name)
             put(DbName.COLUMN_NAME_TITLE_PRODUCTS, product.title)
+            put(DbName.COLUMN_NAME_IDPARENT_PRODUCTS, product.idparent)
+            put(DbName.COLUMN_NAME_LEVEL_PRODUCTS, product.level)
+            put(DbName.COLUMN_NAME_FULLPATH_PRODUCTS, product.fullpath)
         }
         val id=db?.insert(DbName.TABLE_NAME_PRODUCTS,null, values)
         return id?.toInt()
@@ -43,10 +46,16 @@ class DbManager(context: Context) {
             val dataId = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
             val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_TITLE_PRODUCTS))
             val dataName = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_NAME_PRODUCTS))
+            val idparent = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_IDPARENT_PRODUCTS))
+            val level = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_LEVEL_PRODUCTS))
+            val fullpath = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_FULLPATH_PRODUCTS))
             val product = Product()
             product.id = dataId
             product.name = dataName
             product.title=dataTitle
+            product.level = level?:0
+            product.idparent = idparent?:0
+            product.fullpath = fullpath?:""
             dataList.add(product)
         }
         cursor.close()
@@ -67,10 +76,18 @@ class DbManager(context: Context) {
             val dataId = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
             val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_TITLE_PRODUCTS))
             val dataName = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_NAME_PRODUCTS))
+            val idparent = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_IDPARENT_PRODUCTS))
+            val level = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_LEVEL_PRODUCTS))
+            val fullpath = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_FULLPATH_PRODUCTS))
+
             val product = Product()
             product.id = dataId
             product.name = dataName
             product.title=dataTitle
+            product.level = level?:0
+            product.idparent = idparent?:0
+            product.fullpath = fullpath?:""
+
             dataList.add(product)
         }
         cursor.close()
@@ -84,6 +101,9 @@ class DbManager(context: Context) {
         val values = ContentValues().apply {
             put(DbName.COLUMN_NAME_NAME_PRODUCTS, product.name)
             put(DbName.COLUMN_NAME_TITLE_PRODUCTS, product.title)
+            put(DbName.COLUMN_NAME_IDPARENT_PRODUCTS, product.idparent)
+            put(DbName.COLUMN_NAME_LEVEL_PRODUCTS, product.level)
+            put(DbName.COLUMN_NAME_FULLPATH_PRODUCTS, product.fullpath)
         }
         db?.update(DbName.TABLE_NAME_PRODUCTS, values, selection, null)
     }

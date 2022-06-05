@@ -88,6 +88,33 @@ class ProductActivity : AppCompatActivity() {
                     Toast.makeText(this@ProductActivity,R.string.no_selected_item, Toast.LENGTH_LONG).show()
                 }
             }
+
+            override fun onNewItem(parent:Product) {
+                //adapter.addProductItem(product)
+                val product= Product()
+                //новая запись
+                product.id=0
+                product.idparent=parent.id
+                product.level=parent.level+1
+                DialogHelper.showProductInputDialog(this@ProductActivity,product,
+                    object: IUpdateProductItemList {
+                        override fun onUpdateProductItemList(product: Product) {
+                            // add single product
+                            val id=dbManager.insertProduct(product)
+                            if (id != null) {
+                                product.id=id
+                                adapter.updateAdapterInsert(product)
+                            }
+                        }
+
+                    }
+                )
+            }
+
+            override fun refreshItem() {
+                adapter.refreshItem()
+            }
+
         })
         val rcView=rootElement.rcViewProductList
         rcView.layoutManager = LinearLayoutManager(this)

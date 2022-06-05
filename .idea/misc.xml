@@ -9,7 +9,11 @@
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable-v24/edit_product_item_bg.xml" value="0.124" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable-v24/ic_add.xml" value="0.2265" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable-v24/ic_add_item_product.xml" value="0.2265" />
+        <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable-v24/ic_arrow_drop_down.xml" value="0.2265" />
+        <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable-v24/ic_arrow_drop_up.xml" value="0.2265" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable-v24/ic_drag.xml" value="0.2265" />
+        <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable-v24/ic_expand_less.xml" value="0.2265" />
+        <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable-v24/ic_expand_more.xml" value="0.2265" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable/bottom_nav_selector.xml" value="0.2265" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable/ic_add.xml" value="0.2265" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable/ic_delete_ad.xml" value="0.2265" />
@@ -30,7 +34,7 @@
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/input_purchase_item.xml" value="0.253125" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/item_list_product_frag.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/item_product_item.xml" value="0.25416666666666665" />
-        <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/item_product_list.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/item_product_list.xml" value="0.25" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/item_purchase_list_frag.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/item_purchase_list_frag_frag.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/list_product_frag.xml" value="0.25416666666666665" />

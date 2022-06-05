@@ -16,5 +16,9 @@
     <color name="gray">#E6E6E6</color>
     <color name="gray_dark">#CDCDCD</color>
     <color name="yellow">#FFEB3B</color>
-
+    <color name="lightListDividerColor">#CCCCCC</color>
+    <color name="light_gray_text">#999999</color>
+    <color name="gray_text">#808080</color>
+    <color name="blue_color">#1DA6E0</color>
+    <color name="blue_color_pressed">#0d8abf</color>
 </resources>

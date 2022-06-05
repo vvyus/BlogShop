@@ -5,5 +5,8 @@ class Product {
     var name=""
     var title=""
     var bcolor=0
-    var fcolor=0
+    var idparent=0
+    var fullpath=""
+    var level=0
+    var expanded=false
 }

@@ -21,6 +21,7 @@ import com.vk.vsvans.BlogShop.interfaces.IDeleteItem
 import com.vk.vsvans.BlogShop.interfaces.IUpdatePurchaseItemList
 import com.vk.vsvans.BlogShop.interfaces.OnClickItemCallback
 import com.vk.vsvans.BlogShop.model.DbManager
+import com.vk.vsvans.BlogShop.model.Product
 import com.vk.vsvans.BlogShop.model.Purchase
 import com.vk.vsvans.BlogShop.model.PurchaseItem
 import kotlinx.coroutines.CoroutineScope
@@ -48,8 +49,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         override fun onEditItem() {}
 
         override fun onDeleteItem() {}
+        override fun onNewItem(parent: Product) {}
+        override fun refreshItem() {}
     })
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mainActivity=this
