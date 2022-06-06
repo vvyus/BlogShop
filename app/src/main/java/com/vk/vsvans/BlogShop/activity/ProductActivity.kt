@@ -76,8 +76,10 @@ class ProductActivity : AppCompatActivity() {
                 if(selectedId>0){
                     DialogHelper.showPurchaseDeleteItemDialog(this@ProductActivity,selectedId,
                         object: IDeleteItem {
-                            override fun onDeleteItem(id: Int) {
+                            override fun onDeleteItem(id:Int) {
                                 adapter.deleteProductItem()
+                                val parent=adapter.getParent()
+                                if(parent!=null) dbManager.updateProduct(parent)
                                 //reset selectedId
                                 //selectedId=0
                                 dbManager.removeProduct(id)
@@ -91,6 +93,7 @@ class ProductActivity : AppCompatActivity() {
 
             override fun onNewItem(parent:Product) {
                 //adapter.addProductItem(product)
+                // add single product with parent
                 val product= Product()
                 //новая запись
                 product.id=0
@@ -100,12 +103,11 @@ class ProductActivity : AppCompatActivity() {
                 DialogHelper.showProductInputDialog(this@ProductActivity,product,
                     object: IUpdateProductItemList {
                         override fun onUpdateProductItemList(product: Product) {
-                            // add single product
-                            dbManager.updateProduct(parent)
                             val id=dbManager.insertProduct(product)
                             if (id != null) {
                                 product.id=id
                                 adapter.updateAdapterInsert(product)
+                                dbManager.updateProduct(parent)
                                 //adapter.updateAdapter(parent)
                             }
                         }
@@ -154,7 +156,7 @@ class ProductActivity : AppCompatActivity() {
         }
 
     }
-
+// add root element
     fun onClickAddProduct(view: View){
         val product= Product()
         //новая запись
@@ -166,6 +168,8 @@ class ProductActivity : AppCompatActivity() {
                     val id=dbManager.insertProduct(product)
                     if (id != null) {
                         product.id=id
+                        product.idparent=id
+                        dbManager.updateProduct(product)
                         adapter.updateAdapterInsert(product)
                     }
                 }

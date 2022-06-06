@@ -1,6 +1,6 @@
 package com.vk.vsvans.BlogShop.model
 
-class Product {
+class Product : Comparable<Product>{
     var id=0
     var name=""
     var title=""
@@ -10,4 +10,7 @@ class Product {
     var level=0
     var expanded=false
     var count=0
+    override fun compareTo(other: Product): Int {
+        return idparent - other.idparent
+    }
 }

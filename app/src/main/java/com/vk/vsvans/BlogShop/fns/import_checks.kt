@@ -103,6 +103,8 @@ object import_checks {
                                                         product.name=pit!!.productName
                                                         product.title=pit!!.productName
                                                         idproduct= db.insertProduct(product)!!
+                                                        product.idparent=idproduct
+                                                        db.updateProduct(product)
                                                         pit!!.idProduct=idproduct
                                                     }else{
                                                         pit!!.idProduct=list[0].id

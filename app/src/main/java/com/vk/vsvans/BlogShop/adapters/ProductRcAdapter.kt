@@ -17,7 +17,7 @@ import com.vk.vsvans.BlogShop.model.Product
 
 
 class ProductRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerView.Adapter<ProductRcAdapter.ProductHolder>() {
-    val productArray=ArrayList<Product>()
+    var productArray=ArrayList<Product>()
     // indexed product
     val nodeList=HashMap<Int, Product>()
     var selected_position =RecyclerView.NO_POSITION;
@@ -59,7 +59,8 @@ class ProductRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVie
             //!
 
             val parentid=product.idparent
-            if(parentid==0 || parentid>0 && (nodeList.get(parentid) as Product).expanded) {
+        //(nodeList.get(parentid) as Product).expanded
+            if(parentid==product.id || parentid>0 && isParentExpanded(parentid)) {
                 holder.itemView.visibility=View.VISIBLE
                 //
                 holder.itemView.layoutParams =
@@ -96,6 +97,16 @@ class ProductRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVie
     override fun getItemCount(): Int {
         return productArray.size
     }
+    fun isParentExpanded(parentId:Int):Boolean{
+        var id=parentId
+        while(true){
+            val product=nodeList.get(id) as Product
+            if(!product.expanded) return false
+            if(product.id==product.idparent) break
+            id=product.idparent
+        }
+        return true
+    }
 
     fun getProductId():Int{
         if(productArray.size!=0 && selected_position!=RecyclerView.NO_POSITION && selected_position<productArray.size){
@@ -112,7 +123,15 @@ class ProductRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVie
             return null
         }
     }
-
+    fun getParent():Product?{
+        if(productArray.size!=0 && selected_position!=RecyclerView.NO_POSITION && selected_position<productArray.size){
+            val product=productArray[selected_position]
+            val parent=nodeList.get(product.idparent)
+            return parent
+        }else{
+            return null
+        }
+    }
     @SuppressLint("NotifyDataSetChanged")
     fun updateAdapter(newList:List<Product>){
         productArray.clear()
@@ -127,6 +146,9 @@ class ProductRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVie
     @SuppressLint("NotifyDataSetChanged")
     fun updateAdapterInsert(product:Product){
         productArray.add(product)
+        val list=productArray.sorted()
+        productArray.clear()
+        productArray.addAll(list)
         nodeList.put(product.id,product)
         notifyDataSetChanged()
     }
@@ -141,6 +163,10 @@ class ProductRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVie
 
     fun deleteProductItem(){
         if(selected_position!=RecyclerView.NO_POSITION) {
+            val product=getProduct()
+            val parent=nodeList.get(product!!.idparent)
+            if(parent!=null)parent!!.count--
+            nodeList.remove(product.id)
              productArray.removeAt(selected_position)
             notifyItemRemoved(selected_position)
             //reset selected position and selectedId in activity
