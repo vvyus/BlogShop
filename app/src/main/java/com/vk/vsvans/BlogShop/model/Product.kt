@@ -11,6 +11,6 @@ class Product : Comparable<Product>{
     var expanded=false
     var count=0
     override fun compareTo(other: Product): Int {
-        return idparent - other.idparent
+        return fullpath.compareTo(other.fullpath)
     }
 }

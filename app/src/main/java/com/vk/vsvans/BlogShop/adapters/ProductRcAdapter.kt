@@ -100,10 +100,14 @@ class ProductRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVie
     fun isParentExpanded(parentId:Int):Boolean{
         var id=parentId
         while(true){
-            val product=nodeList.get(id) as Product
-            if(!product.expanded) return false
-            if(product.id==product.idparent) break
-            id=product.idparent
+            if(nodeList.get(id)!=null) {
+                val product = nodeList.get(id) as Product
+                if (product != null) {
+                    if (!product.expanded) return false
+                    if (product.id == product.idparent) break
+                    id = product.idparent
+                } else break
+            } else break
         }
         return true
     }

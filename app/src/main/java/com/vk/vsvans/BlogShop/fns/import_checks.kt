@@ -104,10 +104,15 @@ object import_checks {
                                                         product.title=pit!!.productName
                                                         idproduct= db.insertProduct(product)!!
                                                         product.idparent=idproduct
+                                                        product.fullpath=idproduct.toString()
                                                         db.updateProduct(product)
                                                         pit!!.idProduct=idproduct
                                                     }else{
-                                                        pit!!.idProduct=list[0].id
+                                                        idproduct=list[0].id
+                                                        pit!!.idProduct=idproduct
+                                                        product.idparent=idproduct
+                                                        product.fullpath=idproduct.toString()
+                                                        db.updateProduct(product)
                                                     }
                                                     db.insertPurchaseItem(pit!!)
                                                 }

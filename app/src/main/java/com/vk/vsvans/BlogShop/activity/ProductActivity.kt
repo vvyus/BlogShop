@@ -106,9 +106,13 @@ class ProductActivity : AppCompatActivity() {
                             val id=dbManager.insertProduct(product)
                             if (id != null) {
                                 product.id=id
+                                product.fullpath=parent.fullpath+id.toString()
+                                // update product array in adapter
                                 adapter.updateAdapterInsert(product)
+                                // update count for parent
                                 dbManager.updateProduct(parent)
-                                //adapter.updateAdapter(parent)
+                                // update fullpath for product
+                                dbManager.updateProduct(product)
                             }
                         }
 
@@ -169,6 +173,7 @@ class ProductActivity : AppCompatActivity() {
                     if (id != null) {
                         product.id=id
                         product.idparent=id
+                        product.fullpath=id.toString()
                         dbManager.updateProduct(product)
                         adapter.updateAdapterInsert(product)
                     }

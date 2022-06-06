@@ -40,7 +40,7 @@ class DbManager(context: Context) {
         val selection = "${DbName.COLUMN_NAME_NAME_PRODUCTS} like ?"
         val cursor = db?.query(
             DbName.TABLE_NAME_PRODUCTS, arrayOf("_id","idparent","name","title","level","count","fullpath"), selection, arrayOf("%$searchText%"),
-            null, null, "idparent ASC,_id ASC"
+            null, null, "fullpath ASC"
         )
 
         while (cursor?.moveToNext()!!) {
