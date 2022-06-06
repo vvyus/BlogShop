@@ -96,24 +96,23 @@ object import_checks {
                                                     pit!!.productName=item.getString("name")
                                                     content_temp+= pit!!.getContent(title_color)+"\n\n"
                                                     println("${pit!!.productName}  ${pit!!.quantity}  ${pit!!.summa}")
-                                                    val product=Product()
+                                                    var product:Product?=null
                                                     val list=db.readProductsTitle(pit!!.productName)
                                                     var idproduct=0
                                                     if(list.size==0){
+                                                        product=Product()
                                                         product.name=pit!!.productName
                                                         product.title=pit!!.productName
                                                         idproduct= db.insertProduct(product)!!
-                                                        product.idparent=idproduct
-                                                        product.fullpath=idproduct.toString()
-                                                        db.updateProduct(product)
-                                                        pit!!.idProduct=idproduct
+                                                        product.id=idproduct
                                                     }else{
-                                                        idproduct=list[0].id
-                                                        pit!!.idProduct=idproduct
-                                                        product.idparent=idproduct
-                                                        product.fullpath=idproduct.toString()
-                                                        db.updateProduct(product)
+                                                        product= list[0] as Product
+                                                        idproduct=product.id
                                                     }
+                                                    product.idparent=idproduct
+                                                    product.fullpath=idproduct.toString()
+                                                    db.updateProduct(product)
+                                                    pit!!.idProduct=idproduct
                                                     db.insertPurchaseItem(pit!!)
                                                 }
                                             }
