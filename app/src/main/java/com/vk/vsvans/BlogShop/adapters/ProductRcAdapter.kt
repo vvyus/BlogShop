@@ -178,6 +178,16 @@ class ProductRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVie
         nodeList.put(parent.id,parent)
         notifyDataSetChanged()
     }
+
+    fun setChildren(parentid:Int,newfullPath:String,newlevel:Int){
+       for(i in 0 until productArray.size){
+           if(productArray[i].idparent==parentid) {
+               productArray[i].fullpath=newfullPath+productArray[i].id
+               productArray[i].level=newlevel+1
+               if(productArray[i].count>0)setChildren(productArray[i].id,productArray[i].fullpath,productArray[i].level)
+           }
+       }
+    }
 //    @SuppressLint("NotifyDataSetChanged")
 //    fun updateAdapterEdit(oldparent:Product,parent:Product,product:Product){
 //        if(selected_position!=RecyclerView.NO_POSITION) {

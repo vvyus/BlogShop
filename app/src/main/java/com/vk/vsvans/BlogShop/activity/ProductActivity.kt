@@ -134,9 +134,12 @@ class ProductActivity : AppCompatActivity() {
                           val product= adapter.getProduct()
                           val oldparent=adapter.getParent()
                           if (product != null ) {
+                              //val oldparentid=product.idparent
                               product.idparent=parent.id
                               product.fullpath=parent.fullpath+product.id
                               product.level=parent.level+1
+                              // replace all children where idparent==product.idparent
+                              if(product.count>0)adapter.setChildren(product.id,product.fullpath,product.level)
                               // new parent
                               parent.count=parent.count+1
                               if(oldparent!=null){
