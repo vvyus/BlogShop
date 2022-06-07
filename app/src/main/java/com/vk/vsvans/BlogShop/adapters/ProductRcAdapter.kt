@@ -165,7 +165,14 @@ class ProductRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVie
             notifyDataSetChanged()
         }
     }
-
+//    @SuppressLint("NotifyDataSetChanged")
+//    fun updateAdapterEdit(oldparent:Product,parent:Product,product:Product){
+//        if(selected_position!=RecyclerView.NO_POSITION) {
+//            productArray[selected_position]=product
+//            nodeList.put(product.id,product)
+//            notifyDataSetChanged()
+//        }
+//    }
     fun deleteProductItem(){
         if(selected_position!=RecyclerView.NO_POSITION) {
             val product=getProduct()

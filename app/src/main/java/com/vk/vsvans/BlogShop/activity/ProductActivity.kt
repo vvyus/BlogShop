@@ -140,14 +140,15 @@ class ProductActivity : AppCompatActivity() {
                               // new parent
                               parent.count=parent.count+1
                               oldparent.count=oldparent.count-1
-                              adapter.updateAdapterEdit(product)
-                              adapter.updateAdapterEdit(parent)
-                              adapter.updateAdapterEdit(oldparent)
+//                              adapter.updateAdapterEdit(product)
+//                              adapter.updateAdapterEdit(parent)
+//                              adapter.updateAdapterEdit(oldparent)
                               // update count for parent
                               dbManager.updateProduct(parent)
                               dbManager.updateProduct(oldparent)
-                              // update fullpath for product
                               dbManager.updateProduct(product)
+                              fillAdapter("")
+                              //adapter.notifyDataSetChanged()
                           }
                       }
                   })
