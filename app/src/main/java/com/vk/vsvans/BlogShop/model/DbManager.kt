@@ -202,7 +202,7 @@ class DbManager(context: Context) {
         val selection = "${DbName.COLUMN_NAME_TITLE} like ?"
         val cursor = db?.query(
             DbName.TABLE_NAME, null, selection, arrayOf("%$searchText%"),
-            null, null, null
+            null, null, "${DbName.COLUMN_NAME_TIME} DESC"
         )
 
         while (cursor?.moveToNext()!!) {

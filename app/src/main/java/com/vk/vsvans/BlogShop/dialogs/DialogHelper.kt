@@ -154,7 +154,7 @@ fun ShowSelectNestedModelDialog(title: String?, activity: Activity,
     val nodes: List<Product> =(activity as ProductActivity).adapter.productArray //tree.getFlatChildrenListWOChildrenOfGivenOne(excludeNode)
     builder.setTitle(title)
         .setNegativeButton(
-            activity.resources.getString(R.string.cancel)
+            ( activity).resources.getString(R.string.cancel)
         ) { dialog, which -> dialog.dismiss() }
         .setAdapter(
             createTreeArrayAdapter(activity, nodes)
@@ -172,18 +172,21 @@ private fun createTreeArrayAdapter(
 ): ArrayAdapter<String> {
     val arrayAdapter = ArrayAdapter<String>(activity, R.layout.simple_list_item_1)
     for (node in nodes) {
-        var prefix = ""
-        for (i in 0 until node.level) {
-            prefix = prefix + "\t\t"
-        }
-        if (!prefix.isEmpty()) {
-            prefix = if (node.count==0) {
-                "$prefix└ "
-            } else {
-                "$prefix├ "
+        // исключим переносы из фнс для них поле title не пусто
+        //if(node.title.isEmpty()) {
+            var prefix = ""
+            for (i in 0 until node.level) {
+                prefix = prefix + "\t\t"
             }
-        }
-        arrayAdapter.add(prefix + node.name)
+            if (!prefix.isEmpty()) {
+                prefix = if (node.count == 0) {
+                    "$prefix└ "
+                } else {
+                    "$prefix├ "
+                }
+            }
+            arrayAdapter.add(prefix + node.name)
+        //}//exclude not empt
     }
     return arrayAdapter
 }

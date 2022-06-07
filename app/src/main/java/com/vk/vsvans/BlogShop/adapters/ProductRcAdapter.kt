@@ -130,7 +130,7 @@ class ProductRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVie
     fun getParent():Product?{
         if(productArray.size!=0 && selected_position!=RecyclerView.NO_POSITION && selected_position<productArray.size){
             val product=productArray[selected_position]
-            val parent=nodeList.get(product.idparent)
+            val parent=if(product.id==product.idparent) null else nodeList.get(product.idparent)
             return parent
         }else{
             return null
@@ -164,6 +164,19 @@ class ProductRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVie
             nodeList.put(product.id,product)
             notifyDataSetChanged()
         }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateAdapterParent(oldparent:Product?, parent:Product, product:Product){
+        val list=productArray.sorted()
+        productArray.clear()
+        productArray.addAll(list)
+        nodeList.put(product.id,product)
+        if(oldparent!=null){
+            nodeList.put(oldparent.id,oldparent)
+        }
+        nodeList.put(parent.id,parent)
+        notifyDataSetChanged()
     }
 //    @SuppressLint("NotifyDataSetChanged")
 //    fun updateAdapterEdit(oldparent:Product,parent:Product,product:Product){

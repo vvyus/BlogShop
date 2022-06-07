@@ -94,7 +94,7 @@ object import_checks {
                                                     pit!!.quantity= item.getLong("quantity").toDouble()
                                                     pit!!.summa=item.getLong("sum") / 100.0
                                                     pit!!.productName=item.getString("name")
-                                                    content_temp+= pit!!.getContent(title_color)+"\n\n"
+                                                    content_temp+= pit!!.getContentShort(title_color)+"\n\n"
                                                     println("${pit!!.productName}  ${pit!!.quantity}  ${pit!!.summa}")
                                                     var product:Product?=null
                                                     val list=db.readProductsTitle(pit!!.productName)
@@ -105,12 +105,13 @@ object import_checks {
                                                         product.title=pit!!.productName
                                                         idproduct= db.insertProduct(product)!!
                                                         product.id=idproduct
+                                                        product.idparent=idproduct
+                                                        product.fullpath=idproduct.toString()
+
                                                     }else{
                                                         product= list[0] as Product
                                                         idproduct=product.id
                                                     }
-                                                    product.idparent=idproduct
-                                                    product.fullpath=idproduct.toString()
                                                     db.updateProduct(product)
                                                     pit!!.idProduct=idproduct
                                                     db.insertPurchaseItem(pit!!)

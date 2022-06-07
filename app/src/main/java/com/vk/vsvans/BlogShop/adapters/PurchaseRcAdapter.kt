@@ -12,6 +12,7 @@ import com.vk.vsvans.BlogShop.R
 import com.vk.vsvans.BlogShop.databinding.PurchaseListItemBinding
 import com.vk.vsvans.BlogShop.interfaces.OnClickItemCallback
 import com.vk.vsvans.BlogShop.model.Purchase
+import com.vk.vsvans.BlogShop.utils.UtilsHelper
 import com.vk.vsvans.BlogShop.utils.makeSpannableString
 
 class PurchaseRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerView.Adapter<PurchaseRcAdapter.PurchaseHolder>() {
@@ -28,6 +29,7 @@ class PurchaseRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
         return PurchaseHolder(binding)
     }
     //fill and show holder in position
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onBindViewHolder(holder: PurchaseHolder, position: Int) {
         holder.setData(purchaseArray[position])
         holder.itemView.setOnClickListener{
@@ -68,6 +70,7 @@ class PurchaseRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
                 tvDescription.text= Html.fromHtml(purchase.content_html,0)
                 tvSummaPuchase.text= purchase.summa.toString()
                 tvTitle.text=purchase.title
+                tvPurchaseTime.setText(UtilsHelper.getDate(purchase.time))
                 //tvTitle.tag= com.vk.vsvans.BlogShop.helper.Tag(purchase.id,se)
             }
             showEditPanel(true)

@@ -189,7 +189,7 @@ class EditPurchaseActivity : AppCompatActivity() {
                 val title_color=getColor(R.color.green_main)
                 var content_temp="".makeSpannableString()
                 for(pit:PurchaseItem in list){
-                    content_temp+=pit.getContent(title_color)+"\n\n"
+                    content_temp+=pit.getContentShort(title_color)+"\n\n"
                     summa+=pit.summa
                 }
                 purchase!!.content= content_temp.toString()

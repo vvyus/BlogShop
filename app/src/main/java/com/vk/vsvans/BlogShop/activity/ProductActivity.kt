@@ -133,21 +133,25 @@ class ProductActivity : AppCompatActivity() {
                       override fun onOkClick(parent: Product) {
                           val product= adapter.getProduct()
                           val oldparent=adapter.getParent()
-                          if (product != null && oldparent!=null) {
+                          if (product != null ) {
                               product.idparent=parent.id
                               product.fullpath=parent.fullpath+product.id
                               product.level=parent.level+1
                               // new parent
                               parent.count=parent.count+1
-                              oldparent.count=oldparent.count-1
+                              if(oldparent!=null){
+                                  oldparent.count=oldparent.count-1
+                                  dbManager.updateProduct(oldparent)
+                              }
 //                              adapter.updateAdapterEdit(product)
 //                              adapter.updateAdapterEdit(parent)
 //                              adapter.updateAdapterEdit(oldparent)
                               // update count for parent
+                              adapter.updateAdapterParent(oldparent,parent,product)
                               dbManager.updateProduct(parent)
-                              dbManager.updateProduct(oldparent)
+
                               dbManager.updateProduct(product)
-                              fillAdapter("")
+                              //fillAdapter("")
                               //adapter.notifyDataSetChanged()
                           }
                       }
