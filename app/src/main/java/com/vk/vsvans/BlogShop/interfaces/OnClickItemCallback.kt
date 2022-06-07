@@ -8,4 +8,5 @@ interface OnClickItemCallback {
     fun onDeleteItem()
     fun onNewItem(parent:Product)
     fun refreshItem()
+    fun onParentItem()
 }

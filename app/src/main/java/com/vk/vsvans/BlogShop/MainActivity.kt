@@ -51,6 +51,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         override fun onDeleteItem() {}
         override fun onNewItem(parent: Product) {}
         override fun refreshItem() {}
+        override fun onParentItem() {}
     })
 
     @RequiresApi(Build.VERSION_CODES.N)

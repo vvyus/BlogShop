@@ -161,6 +161,7 @@ class ProductRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVie
     fun updateAdapterEdit(product:Product){
         if(selected_position!=RecyclerView.NO_POSITION) {
             productArray[selected_position]=product
+            nodeList.put(product.id,product)
             notifyDataSetChanged()
         }
     }
@@ -202,6 +203,9 @@ class ProductRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVie
                 }
                 imNewProduct.setOnClickListener{
                     if(clickItemCallback!=null) clickItemCallback!!.onNewItem(product)
+                }
+                imParent.setOnClickListener{
+                    if(clickItemCallback!=null) clickItemCallback!!.onParentItem()
                 }
 //                expandableIndicator.setOnClickListener{
 //                    product.expanded=!product.expanded

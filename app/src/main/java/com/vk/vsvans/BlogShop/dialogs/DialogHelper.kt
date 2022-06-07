@@ -1,9 +1,12 @@
 package com.vk.vsvans.BlogShop.dialogs
 
+import android.R
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -11,15 +14,19 @@ import com.vk.vsvans.BlogShop.activity.EditPurchaseActivity
 import com.vk.vsvans.BlogShop.activity.ProductActivity
 import com.vk.vsvans.BlogShop.helper.SpinnerHelper
 import com.vk.vsvans.BlogShop.interfaces.IDeleteItem
+import com.vk.vsvans.BlogShop.interfaces.IDialogListener
 import com.vk.vsvans.BlogShop.interfaces.IUpdateProductItemList
 import com.vk.vsvans.BlogShop.interfaces.IUpdatePurchaseItemList
 import com.vk.vsvans.BlogShop.model.Product
 import com.vk.vsvans.BlogShop.model.PurchaseItem
+
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.util.*
 import com.vk.vsvans.BlogShop.R as R1
+
 
 object DialogHelper {
     var job: Job? = null
@@ -137,5 +144,47 @@ object DialogHelper {
 
 
     }
+//
+fun ShowSelectNestedModelDialog(title: String?, activity: Activity,
+//                                     tree: Product
+//    excludeNode: Product?,
+    eventsListener: IDialogListener?
+) {
+    val builder = AlertDialog.Builder(activity)
+    val nodes: List<Product> =(activity as ProductActivity).adapter.productArray //tree.getFlatChildrenListWOChildrenOfGivenOne(excludeNode)
+    builder.setTitle(title)
+        .setNegativeButton(
+            activity.resources.getString(R.string.cancel)
+        ) { dialog, which -> dialog.dismiss() }
+        .setAdapter(
+            createTreeArrayAdapter(activity, nodes)
+        ) { dialog, which ->
+            if (eventsListener != null) {
+                eventsListener.onOkClick(nodes[which])
+            }
+        }
+        .show()
+}
 
+private fun createTreeArrayAdapter(
+    activity: Activity,
+    nodes: List<Product>
+): ArrayAdapter<String> {
+    val arrayAdapter = ArrayAdapter<String>(activity, R.layout.simple_list_item_1)
+    for (node in nodes) {
+        var prefix = ""
+        for (i in 0 until node.level) {
+            prefix = prefix + "\t\t"
+        }
+        if (!prefix.isEmpty()) {
+            prefix = if (node.count==0) {
+                "$prefix└ "
+            } else {
+                "$prefix├ "
+            }
+        }
+        arrayAdapter.add(prefix + node.name)
+    }
+    return arrayAdapter
+}
 }

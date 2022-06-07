@@ -18,6 +18,7 @@ import com.vk.vsvans.BlogShop.adapters.ProductRcAdapter
 import com.vk.vsvans.BlogShop.databinding.ActivityProductBinding
 import com.vk.vsvans.BlogShop.dialogs.DialogHelper
 import com.vk.vsvans.BlogShop.interfaces.IDeleteItem
+import com.vk.vsvans.BlogShop.interfaces.IDialogListener
 import com.vk.vsvans.BlogShop.interfaces.IUpdateProductItemList
 import com.vk.vsvans.BlogShop.interfaces.OnClickItemCallback
 import com.vk.vsvans.BlogShop.model.DbManager
@@ -26,6 +27,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.util.*
 
 class ProductActivity : AppCompatActivity() {
 
@@ -122,6 +124,33 @@ class ProductActivity : AppCompatActivity() {
 
             override fun refreshItem() {
                 adapter.refreshItem()
+            }
+
+            override fun onParentItem() {
+              DialogHelper.ShowSelectNestedModelDialog("Выберите родителя",this@ProductActivity,
+                  object: IDialogListener {
+                      //override fun onOkClick(v: View?) {}
+                      override fun onOkClick(parent: Product) {
+                          val product= adapter.getProduct()
+                          val oldparent=adapter.getParent()
+                          if (product != null && oldparent!=null) {
+                              product.idparent=parent.id
+                              product.fullpath=parent.fullpath+product.id
+                              product.level=parent.level+1
+                              // new parent
+                              parent.count=parent.count+1
+                              oldparent.count=oldparent.count-1
+                              adapter.updateAdapterEdit(product)
+                              adapter.updateAdapterEdit(parent)
+                              adapter.updateAdapterEdit(oldparent)
+                              // update count for parent
+                              dbManager.updateProduct(parent)
+                              dbManager.updateProduct(oldparent)
+                              // update fullpath for product
+                              dbManager.updateProduct(product)
+                          }
+                      }
+                  })
             }
 
         })
