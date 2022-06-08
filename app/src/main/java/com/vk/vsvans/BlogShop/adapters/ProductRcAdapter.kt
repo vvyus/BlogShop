@@ -18,6 +18,7 @@ import com.vk.vsvans.BlogShop.model.Product
 
 class ProductRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerView.Adapter<ProductRcAdapter.ProductHolder>() {
     var productArray=ArrayList<Product>()
+    var childArray=ArrayList<Product>()
     // indexed product
     val nodeList=HashMap<Int, Product>()
     var selected_position =RecyclerView.NO_POSITION;
@@ -182,8 +183,10 @@ class ProductRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVie
     }
 
     fun setChildren(parentid:Int,newfullPath:String,newlevel:Int){
+
        for(i in 0 until productArray.size){
            if(productArray[i].idparent==parentid && productArray[i].idparent!=productArray[i].id) {
+               childArray.add(productArray[i])
                productArray[i].fullpath=newfullPath+productArray[i].id
                productArray[i].level=newlevel+1
                if(productArray[i].count>0)setChildren(productArray[i].id,productArray[i].fullpath,productArray[i].level)

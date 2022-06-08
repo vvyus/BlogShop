@@ -165,7 +165,7 @@ fun showSelectParentProductDialog(title: String?, activity: Activity,
                     if(which==0)
                         null
                     else
-                        nodes[nodes[which-1].position])
+                        nodes[which-1]) //nodes[which-1].position])
             }
         }
         .show()
@@ -181,7 +181,7 @@ private fun createTreeArrayAdapter(
     for (node in nodes) {
         // исключим переносы из фнс для них поле title не пусто
 
-        if(node.title.isEmpty()) {
+ //       if(node.title.isEmpty()) {
             var prefix = "\t"
             for (i in 0 until node.level) {
                 prefix = prefix + "\t\t"
@@ -194,8 +194,9 @@ private fun createTreeArrayAdapter(
                 }
             }
             arrayAdapter.add(prefix + node.name)
-        }//exclude not empt
-        node.position=++i
+//        }//exclude not empt
+
+        node.position=i++
     }
     return arrayAdapter
 }

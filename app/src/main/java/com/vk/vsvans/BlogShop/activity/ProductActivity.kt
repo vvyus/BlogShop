@@ -149,7 +149,13 @@ class ProductActivity : AppCompatActivity() {
                                   dbManager.updateProduct(parent)
                               }
                               // replace all children where idparent==product.idparent
-                              if(product.count>0)adapter.setChildren(product.id,product.fullpath,product.level)
+                              if(product.count>0){
+                                  adapter.childArray.clear()
+                                  adapter.setChildren(product.id,product.fullpath,product.level)
+                                  for(i in 0 until adapter.childArray.size)
+                                      dbManager.updateProduct(adapter.childArray[i])
+                                  adapter.childArray.clear()
+                              }
                               if(oldparent!=null){
                                   oldparent.count=oldparent.count-1
                                   dbManager.updateProduct(oldparent)
