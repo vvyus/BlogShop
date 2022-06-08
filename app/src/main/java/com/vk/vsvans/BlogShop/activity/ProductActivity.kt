@@ -27,7 +27,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import java.util.*
 
 class ProductActivity : AppCompatActivity() {
 
@@ -127,32 +126,36 @@ class ProductActivity : AppCompatActivity() {
             }
 
             override fun onParentItem() {
-              DialogHelper.ShowSelectNestedModelDialog("Выберите родителя",this@ProductActivity,
+              DialogHelper.showSelectParentProductDialog("Выберите родителя",this@ProductActivity,
                   object: IDialogListener {
                       //override fun onOkClick(v: View?) {}
-                      override fun onOkClick(parent: Product) {
+                      override fun onOkClick(parent: Product?) {
                           val product= adapter.getProduct()
+
                           val oldparent=adapter.getParent()
                           if (product != null ) {
-                              //val oldparentid=product.idparent
-                              product.idparent=parent.id
-                              product.fullpath=parent.fullpath+product.id
-                              product.level=parent.level+1
+                              // select root
+                              if(parent==null){
+                                  product.idparent=product.id
+                                  product.fullpath=product.id.toString()
+                                  product.level=0
+                              }else {
+                                  //select normal node get from parent
+                                  product.idparent = parent.id
+                                  product.fullpath = parent.fullpath + product.id
+                                  product.level = parent.level + 1
+                                  // set count for new parent
+                                  parent.count=parent.count+1
+                                  dbManager.updateProduct(parent)
+                              }
                               // replace all children where idparent==product.idparent
                               if(product.count>0)adapter.setChildren(product.id,product.fullpath,product.level)
-                              // new parent
-                              parent.count=parent.count+1
                               if(oldparent!=null){
                                   oldparent.count=oldparent.count-1
                                   dbManager.updateProduct(oldparent)
                               }
-//                              adapter.updateAdapterEdit(product)
-//                              adapter.updateAdapterEdit(parent)
-//                              adapter.updateAdapterEdit(oldparent)
                               // update count for parent
                               adapter.updateAdapterParent(oldparent,parent,product)
-                              dbManager.updateProduct(parent)
-
                               dbManager.updateProduct(product)
                               //fillAdapter("")
                               //adapter.notifyDataSetChanged()

@@ -10,6 +10,7 @@ class Product : Comparable<Product>{
     var level=0
     var expanded=false
     var count=0
+    var position=0
     override fun compareTo(other: Product): Int {
         return fullpath.compareTo(other.fullpath)
     }

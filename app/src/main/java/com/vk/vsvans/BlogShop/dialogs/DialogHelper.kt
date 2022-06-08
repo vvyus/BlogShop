@@ -145,10 +145,10 @@ object DialogHelper {
 
     }
 //
-fun ShowSelectNestedModelDialog(title: String?, activity: Activity,
+fun showSelectParentProductDialog(title: String?, activity: Activity,
 //                                     tree: Product
 //    excludeNode: Product?,
-    eventsListener: IDialogListener?
+                                  eventsListener: IDialogListener?
 ) {
     val builder = AlertDialog.Builder(activity)
     val nodes: List<Product> =(activity as ProductActivity).adapter.productArray //tree.getFlatChildrenListWOChildrenOfGivenOne(excludeNode)
@@ -160,7 +160,12 @@ fun ShowSelectNestedModelDialog(title: String?, activity: Activity,
             createTreeArrayAdapter(activity, nodes)
         ) { dialog, which ->
             if (eventsListener != null) {
-                eventsListener.onOkClick(nodes[which])
+                // which==0 this mean node is root
+                eventsListener.onOkClick(
+                    if(which==0)
+                        null
+                    else
+                        nodes[nodes[which-1].position])
             }
         }
         .show()
@@ -171,10 +176,13 @@ private fun createTreeArrayAdapter(
     nodes: List<Product>
 ): ArrayAdapter<String> {
     val arrayAdapter = ArrayAdapter<String>(activity, R.layout.simple_list_item_1)
+    var i=0
+    arrayAdapter.add("" + "─ "+"Root")//ascii 196
     for (node in nodes) {
         // исключим переносы из фнс для них поле title не пусто
-        //if(node.title.isEmpty()) {
-            var prefix = ""
+
+        if(node.title.isEmpty()) {
+            var prefix = "\t"
             for (i in 0 until node.level) {
                 prefix = prefix + "\t\t"
             }
@@ -186,7 +194,8 @@ private fun createTreeArrayAdapter(
                 }
             }
             arrayAdapter.add(prefix + node.name)
-        //}//exclude not empt
+        }//exclude not empt
+        node.position=++i
     }
     return arrayAdapter
 }

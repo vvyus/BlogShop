@@ -167,7 +167,7 @@ class ProductRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVie
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateAdapterParent(oldparent:Product?, parent:Product, product:Product){
+    fun updateAdapterParent(oldparent:Product?, parent:Product?, product:Product){
         val list=productArray.sorted()
         productArray.clear()
         productArray.addAll(list)
@@ -175,13 +175,15 @@ class ProductRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVie
         if(oldparent!=null){
             nodeList.put(oldparent.id,oldparent)
         }
-        nodeList.put(parent.id,parent)
+        if(parent!=null){
+            nodeList.put(parent.id,parent)
+        }
         notifyDataSetChanged()
     }
 
     fun setChildren(parentid:Int,newfullPath:String,newlevel:Int){
        for(i in 0 until productArray.size){
-           if(productArray[i].idparent==parentid) {
+           if(productArray[i].idparent==parentid && productArray[i].idparent!=productArray[i].id) {
                productArray[i].fullpath=newfullPath+productArray[i].id
                productArray[i].level=newlevel+1
                if(productArray[i].count>0)setChildren(productArray[i].id,productArray[i].fullpath,productArray[i].level)
