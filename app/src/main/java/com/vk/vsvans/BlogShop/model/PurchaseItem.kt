@@ -27,9 +27,9 @@ class PurchaseItem {
         val summa_title=   getSpannableTitle("Сумма",title_color)
 
         val product_value=getSpannableValue("${this.productName}")
-        val price_value=getSpannableValue("${this.price}".format("%12.2f"))
-        val quan_value=getSpannableValue("${this.quantity}".format("%12.2f"))
-        val summa_value=getSpannableValue("${this.summa}".format("%12.2f"))
+        val price_value=getSpannableValue("${this.price}".format("%12.2f").padStart(12,' '))
+        val quan_value=getSpannableValue("${this.quantity}".format("%12.3f").padStart(12,' '))
+        val summa_value=getSpannableValue("${this.summa}".format("%12.2f").padStart(12,' '))
 
         val str=product_title+ indent.repeat(2)+ product_value+delim+
                 price_title+ indent.repeat(3)+price_value+delim+
@@ -49,14 +49,17 @@ class PurchaseItem {
         val summa_title=   getSpannableTitle("Сумма",title_color)
 
         val product_value=getSpannableValue("${this.productName}")
-        val price_value=getSpannableValue("${this.price}".format("%12.2f"))
-        val quan_value=getSpannableValue("${this.quantity}".format("%12.2f"))
-        val summa_value=getSpannableValue("${this.summa}".format("%12.2f"))
+        val str_price="${this.price}".format("%12.2f")
+        val price_value=getSpannableValue(str_price.padStart(25-str_price.length,' '))
+        val str_quantity="${this.quantity}".format("%12.3f")
+        val quan_value=getSpannableValue(str_quantity.padStart(25-str_quantity.length,' '))
+        val str_summa="${this.summa}".format("%12.2f")
+        val summa_value=getSpannableValue(str_summa.padStart(25-str_summa.length,' '))
 
         val str=product_title+ indent.repeat(2)+ product_value+delim+
-                price_title+ indent.repeat(3)+price_value+delim_t+
-                quan_title+ indent.repeat(4)+quan_value+delim_t+
-                summa_title+ indent.repeat(2)+summa_value
+                price_title+ price_value+delim_t+//indent.repeat(3)+
+                quan_title+quan_value+delim_t+//+ indent.repeat(4)
+                summa_title+summa_value//+ indent.repeat(2)
         return str
     }
     private fun getSpannableTitle(str:String,title_color:Int): SpannableString {
