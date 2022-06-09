@@ -21,4 +21,6 @@
     <color name="gray_text">#808080</color>
     <color name="blue_color">#1DA6E0</color>
     <color name="blue_color_pressed">#0d8abf</color>
+
+    <color name="daycaptionColor">#a0a0a0</color>
 </resources>

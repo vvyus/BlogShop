@@ -11,6 +11,8 @@
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable-v24/ic_add_item_product.xml" value="0.2265" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable-v24/ic_arrow_drop_down.xml" value="0.2265" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable-v24/ic_arrow_drop_up.xml" value="0.2265" />
+        <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable-v24/ic_baseline_arrow_left_24.xml" value="0.124" />
+        <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable-v24/ic_baseline_arrow_right_24.xml" value="0.124" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable-v24/ic_drag.xml" value="0.2265" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable-v24/ic_expand_less.xml" value="0.2265" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable-v24/ic_expand_more.xml" value="0.2265" />
@@ -30,7 +32,9 @@
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/activity_edit_purchase.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/activity_main.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/activity_product.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/calendar_item.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/card_purchase_adapter_item.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/dialog_calendar.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/drawer_main_menu.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/input_product_item.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/input_purchase_item.xml" value="0.253125" />

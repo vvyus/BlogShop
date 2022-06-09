@@ -6,6 +6,7 @@ import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.vk.vsvans.BlogShop.R
@@ -71,6 +72,9 @@ class PurchaseRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
                 tvSummaPuchase.text= purchase.summa.toString()
                 tvTitle.text=purchase.title
                 tvPurchaseTime.setText(UtilsHelper.getDate(purchase.time))
+                tvPurchaseTime.setOnClickListener{
+                    println(tvPurchaseTime.text)
+                }
                 //tvTitle.tag= com.vk.vsvans.BlogShop.helper.Tag(purchase.id,se)
             }
             showEditPanel(true)
