@@ -43,7 +43,7 @@ class PurchaseItem {
 
     fun getContentShort(title_color:Int): SpannableString {
         val delim="\n"
-        var width=getWidth(3)-(size*10).toInt()
+        var width=getWidth(3)//-(size*10).toInt()
        val indent=" ".repeat(4)//4==приерно==1 симв в строке
        // val delim_t=indent
         val product_title= getSpannableTitle("Товар",title_color)

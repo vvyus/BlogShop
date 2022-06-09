@@ -6,9 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/gray_dark"
-    tools:context=".activity.EditPurchaseActivity"
+    android:gravity="center_vertical"
     android:orientation="vertical"
-    >
+    tools:context=".activity.EditPurchaseActivity">
 
     <ScrollView
         android:id="@+id/scrollViewMain"
