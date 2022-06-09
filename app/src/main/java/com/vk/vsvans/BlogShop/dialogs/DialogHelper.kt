@@ -151,13 +151,14 @@ fun showSelectParentProductDialog(title: String?, activity: Activity,
                                   eventsListener: IDialogListener?
 ) {
     val builder = AlertDialog.Builder(activity)
-    val nodes: List<Product> =(activity as ProductActivity).adapter.productArray //tree.getFlatChildrenListWOChildrenOfGivenOne(excludeNode)
+    val nodes: List<Product> =(activity as ProductActivity).adapter.productArray
+    val filterNodes=ArrayList<Product>()
     builder.setTitle(title)
         .setNegativeButton(
             ( activity).resources.getString(R.string.cancel)
         ) { dialog, which -> dialog.dismiss() }
         .setAdapter(
-            createTreeArrayAdapter(activity, nodes)
+            createTreeArrayAdapter(activity, nodes,filterNodes)
         ) { dialog, which ->
             if (eventsListener != null) {
                 // which==0 this mean node is root
@@ -165,7 +166,7 @@ fun showSelectParentProductDialog(title: String?, activity: Activity,
                     if(which==0)
                         null
                     else
-                        nodes[which-1]) //nodes[which-1].position])
+                        filterNodes[which-1].id) //-1 because arrayAdapter[0] is "Root"
             }
         }
         .show()
@@ -173,15 +174,15 @@ fun showSelectParentProductDialog(title: String?, activity: Activity,
 
 private fun createTreeArrayAdapter(
     activity: Activity,
-    nodes: List<Product>
+    nodes: List<Product>,
+    filterNodes: ArrayList<Product>,
 ): ArrayAdapter<String> {
     val arrayAdapter = ArrayAdapter<String>(activity, R.layout.simple_list_item_1)
     var i=0
     arrayAdapter.add("" + "─ "+"Root")//ascii 196
     for (node in nodes) {
         // исключим переносы из фнс для них поле title не пусто
-
- //       if(node.title.isEmpty()) {
+        if(node.title.isEmpty()) {
             var prefix = "\t"
             for (i in 0 until node.level) {
                 prefix = prefix + "\t\t"
@@ -194,9 +195,9 @@ private fun createTreeArrayAdapter(
                 }
             }
             arrayAdapter.add(prefix + node.name)
-//        }//exclude not empt
+            filterNodes.add(node)
+        }//exclude not empt
 
-        node.position=i++
     }
     return arrayAdapter
 }

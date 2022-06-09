@@ -129,7 +129,10 @@ class ProductActivity : AppCompatActivity() {
               DialogHelper.showSelectParentProductDialog("Выберите родителя",this@ProductActivity,
                   object: IDialogListener {
                       //override fun onOkClick(v: View?) {}
-                      override fun onOkClick(parent: Product?) {
+                      override fun onOkClick(idParent: Int?) {
+
+                          var parent=if(idParent==null) null else adapter.nodeList.get(idParent)
+
                           val product= adapter.getProduct()
 
                           val oldparent=adapter.getParent()
