@@ -10,7 +10,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.vk.vsvans.BlogShop.R
-import com.vk.vsvans.BlogShop.databinding.PurchaseListItemBinding
+import com.vk.vsvans.BlogShop.databinding.ItemPurchaseListBinding
 import com.vk.vsvans.BlogShop.interfaces.OnClickItemCallback
 import com.vk.vsvans.BlogShop.model.Purchase
 import com.vk.vsvans.BlogShop.utils.UtilsHelper
@@ -26,7 +26,7 @@ class PurchaseRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
         selected_color=parent.context.resources.getColor(R.color.color_red)
 
         val binding=
-            PurchaseListItemBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+            ItemPurchaseListBinding.inflate(LayoutInflater.from(parent.context),parent,false)
         return PurchaseHolder(binding)
     }
     //fill and show holder in position
@@ -63,7 +63,7 @@ class PurchaseRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
         notifyDataSetChanged()
     }
 
-    class PurchaseHolder(val binding:PurchaseListItemBinding): RecyclerView.ViewHolder(binding.root) {
+    class PurchaseHolder(val binding:ItemPurchaseListBinding): RecyclerView.ViewHolder(binding.root) {
 
         @RequiresApi(Build.VERSION_CODES.N)
         fun setData(purchase:Purchase){
