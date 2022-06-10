@@ -18,10 +18,7 @@ import com.vk.vsvans.BlogShop.adapters.PurchaseRcAdapter
 import com.vk.vsvans.BlogShop.calendar.CalendarAlertDialog
 import com.vk.vsvans.BlogShop.calendar.CalendarDialogAdapter
 import com.vk.vsvans.BlogShop.helper.SpinnerHelper
-import com.vk.vsvans.BlogShop.interfaces.IDeleteItem
-import com.vk.vsvans.BlogShop.interfaces.IDialogListener
-import com.vk.vsvans.BlogShop.interfaces.IUpdateProductItemList
-import com.vk.vsvans.BlogShop.interfaces.IUpdatePurchaseItemList
+import com.vk.vsvans.BlogShop.interfaces.*
 import com.vk.vsvans.BlogShop.model.Product
 import com.vk.vsvans.BlogShop.model.PurchaseItem
 import com.vk.vsvans.BlogShop.utils.UtilsHelper
@@ -30,7 +27,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.lang.String.valueOf
 import java.util.*
+import kotlin.collections.ArrayList
 import com.vk.vsvans.BlogShop.R as R1
 
 
@@ -208,7 +207,7 @@ private fun createTreeArrayAdapter(
     return arrayAdapter
 }
 
-    fun getCalendarDialog(activity: Activity) {
+    fun getCalendarDialog(activity: Activity,eventsListener: IDialogGetDateListener?) {
         val mainActivity: MainActivity = activity as MainActivity
         val adapter: PurchaseRcAdapter = mainActivity.adapter
         val selected_date = HashMap<String, Date?>()
@@ -232,9 +231,6 @@ private fun createTreeArrayAdapter(
                 if (selected_date.size != 0) {
                     val dates = ArrayList(selected_date.values)
                     Collections.sort(dates, object : Comparator<Date?> {
-//                        fun compare(o1: Date, o2: Date): Int {
-//                            return o1.compareTo(o2)
-//                        }
 
                         override fun compare(o1: Date?, o2: Date?): Int {
                             if (o1 != null) {
@@ -242,16 +238,18 @@ private fun createTreeArrayAdapter(
                             }else return 0
                         }
                     })
-                    val dates_begin = arrayOfNulls<String>(selected_date.size)
-                    val dates_end = arrayOfNulls<String>(selected_date.size)
+                    val dates_begin = ArrayList<String>()
+                    val dates_end = ArrayList<String>()
                     var str: String?
                     for (i in 0 until selected_date.size) {
-                        str =
-                            java.lang.String.valueOf(UtilsHelper.correct_date_begin(dates[i]!!.time))
-                        dates_begin[i] = str //"'"+str.substring(0,5)+"'";
-                        str =
-                            java.lang.String.valueOf(UtilsHelper.correct_date_end(dates[i]!!.time))
-                        dates_end[i] = str
+                        str = valueOf(UtilsHelper.correct_date_begin(dates[i]!!.time))
+                        dates_begin.add(str)
+                        str = valueOf(UtilsHelper.correct_date_end(dates[i]!!.time))
+                        dates_end.add(str)
+                    }
+                    if (eventsListener != null) {
+                        // which==0 this mean node is root
+                        eventsListener.onOkClick(dates_begin,dates_end)
                     }
                    // adapter.searchNote(dates_begin, dates_end)
                 } else {

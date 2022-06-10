@@ -3,11 +3,11 @@ package com.vk.vsvans.BlogShop.model
 import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.os.Build
 import android.provider.BaseColumns
 import androidx.annotation.RequiresApi
-import com.vk.vsvans.BlogShop.utils.UtilsHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -230,6 +230,52 @@ class DbManager(context: Context) {
         return@withContext dataList
     }
 
+    fun getSelectedPurchases(dates_begin: ArrayList<String>, dates_end: ArrayList<String>): ArrayList<Purchase> {
+        //val db: SQLiteDatabase = MyDbHelper.getWritableDatabase()
+        var purchaseList  = ArrayList<Purchase>()
+        var str_where = ""
+        for (i in dates_begin.indices) {
+            str_where += "${DbName.COLUMN_NAME_TIME} >= " + dates_begin[i] + " AND ${DbName.COLUMN_NAME_TIME}<=" + dates_end[i]
+            if (i < dates_begin.size - 1) str_where += " OR "
+        }
+        val temp: String = DbName.PURCHASE_QUERY
+        val selectQuery: String = temp.replace(
+            DbName.WHERE_FOR_PURCHASE_QUERY,
+            "WHERE $str_where "
+        )
+        val cursor = db?.rawQuery(selectQuery, null)
+        if(cursor!=null){
+            setPurchaseListFromCursor(cursor!!,purchaseList)
+            cursor!!.close()
+        }
+        // return note list
+        return purchaseList
+    }
+
+    @SuppressLint("Range")
+    private fun setPurchaseListFromCursor(cursor: Cursor, purchaseList: ArrayList<Purchase>){
+        while (cursor?.moveToNext()!!) {
+            val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_TITLE))
+            val dataContent = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_CONTENT))
+            val dataContentHtml = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_CONTENT_HTML))
+
+            val dataIdFns = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_ID_FNS))
+
+            val dataId = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
+            val time = cursor.getLong(cursor.getColumnIndex(DbName.COLUMN_NAME_TIME))
+            val dataSumma = cursor.getDouble(cursor.getColumnIndex(DbName.COLUMN_NAME_SUMMA_PURCHASES))
+            val purchase = Purchase()
+            purchase.title = dataTitle
+            purchase.content = dataContent
+
+            purchase.content_html= dataContentHtml
+            purchase.id = dataId
+            purchase.time = time
+            purchase.summa=dataSumma
+            purchase.idfns=dataIdFns
+            purchaseList.add(purchase)
+        }
+    }
         @RequiresApi(Build.VERSION_CODES.N)
         @SuppressLint("Range")
         suspend fun readOnePurchase(id:Int): Purchase = withContext(Dispatchers.IO) {

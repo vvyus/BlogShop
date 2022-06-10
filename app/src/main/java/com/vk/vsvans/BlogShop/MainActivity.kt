@@ -17,9 +17,7 @@ import com.vk.vsvans.BlogShop.adapters.PurchaseRcAdapter
 import com.vk.vsvans.BlogShop.databinding.ActivityMainBinding
 import com.vk.vsvans.BlogShop.dialogs.DialogHelper
 import com.vk.vsvans.BlogShop.fns.import_checks
-import com.vk.vsvans.BlogShop.interfaces.IDeleteItem
-import com.vk.vsvans.BlogShop.interfaces.IUpdatePurchaseItemList
-import com.vk.vsvans.BlogShop.interfaces.OnClickItemCallback
+import com.vk.vsvans.BlogShop.interfaces.*
 import com.vk.vsvans.BlogShop.model.DbManager
 import com.vk.vsvans.BlogShop.model.Product
 import com.vk.vsvans.BlogShop.model.Purchase
@@ -53,9 +51,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         override fun refreshItem() {}
         override fun onParentItem() {}
         override fun onTimeClick() {
-DialogHelper.getCalendarDialog(this@MainActivity)
-        }
-    })
+            DialogHelper.getCalendarDialog(this@MainActivity,object: IDialogGetDateListener {
+                override fun onOkClick(dates_begin: ArrayList<String>, dates_end: ArrayList<String>) {
+                    val list=dbManager.getSelectedPurchases(dates_begin,dates_end)
+                    //adapter.updateAdapter(list )
+                }
+            })
+        } // onItemClick
+    }
+)
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
