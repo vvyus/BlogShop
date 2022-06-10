@@ -4,6 +4,7 @@ import android.R
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
+import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import com.vk.vsvans.BlogShop.MainActivity
 import com.vk.vsvans.BlogShop.activity.EditPurchaseActivity
 import com.vk.vsvans.BlogShop.activity.ProductActivity
@@ -207,7 +209,7 @@ private fun createTreeArrayAdapter(
     return arrayAdapter
 }
 
-    fun getCalendarDialog(activity: Activity,eventsListener: IDialogGetDateListener?) {
+    fun getCalendarDialog(activity: Activity) {
         val mainActivity: MainActivity = activity as MainActivity
         val adapter: PurchaseRcAdapter = mainActivity.adapter
         val selected_date = HashMap<String, Date?>()
@@ -227,6 +229,7 @@ private fun createTreeArrayAdapter(
             }, 1
         )
         mCalendar.setOnClickOkListener(object : CalendarAlertDialog.onClickListener {
+            @RequiresApi(Build.VERSION_CODES.N)
             override fun onClick() {
                 if (selected_date.size != 0) {
                     val dates = ArrayList(selected_date.values)
@@ -247,13 +250,11 @@ private fun createTreeArrayAdapter(
                         str = valueOf(UtilsHelper.correct_date_end(dates[i]!!.time))
                         dates_end.add(str)
                     }
-                    if (eventsListener != null) {
-                        // which==0 this mean node is root
-                        eventsListener.onOkClick(dates_begin,dates_end)
-                    }
+                    val list=mainActivity.dbManager.getSelectedPurchases(dates_begin,dates_end)
+                    mainActivity.adapter.updateAdapter(list)
                    // adapter.searchNote(dates_begin, dates_end)
                 } else {
-                   // mainActivity.searchNote()
+                   mainActivity.fillAdapter("")
                 }
                 mCalendar.dismiss()
             }

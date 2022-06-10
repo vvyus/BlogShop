@@ -51,16 +51,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         override fun refreshItem() {}
         override fun onParentItem() {}
         override fun onTimeClick() {
-            DialogHelper.getCalendarDialog(this@MainActivity,object: IDialogGetDateListener {
-                override fun onOkClick(dates_begin: ArrayList<String>, dates_end: ArrayList<String>) {
-                    val list=dbManager.getSelectedPurchases(dates_begin,dates_end)
-                    //adapter.updateAdapter(list )
-                }
-            })
+            DialogHelper.getCalendarDialog(this@MainActivity)
         } // onItemClick
     }
 )
-
+//    ,object: IDialogGetDateListener {
+//        override fun onOkClick(dates_begin: ArrayList<String>, dates_end: ArrayList<String>) {
+//            val list=dbManager.getSelectedPurchases(dates_begin,dates_end)
+//            //
+//            // adapter.updateAdapter(list )
+//        }
+//    }
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -138,14 +139,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     startActivity(i)
                     //Toast.makeText(this@MainActivity,"Pressed new purchase", Toast.LENGTH_LONG).show()
                 }
-                R.id.id_edit_purchase->{
-                    val id=adapter.getPurchaseId()
-                    if(id>0) {
-                        val i = Intent(this@MainActivity, EditPurchaseActivity::class.java)
-                        i.putExtra(R.string.PURCHASE_ID.toString(), id)
-                        // сообщаем системе о запуске активити
-                        startActivity(i)
-                    }
+                R.id.id_refresh_purchase->{
+                    fillAdapter("")
+//                    val id=adapter.getPurchaseId()
+//                    if(id>0) {
+//                        val i = Intent(this@MainActivity, EditPurchaseActivity::class.java)
+//                        i.putExtra(R.string.PURCHASE_ID.toString(), id)
+//                        // сообщаем системе о запуске активити
+//                        startActivity(i)
+//                    }
                 }
                 R.id.id_delete_purchase->{
                     val id=adapter.getPurchaseId()

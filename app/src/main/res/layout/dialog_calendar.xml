@@ -135,22 +135,22 @@
         android:orientation="horizontal"
         android:layout_gravity="center_horizontal"
         >
+
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/negativeButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/confirm_dialog"
             android:layout_gravity="center_horizontal"
             android:layout_weight="1"
-            />
+            android:text="@string/cancel_dialog" />
+
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/positiveButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/cancel_dialog"
             android:layout_gravity="center_horizontal"
             android:layout_weight="1"
-            />
+            android:text="@string/confirm_dialog" />
 
     </LinearLayout>
 
