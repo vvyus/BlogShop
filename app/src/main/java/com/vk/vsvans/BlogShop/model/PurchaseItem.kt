@@ -20,23 +20,26 @@ class PurchaseItem {
         val delim="\n"
        // val delim_t="\t"
         //"Цен".length==3
-        val width=getWidth(1)-3*(size*10).toInt()
+        val width=getWidth(1)//-3*(size*10).toInt()
       //  val product_title= getSpannableTitle("Товар",title_color)
         val price_title=   getSpannableTitle("Цен",title_color)
         val quan_title=    getSpannableTitle("Кол",title_color)
         val summa_title=   getSpannableTitle("Сум",title_color)
 
         val product_value=getSpannableTitle("${this.productName}"+delim,title_color)//getSpannableValue("${this.productName}")
-        val str_price="${this.price}".format("%12.2f").padStart(width,' ')+delim
+        var str_price="${this.price}".format("%12.2f")
+        str_price=str_price.padStart(width-3-str_price.length,' ')
         val price_value=getSpannableValue(str_price)
-        val str_quantity="${this.quantity}".format("%12.3f").padStart(width,' ')+delim
+        var str_quantity="${this.quantity}".format("%12.3f")
+        str_quantity=str_quantity.padStart(width-3-str_quantity.length,' ')
         val quan_value=getSpannableValue(str_quantity)
-        val str_summa="${this.summa}".format("%12.2f").padStart(width,' ')
+        var str_summa="${this.summa}".format("%12.2f")
+        str_summa=str_summa.padStart(width-3-str_summa.length,' ')
         val summa_value=getSpannableValue(str_summa)
 
         val str=product_value+
-                price_title+ price_value+
-                quan_title+ quan_value+
+                price_title+ price_value+delim+
+                quan_title+ quan_value+delim+
                 summa_title+ summa_value
         return str
     }
@@ -54,7 +57,7 @@ class PurchaseItem {
         val product_value=getSpannableTitle("${this.productName}"+delim,title_color)
         val str_price="${this.price}".format("%12.2f")
         val price_value=getSpannableValue(str_price.padStart(width-price_title.length-str_price.length,' ')+indent)
-        val str_quantity="${this.quantity}".format("%7.3f")
+        val str_quantity="${this.quantity}".format("%12.3f")
         val quan_value=getSpannableValue(str_quantity.padStart(width-quan_title.length-str_quantity.length,' ')+indent)
         val str_summa="${this.summa}".format("%12.2f")
         val summa_value=getSpannableValue(str_summa.padStart(width-summa_title.length-str_summa.length,' '))
@@ -88,7 +91,8 @@ class PurchaseItem {
     }
 
     private fun getWidth(nColumns:Int) :Int{
-        val width=Resources.getSystem().getDisplayMetrics().widthPixels/(size*10) //Resources.getSystem().getDisplayMetrics().density
+        val density=Resources.getSystem().getDisplayMetrics().density
+        val width=Resources.getSystem().getDisplayMetrics().widthPixels/density/4.5//(size*10)
         val widthDp=width/nColumns
         return widthDp.toInt()
     }
