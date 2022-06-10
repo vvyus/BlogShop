@@ -52,6 +52,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         override fun onNewItem(parent: Product) {}
         override fun refreshItem() {}
         override fun onParentItem() {}
+        override fun onTimeClick() {
+DialogHelper.getCalendarDialog(this@MainActivity)
+        }
     })
 
     @RequiresApi(Build.VERSION_CODES.N)

@@ -173,6 +173,8 @@ class ProductActivity : AppCompatActivity() {
                   })
             }
 
+            override fun onTimeClick() {}
+
         })
         val rcView=rootElement.rcViewProductList
         rcView.layoutManager = LinearLayoutManager(this)

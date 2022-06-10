@@ -4,14 +4,19 @@ import android.R
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import com.vk.vsvans.BlogShop.MainActivity
 import com.vk.vsvans.BlogShop.activity.EditPurchaseActivity
 import com.vk.vsvans.BlogShop.activity.ProductActivity
+import com.vk.vsvans.BlogShop.adapters.PurchaseRcAdapter
+import com.vk.vsvans.BlogShop.calendar.CalendarAlertDialog
+import com.vk.vsvans.BlogShop.calendar.CalendarDialogAdapter
 import com.vk.vsvans.BlogShop.helper.SpinnerHelper
 import com.vk.vsvans.BlogShop.interfaces.IDeleteItem
 import com.vk.vsvans.BlogShop.interfaces.IDialogListener
@@ -19,6 +24,7 @@ import com.vk.vsvans.BlogShop.interfaces.IUpdateProductItemList
 import com.vk.vsvans.BlogShop.interfaces.IUpdatePurchaseItemList
 import com.vk.vsvans.BlogShop.model.Product
 import com.vk.vsvans.BlogShop.model.PurchaseItem
+import com.vk.vsvans.BlogShop.utils.UtilsHelper
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -201,4 +207,66 @@ private fun createTreeArrayAdapter(
     }
     return arrayAdapter
 }
+
+    fun getCalendarDialog(activity: Activity) {
+        val mainActivity: MainActivity = activity as MainActivity
+        val adapter: PurchaseRcAdapter = mainActivity.adapter
+        val selected_date = HashMap<String, Date?>()
+        val mCalendar = CalendarAlertDialog(
+            mainActivity,
+            object : CalendarDialogAdapter.onItemClickListener {
+                override fun onClick(date: Date) {
+                    //to do
+                    val key: String = UtilsHelper.getDate(date.time)
+                    if (selected_date[key] == null) {
+                        selected_date[key] = date
+                    } else {
+                        selected_date.remove(key)
+                    }
+                    Log.d("DATECLICK", date.toString())
+                }
+            }, 1
+        )
+        mCalendar.setOnClickOkListener(object : CalendarAlertDialog.onClickListener {
+            override fun onClick() {
+                if (selected_date.size != 0) {
+                    val dates = ArrayList(selected_date.values)
+                    Collections.sort(dates, object : Comparator<Date?> {
+//                        fun compare(o1: Date, o2: Date): Int {
+//                            return o1.compareTo(o2)
+//                        }
+
+                        override fun compare(o1: Date?, o2: Date?): Int {
+                            if (o1 != null) {
+                                return o1.compareTo(o2)
+                            }else return 0
+                        }
+                    })
+                    val dates_begin = arrayOfNulls<String>(selected_date.size)
+                    val dates_end = arrayOfNulls<String>(selected_date.size)
+                    var str: String?
+                    for (i in 0 until selected_date.size) {
+                        str =
+                            java.lang.String.valueOf(UtilsHelper.correct_date_begin(dates[i]!!.time))
+                        dates_begin[i] = str //"'"+str.substring(0,5)+"'";
+                        str =
+                            java.lang.String.valueOf(UtilsHelper.correct_date_end(dates[i]!!.time))
+                        dates_end[i] = str
+                    }
+                   // adapter.searchNote(dates_begin, dates_end)
+                } else {
+                   // mainActivity.searchNote()
+                }
+                mCalendar.dismiss()
+            }
+        })
+        mCalendar.setOnClickCancelListener(object : CalendarAlertDialog.onClickListener {
+            override fun onClick() {
+                selected_date.clear()
+                mCalendar.dismiss()
+            }
+        })
+        mCalendar.show()
+    }
+
 }

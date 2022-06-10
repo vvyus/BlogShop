@@ -79,6 +79,20 @@ class PurchaseItem {
         }
         return title
     }
+
+//    private fun getSpannableTitleProduct(str:String,title_color:Int): SpannableString {
+//        val title=spannable{
+//            str.makeSpannableString()
+//                .makeBold()
+//                .makeUnderline()
+//                .makeSize(size)
+//                .makeColor(title_color)
+//                .makeUrl("<a href='\"'http://mail.ru'\"'>${str}</a>")//+str)
+//
+//        }
+//        return title
+//    }
+
     private fun getSpannableValue(str:String): SpannableString {
         val title=spannable{
             str.makeSpannableString()
@@ -89,6 +103,8 @@ class PurchaseItem {
         }
         return title
     }
+
+
 
     private fun getWidth(nColumns:Int) :Int{
         val density=Resources.getSystem().getDisplayMetrics().density

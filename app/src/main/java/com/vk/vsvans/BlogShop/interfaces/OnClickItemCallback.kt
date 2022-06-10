@@ -9,4 +9,5 @@ interface OnClickItemCallback {
     fun onNewItem(parent:Product)
     fun refreshItem()
     fun onParentItem()
+    fun onTimeClick()
 }

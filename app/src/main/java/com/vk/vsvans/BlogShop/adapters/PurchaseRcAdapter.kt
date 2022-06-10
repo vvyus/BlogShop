@@ -3,6 +3,8 @@ package com.vk.vsvans.BlogShop.adapters
 import android.graphics.Color
 import android.os.Build
 import android.text.Html
+import android.text.method.LinkMovementMethod
+import android.text.util.Linkify
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,7 +29,7 @@ class PurchaseRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
 
         val binding=
             ItemPurchaseListBinding.inflate(LayoutInflater.from(parent.context),parent,false)
-        return PurchaseHolder(binding)
+        return PurchaseHolder(binding,clickItemCallback)
     }
     //fill and show holder in position
     @RequiresApi(Build.VERSION_CODES.N)
@@ -63,17 +65,20 @@ class PurchaseRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
         notifyDataSetChanged()
     }
 
-    class PurchaseHolder(val binding:ItemPurchaseListBinding): RecyclerView.ViewHolder(binding.root) {
+    class PurchaseHolder(val binding:ItemPurchaseListBinding,val clickItemCallback: OnClickItemCallback?): RecyclerView.ViewHolder(binding.root) {
 
         @RequiresApi(Build.VERSION_CODES.N)
         fun setData(purchase:Purchase){
             binding.apply {
                 tvDescription.text= Html.fromHtml(purchase.content_html,0)
+//                tvDescription.setMovementMethod(LinkMovementMethod.getInstance())
+//                Linkify.addLinks(tvDescription, Linkify.ALL);
                 tvSummaPuchase.text= purchase.summa.toString()
                 tvTitle.text=purchase.title
                 tvPurchaseTime.setText(UtilsHelper.getDate(purchase.time))
                 tvPurchaseTime.setOnClickListener{
                     println(tvPurchaseTime.text)
+                    if(clickItemCallback!=null) clickItemCallback!!.onTimeClick()
                 }
                 //tvTitle.tag= com.vk.vsvans.BlogShop.helper.Tag(purchase.id,se)
             }

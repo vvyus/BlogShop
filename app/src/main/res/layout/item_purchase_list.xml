@@ -52,8 +52,10 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="5dp"
+                android:autoLink="web"
                 android:fontFamily="sans-serif-condensed"
                 android:gravity="start"
+                android:linksClickable="true"
                 android:text="TextView"
                 android:textColor="@color/black"
                 android:textStyle="bold" />

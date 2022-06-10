@@ -31,7 +31,7 @@ public class CalendarAlertDialog extends AlertDialog {
 
     float initialX,initialY;
     boolean directionLeft;
-    protected CalendarAlertDialog(Context context,
+    public CalendarAlertDialog(Context context,
                                   CalendarDialogAdapter.onItemClickListener listener,
                                   int type_event
                                   ) {
