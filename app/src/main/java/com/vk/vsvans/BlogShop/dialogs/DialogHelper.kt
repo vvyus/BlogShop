@@ -250,7 +250,7 @@ private fun createTreeArrayAdapter(
                         str = valueOf(UtilsHelper.correct_date_end(dates[i]!!.time))
                         dates_end.add(str)
                     }
-                    val list=mainActivity.dbManager.getSelectedPurchases(dates_begin,dates_end)
+                    val list=mainActivity.dbManager.queryPurchases(dates_begin,dates_end)
                     mainActivity.adapter.updateAdapter(list)
                    // adapter.searchNote(dates_begin, dates_end)
                 } else {

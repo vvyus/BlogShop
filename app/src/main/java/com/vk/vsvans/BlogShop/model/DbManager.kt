@@ -197,51 +197,54 @@ class DbManager(context: Context) {
 
     @RequiresApi(Build.VERSION_CODES.N)
     @SuppressLint("Range")
-    suspend fun readPurchases(searchText:String): ArrayList<Purchase> = withContext(Dispatchers.IO) {
-        val dataList = ArrayList<Purchase>()
-        val selection = "${DbName.COLUMN_NAME_TITLE} like ?"
-        val cursor = db?.query(
-            DbName.TABLE_NAME, null, selection, arrayOf("%$searchText%"),
-            null, null, "${DbName.COLUMN_NAME_TIME} DESC"
+//    suspend fun readPurchases(searchText:String): ArrayList<Purchase> = withContext(Dispatchers.IO) {
+//        val purchaseList = ArrayList<Purchase>()
+//        val selection = "${DbName.COLUMN_NAME_TITLE} like ?"
+//        val cursor = db?.query(
+//            DbName.TABLE_NAME, null, selection, arrayOf("%$searchText%"),
+//            null, null, "${DbName.COLUMN_NAME_TIME} DESC"
+//        )
+//        if(cursor!=null){
+//            setPurchaseListFromCursor(cursor!!,purchaseList)
+//            cursor!!.close()
+//        }
+//        return@withContext purchaseList
+//    }
+
+    suspend fun queryPurchases(searchText:String): ArrayList<Purchase> = withContext(Dispatchers.IO) {
+        val purchaseList = ArrayList<Purchase>()
+//        val cursor = db?.query(
+//            DbName.TABLE_NAME, null, selection, arrayOf("%$searchText%"),
+//            null, null, "${DbName.COLUMN_NAME_TIME} DESC"
+//        )
+        val selection = "${DbName.COLUMN_NAME_CONTENT} like ?"
+        val selectionArgs = arrayOf("%"+searchText + "%")
+
+        val temp: String = DbName.PURCHASE_QUERY
+        val selectQuery: String = temp.replace(
+            DbName.WHERE_FOR_PURCHASE_QUERY,
+            "WHERE $selection "
         )
-
-        while (cursor?.moveToNext()!!) {
-            val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_TITLE))
-            val dataContent = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_CONTENT))
-            val dataContentHtml = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_CONTENT_HTML))
-
-            val dataIdFns = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_ID_FNS))
-
-            val dataId = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
-            val time = cursor.getLong(cursor.getColumnIndex(DbName.COLUMN_NAME_TIME))
-            val dataSumma = cursor.getDouble(cursor.getColumnIndex(DbName.COLUMN_NAME_SUMMA_PURCHASES))
-            val purchase = Purchase()
-            purchase.title = dataTitle
-            purchase.content = dataContent
-
-            purchase.content_html= dataContentHtml
-            purchase.id = dataId
-            purchase.time = time
-            purchase.summa=dataSumma
-            purchase.idfns=dataIdFns
-            dataList.add(purchase)
+        val cursor = db?.rawQuery(selectQuery, selectionArgs)
+        if(cursor!=null){
+            setPurchaseListFromCursor(cursor!!,purchaseList)
+            cursor!!.close()
         }
-        cursor.close()
-        return@withContext dataList
+        return@withContext purchaseList
     }
 
-    fun getSelectedPurchases(dates_begin: ArrayList<String>, dates_end: ArrayList<String>): ArrayList<Purchase> {
+    fun queryPurchases(dates_begin: ArrayList<String>, dates_end: ArrayList<String>): ArrayList<Purchase> {
         //val db: SQLiteDatabase = MyDbHelper.getWritableDatabase()
         var purchaseList  = ArrayList<Purchase>()
-        var str_where = ""
+        var selection = ""
         for (i in dates_begin.indices) {
-            str_where += "${DbName.COLUMN_NAME_TIME} >= " + dates_begin[i] + " AND ${DbName.COLUMN_NAME_TIME}<=" + dates_end[i]
-            if (i < dates_begin.size - 1) str_where += " OR "
+            selection += "${DbName.COLUMN_NAME_TIME} >= " + dates_begin[i] + " AND ${DbName.COLUMN_NAME_TIME}<=" + dates_end[i]
+            if (i < dates_begin.size - 1) selection += " OR "
         }
         val temp: String = DbName.PURCHASE_QUERY
         val selectQuery: String = temp.replace(
             DbName.WHERE_FOR_PURCHASE_QUERY,
-            "WHERE $str_where "
+            "WHERE $selection "
         )
         val cursor = db?.rawQuery(selectQuery, null)
         if(cursor!=null){

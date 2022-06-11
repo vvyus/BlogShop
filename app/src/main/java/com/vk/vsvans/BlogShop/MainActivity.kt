@@ -1,14 +1,23 @@
 package com.vk.vsvans.BlogShop
 
+import android.app.SearchManager
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.EditText
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.widget.SearchView
+import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
+import androidx.core.view.MenuItemCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.navigation.NavigationView
 import com.vk.vsvans.BlogShop.activity.EditPurchaseActivity
@@ -33,6 +42,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     val dbManager= DbManager(this)
     private val purchaseArray=ArrayList<Purchase>()
     private var job: Job? = null
+    private lateinit var toolbar: Toolbar
+    private lateinit var searchView:SearchView
 
     val adapter= PurchaseRcAdapter(object:OnClickItemCallback{
         override fun onClickItem(id:Int) {
@@ -69,10 +80,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         rootElement= ActivityMainBinding.inflate(layoutInflater)
         val view=rootElement.root
         setContentView(view)
-        init()
+    //устанавливаем тоолбар
+    toolbar=rootElement.mainContent.toolbar
+    //setUpToolbar()
+    setSupportActionBar(toolbar)
+    toolbar.title=""
+
+//
+    init()
         initRecyclerView()
         bottomMenuOnClick()
-    }
+
+}
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onResume() {
@@ -91,7 +110,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         job?.cancel()
         job = CoroutineScope(Dispatchers.Main).launch{
-            val list = dbManager.readPurchases(text)
+            val list = dbManager.queryPurchases(text)
             adapter.updateAdapter(list)
         }
 
@@ -99,7 +118,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun init(){
         // строка с подключенным toolbar(какой тоолбар исп в активити) должна стоять выше всех
         setSupportActionBar(rootElement.mainContent.toolbar)
-        val toggle= ActionBarDrawerToggle(this,rootElement.drawerLayout,rootElement.mainContent.toolbar,R.string.open,R.string.close)
+        val toggle= ActionBarDrawerToggle(this,rootElement.drawerLayout,toolbar,R.string.open,R.string.close)
         rootElement.drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
         rootElement.navView.setNavigationItemSelectedListener(this)
@@ -180,6 +199,72 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
                 }//when
             true
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        getMenuInflater().inflate(R.menu.menu_choose_purchase_item, menu)
+        setUpToolbar()
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    private fun setUpToolbar() {
+        rootElement.apply {
+
+            //toolbar.inflateMenu(R.menu.menu_choose_purchase_item)
+
+            val searchItem: MenuItem =toolbar.menu.findItem(R.id.action_search)
+            if (searchItem != null) {
+                searchView = MenuItemCompat.getActionView(searchItem) as SearchView
+                searchView.setOnCloseListener(object : SearchView.OnCloseListener {
+                    override fun onClose(): Boolean {
+                        return true
+                    }
+                })
+
+                val searchPlate =        searchView.findViewById(androidx.appcompat.R.id.search_src_text) as EditText
+                searchPlate.hint = getString(R.string.search_hint)
+                val searchPlateView: View =
+                    searchView.findViewById(androidx.appcompat.R.id.search_plate)
+                searchPlateView.setBackgroundColor(
+                    ContextCompat.getColor(
+                        this@MainActivity,
+                        android.R.color.transparent
+                    )
+                )
+
+                searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                    override fun onQueryTextSubmit(query: String?): Boolean {
+                        return false
+                    }
+
+                    @RequiresApi(Build.VERSION_CODES.N)
+                    override fun onQueryTextChange(newText: String?): Boolean {
+                        if (newText != null) {
+                            fillAdapter(newText)
+                        }
+                        return true
+                    }
+                })
+
+                val searchManager =
+                    getSystemService(Context.SEARCH_SERVICE) as SearchManager
+                searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+            }//search_item
+
+            // GO BACK
+            toolbar.setNavigationOnClickListener {
+                onBackPressed()
+            }
+        }
+    }//setupToolbar
+
+    override fun onBackPressed() {
+        //super.onBackPressed()
+        if (!searchView.isIconified()) {
+            searchView.onActionViewCollapsed();
+        } else {
+            super.onBackPressed();
         }
     }
 }

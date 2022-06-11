@@ -12,11 +12,12 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:minHeight="?attr/actionBarSize"
-        android:theme="@style/ToolbarMainStyle"
+        android:theme="@style/ActionBarCustom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="Машины"
+        app:menu="@menu/menu_choose_purchase_item"
+        app:navigationIcon="?attr/homeAsUpIndicator"
         app:titleTextColor="@color/black" />
 
     <androidx.recyclerview.widget.RecyclerView
