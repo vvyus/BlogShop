@@ -95,62 +95,88 @@
                         app:layout_constraintTop_toTopOf="parent">
 
                         <LinearLayout
+                            android:id="@+id/llCaptionDateTime"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="16dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tvCaptionDate"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+                                android:fontFamily="sans-serif-medium"
+                                android:text="@string/ent_date"
+                                android:textAlignment="center"
+                                android:textColor="@color/green_main"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tvCaptionTime"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:fontFamily="sans-serif-medium"
+                                android:text="@string/ent_time"
+                                android:textAlignment="center"
+                                android:textColor="@color/green_main"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <LinearLayout
                             android:id="@+id/llDateTime"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_marginStart="10dp"
-                            android:layout_marginTop="16dp"
+                            android:layout_marginTop="5dp"
                             android:layout_marginEnd="10dp"
                             android:baselineAligned="false"
                             android:orientation="horizontal">
 
-                            <com.google.android.material.textfield.TextInputLayout
+                            <EditText
+                                android:id="@+id/edDatePart"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:hint="@string/ent_date">
+                                android:backgroundTint="@color/white"
+                                android:drawableEnd="@drawable/ic_arrow_drop_down"
+                                android:ems="10"
+                                android:focusable="false"
+                                android:fontFamily="sans-serif-medium"
+                                android:inputType="none|textNoSuggestions"
+                                android:singleLine="false"
+                                android:text="18 сентября 2015"
+                                android:textAlignment="center"
+                                android:textColorHint="@color/green_main" />
 
-                                <EditText
-                                    android:id="@+id/tvDatePart"
-
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:backgroundTint="@color/white"
-                                    android:drawableEnd="@drawable/ic_arrow_drop_down"
-                                    android:editable="false"
-                                    android:ems="10"
-                                    android:focusable="false"
-                                    android:inputType="none|textNoSuggestions"
-                                    android:singleLine="false"
-                                    android:textColorHint="@color/green_main"
-                                    tools:ignore="TextFields"
-                                    tools:text="18 сентября 2015" />
-                            </com.google.android.material.textfield.TextInputLayout>
-
-                            <com.google.android.material.textfield.TextInputLayout
+                            <EditText
+                                android:id="@+id/edTimePart"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="2"
-                                android:hint="@string/ent_time">
-
-                                <EditText
-                                    android:id="@+id/tvTimePart"
-
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:backgroundTint="@color/white"
-                                    android:drawableEnd="@drawable/ic_arrow_drop_down"
-                                    android:editable="false"
-                                    android:ems="10"
-                                    android:focusable="false"
-                                    android:inputType="none|textNoSuggestions"
-                                    android:textColorHint="@color/green_main"
-                                    android:singleLine="false"
-                                    tools:text="11:51" />
-                            </com.google.android.material.textfield.TextInputLayout>
+                                android:backgroundTint="@color/white"
+                                android:drawableEnd="@drawable/ic_arrow_drop_down"
+                                android:ems="10"
+                                android:focusable="false"
+                                android:fontFamily="sans-serif-medium"
+                                android:inputType="none|textNoSuggestions"
+                                android:singleLine="false"
+                                android:text="11:51"
+                                android:textAlignment="center"
+                                android:textColorHint="@color/green_main" />
 
                         </LinearLayout>
-
+                        <LinearLayout
+                            android:id="@+id/divider9"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:background="@color/green_main"
+                            android:orientation="horizontal"></LinearLayout>
 
                         <TextView
                             android:id="@+id/tvTitleCategory"
@@ -158,8 +184,10 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:layout_marginTop="10dp"
+                            android:fontFamily="sans-serif-medium"
                             android:text="@string/category"
                             android:textColor="@color/green_main"
+                            android:textSize="16sp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -188,8 +216,10 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:layout_marginTop="10dp"
+                            android:fontFamily="sans-serif-medium"
                             android:text="@string/title"
                             android:textColor="@color/green_main"
+                            android:textSize="16sp"
                             android:textStyle="bold" />
 
                         <EditText
@@ -220,8 +250,10 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:layout_marginTop="10dp"
+                            android:fontFamily="sans-serif-medium"
                             android:text="@string/summa"
                             android:textColor="@color/green_main"
+                            android:textSize="16sp"
                             android:textStyle="bold" />
 
 

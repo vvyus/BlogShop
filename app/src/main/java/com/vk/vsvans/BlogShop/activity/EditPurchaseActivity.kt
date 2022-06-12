@@ -113,8 +113,7 @@ class EditPurchaseActivity : AppCompatActivity() {
 
     private fun initDateTime(){
         initDateTimeButtons()
-        val tvDatePart=rootElement.tvDatePart
-        tvDatePart.setOnClickListener{
+        rootElement.edDatePart.setOnClickListener{
             val calendar: Calendar = Calendar.getInstance()
             calendar.setTime(Date(purchase!!.time))
             DatePickerDialog(
@@ -132,7 +131,7 @@ class EditPurchaseActivity : AppCompatActivity() {
             )
                 .show()
         }
-        rootElement.tvTimePart.setOnClickListener{
+        rootElement.edTimePart.setOnClickListener{
             val calendar = Calendar.getInstance()
             calendar.time = Date(purchase!!.time)
             TimePickerDialog(
@@ -156,9 +155,9 @@ class EditPurchaseActivity : AppCompatActivity() {
         //val mDateMediumFormat = SimpleDateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault())
         //
         val mDateMediumFormat = SimpleDateFormat("dd MMMM yyyy",Locale.getDefault())
-        rootElement.tvDatePart.setText(mDateMediumFormat.format(Date(purchase!!.time)))
+        rootElement.edDatePart.setText(mDateMediumFormat.format(Date(purchase!!.time)))
         val mDateShortFormat =  SimpleDateFormat("HH:mm", Locale.getDefault())
-        rootElement.tvTimePart.setText(mDateShortFormat.format(Date(purchase!!.time)))
+        rootElement.edTimePart.setText(mDateShortFormat.format(Date(purchase!!.time)))
     }
 
     fun clearResultArray(){
@@ -188,7 +187,7 @@ class EditPurchaseActivity : AppCompatActivity() {
                    //здесь то что редактируется а не пришло из фрагмента
                    purchase!!.summa= edSummaPurchase.text.toString().toDouble()
                    purchase!!.title=edTitle.text.toString()
-                   purchase!!.time= DateTimeUtils.parseDateTimeString(rootElement.tvDatePart.text.toString()+" "+rootElement.tvTimePart.text.toString())!!
+                   purchase!!.time= DateTimeUtils.parseDateTimeString(rootElement.edDatePart.text.toString()+" "+rootElement.edTimePart.text.toString())!!
                    if(idPurchase>0){
                        //dbManager.updatePurchase(idPurchase,edTitle.text.toString(),edDescription.text.toString())
                        dbManager.updatePurchase(purchase!!)
