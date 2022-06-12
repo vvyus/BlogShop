@@ -44,4 +44,6 @@
     <string name="thu">Чт</string>
     <string name="fri">Пт</string>
     <string name="sat">Сб</string>
+    <string name="ent_date">Дата</string>
+    <string name="ent_time">Время</string>
 </resources>

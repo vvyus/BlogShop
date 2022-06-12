@@ -36,4 +36,19 @@ object DateTimeUtils {
         }
         return date
     }
+
+    fun parseDateTimeString(s: String?): Long? {
+        val mDateTimeQrFormat = SimpleDateFormat("dd MMMM yyyy HH:mm", Locale.getDefault())
+        var date: Long?=null
+        try {
+            if (s != null) {
+                //2022-05-29T08:33:00
+                date = mDateTimeQrFormat!!.parse(s.replace("T"," ")).time
+                //date.getTime()
+            }
+        } catch (e: ParseException) {
+            date = null
+        }
+        return date
+    }
 }
