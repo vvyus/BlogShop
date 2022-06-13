@@ -102,6 +102,10 @@ class EditPurchaseActivity : AppCompatActivity() {
         }else {
             //idPurchase==0
             purchase= Purchase()
+            if(purchase!=null){
+                purchase!!.time=UtilsHelper.getCurrentDate()
+                initDateTime()
+            }
         }
     }
 

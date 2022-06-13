@@ -99,16 +99,19 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_marginTop="16dp"
-                            android:orientation="horizontal">
+                            android:layout_marginEnd="10dp"
+                            android:orientation="horizontal"
+                            android:paddingStart="10dp">
 
                             <TextView
                                 android:id="@+id/tvCaptionDate"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginEnd="40dp"
                                 android:layout_weight="2"
                                 android:fontFamily="sans-serif-medium"
                                 android:text="@string/ent_date"
-                                android:textAlignment="center"
+                                android:textAlignment="textStart"
                                 android:textColor="@color/green_main"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
@@ -120,7 +123,7 @@
                                 android:layout_weight="1"
                                 android:fontFamily="sans-serif-medium"
                                 android:text="@string/ent_time"
-                                android:textAlignment="center"
+                                android:textAlignment="textStart"
                                 android:textColor="@color/green_main"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
@@ -140,6 +143,7 @@
                                 android:id="@+id/edDatePart"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:layout_marginEnd="40dp"
                                 android:layout_weight="1"
                                 android:backgroundTint="@color/white"
                                 android:drawableEnd="@drawable/ic_arrow_drop_down"
@@ -148,9 +152,10 @@
                                 android:fontFamily="sans-serif-medium"
                                 android:inputType="none|textNoSuggestions"
                                 android:singleLine="false"
-                                android:text="18 сентября 2015"
-                                android:textAlignment="center"
-                                android:textColorHint="@color/green_main" />
+                                android:text="13 июня 2022"
+                                android:textAlignment="textStart"
+                                android:textColorHint="@color/green_main"
+                                />
 
                             <EditText
                                 android:id="@+id/edTimePart"
@@ -164,9 +169,10 @@
                                 android:fontFamily="sans-serif-medium"
                                 android:inputType="none|textNoSuggestions"
                                 android:singleLine="false"
-                                android:text="11:51"
-                                android:textAlignment="center"
-                                android:textColorHint="@color/green_main" />
+                                android:text="10:05"
+                                android:textAlignment="textStart"
+                                android:textColorHint="@color/green_main"
+                                />
 
                         </LinearLayout>
                         <LinearLayout
