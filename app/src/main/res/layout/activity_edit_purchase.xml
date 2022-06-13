@@ -270,7 +270,8 @@
                             android:background="@null"
                             android:ems="10"
                             android:hint="@string/summa_hint"
-                            android:inputType="number"
+                            android:inputType="numberDecimal"
+                            android:selectAllOnFocus="true"
                             android:padding="10dp"
                             android:textColorHint="@color/gray_dark" />
 

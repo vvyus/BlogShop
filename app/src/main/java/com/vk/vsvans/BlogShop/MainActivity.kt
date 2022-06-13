@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var job: Job? = null
     private lateinit var toolbar: Toolbar
     private lateinit var searchView:SearchView
-
+    private var isSetFilter=false
     val adapter= PurchaseRcAdapter(object:OnClickItemCallback{
         override fun onClickItem(id:Int) {
             if(id>0) {
@@ -106,14 +106,25 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
-    fun fillAdapter(text: String){
-
+    fun fillAdapter(text: String):String{
+        var str=""
         job?.cancel()
         job = CoroutineScope(Dispatchers.Main).launch{
             val list = dbManager.queryPurchases(text)
             adapter.updateAdapter(list)
+            if(isSetFilter) {
+                var summa = 0.0
+                for (purchase in list) {
+                    summa += purchase.summa
+                }
+                str = "${list.size} покуп на сумму ${summa}"
+                showFilterPanel(str)
+            }else {
+                isSetFilter=false
+                showFilterPanel(str)
+            }
         }
-
+        return str
     }
     private fun init(){
         // строка с подключенным toolbar(какой тоолбар исп в активити) должна стоять выше всех
@@ -124,6 +135,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         rootElement.navView.setNavigationItemSelectedListener(this)
         //header с нулевой позиции
        // tvAccount=rootElement.navView.getHeaderView(0).findViewById(R.id.tvAccountEmail)
+        //showFilterPanel(false,"")
     }
 
     private fun initRecyclerView(){
@@ -132,6 +144,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             mainContent.rcView.layoutManager= LinearLayoutManager(this@MainActivity)
             mainContent.rcView.adapter=adapter
         }
+    }
+
+    private fun showFilterPanel(summa:String){
+        if(isSetFilter) {
+            rootElement.mainContent.llFilterdPanel.visibility=View.VISIBLE
+        }
+        else rootElement.mainContent.llFilterdPanel.visibility=View.GONE
+        rootElement.mainContent.tvFilteredSumma.text=summa
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -241,6 +261,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     @RequiresApi(Build.VERSION_CODES.N)
                     override fun onQueryTextChange(newText: String?): Boolean {
                         if (newText != null) {
+                            isSetFilter=true
                             fillAdapter(newText)
                         }
                         return true
@@ -263,6 +284,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         //super.onBackPressed()
         if (!searchView.isIconified()) {
             searchView.onActionViewCollapsed();
+            //showFilterPanel(false,"")
+            isSetFilter=false
+            showFilterPanel("")
         } else {
             super.onBackPressed();
         }
