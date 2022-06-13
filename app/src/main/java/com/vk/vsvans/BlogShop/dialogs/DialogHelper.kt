@@ -22,6 +22,7 @@ import com.vk.vsvans.BlogShop.calendar.CalendarDialogAdapter
 import com.vk.vsvans.BlogShop.helper.SpinnerHelper
 import com.vk.vsvans.BlogShop.interfaces.*
 import com.vk.vsvans.BlogShop.model.Product
+import com.vk.vsvans.BlogShop.model.Purchase
 import com.vk.vsvans.BlogShop.model.PurchaseItem
 import com.vk.vsvans.BlogShop.utils.UtilsHelper
 
@@ -250,10 +251,15 @@ private fun createTreeArrayAdapter(
                         str = valueOf(UtilsHelper.correct_date_end(dates[i]!!.time))
                         dates_end.add(str)
                     }
-                    val list=mainActivity.dbManager.queryPurchases(dates_begin,dates_end)
-                    mainActivity.adapter.updateAdapter(list)
+                    var purchaseList  = ArrayList<Purchase>()
+                    val amount=mainActivity.dbManager.queryPurchases(dates_begin,dates_end,purchaseList)
+                    val amount_str = "${purchaseList.size} покуп на сумму ${amount.toString().format("%12.2f")}"
+                    mainActivity.adapter.updateAdapter(purchaseList)
+                    mainActivity.isSetFilter=true
+                    mainActivity.showFilterPanel(amount_str)
                    // adapter.searchNote(dates_begin, dates_end)
                 } else {
+                    mainActivity.isSetFilter=false
                    mainActivity.fillAdapter("")
                 }
                 mCalendar.dismiss()

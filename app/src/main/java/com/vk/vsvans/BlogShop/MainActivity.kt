@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var job: Job? = null
     private lateinit var toolbar: Toolbar
     private lateinit var searchView:SearchView
-    private var isSetFilter=false
+    var isSetFilter=false
     val adapter= PurchaseRcAdapter(object:OnClickItemCallback{
         override fun onClickItem(id:Int) {
             if(id>0) {
@@ -110,19 +110,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         var str=""
         job?.cancel()
         job = CoroutineScope(Dispatchers.Main).launch{
-            val list = dbManager.queryPurchases(text)
-            adapter.updateAdapter(list)
+            val purchaseList = ArrayList<Purchase>()
+            val amount = dbManager.queryPurchases(text,purchaseList)
+            adapter.updateAdapter(purchaseList)
             if(isSetFilter) {
-                var summa = 0.0
-                for (purchase in list) {
-                    summa += purchase.summa
-                }
-                str = "${list.size} покуп на сумму ${summa}"
-                showFilterPanel(str)
-            }else {
-                isSetFilter=false
-                showFilterPanel(str)
+                str = "${purchaseList.size} покуп на сумму ${amount.toString().format("%12.2f")}"
             }
+            showFilterPanel(str)
+
         }
         return str
     }
@@ -146,7 +141,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    private fun showFilterPanel(summa:String){
+    fun showFilterPanel(summa:String){
         if(isSetFilter) {
             rootElement.mainContent.llFilterdPanel.visibility=View.VISIBLE
         }
@@ -179,6 +174,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     //Toast.makeText(this@MainActivity,"Pressed new purchase", Toast.LENGTH_LONG).show()
                 }
                 R.id.id_refresh_purchase->{
+                    isSetFilter=false
                     fillAdapter("")
 //                    val id=adapter.getPurchaseId()
 //                    if(id>0) {
@@ -261,8 +257,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     @RequiresApi(Build.VERSION_CODES.N)
                     override fun onQueryTextChange(newText: String?): Boolean {
                         if (newText != null) {
-                            isSetFilter=true
-                            fillAdapter(newText)
+                            if(newText.isEmpty())isSetFilter=false else isSetFilter=true
+                            fillAdapter(newText)//call to showFilterPanel
                         }
                         return true
                     }

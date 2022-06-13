@@ -211,8 +211,8 @@ class DbManager(context: Context) {
 //        return@withContext purchaseList
 //    }
 
-    suspend fun queryPurchases(searchText:String): ArrayList<Purchase> = withContext(Dispatchers.IO) {
-        val purchaseList = ArrayList<Purchase>()
+    suspend fun queryPurchases(searchText:String,purchaseList: ArrayList<Purchase>):Double = withContext(Dispatchers.IO) {
+//        val purchaseList = ArrayList<Purchase>()
 //        val cursor = db?.query(
 //            DbName.TABLE_NAME, null, selection, arrayOf("%$searchText%"),
 //            null, null, "${DbName.COLUMN_NAME_TIME} DESC"
@@ -226,16 +226,18 @@ class DbManager(context: Context) {
             "WHERE $selection "
         )
         val cursor = db?.rawQuery(selectQuery, selectionArgs)
+        var amount=0.0
         if(cursor!=null){
-            setPurchaseListFromCursor(cursor!!,purchaseList)
+            amount=setPurchaseListFromCursor(cursor!!,purchaseList)
             cursor!!.close()
         }
-        return@withContext purchaseList
+        //return@withContext purchaseList
+        return@withContext amount
     }
 
-    fun queryPurchases(dates_begin: ArrayList<String>, dates_end: ArrayList<String>): ArrayList<Purchase> {
+    fun queryPurchases(dates_begin: ArrayList<String>, dates_end: ArrayList<String>,purchaseList: ArrayList<Purchase>):Double {
         //val db: SQLiteDatabase = MyDbHelper.getWritableDatabase()
-        var purchaseList  = ArrayList<Purchase>()
+        //var purchaseList  = ArrayList<Purchase>()
         var selection = ""
         for (i in dates_begin.indices) {
             selection += "${DbName.COLUMN_NAME_TIME} >= " + dates_begin[i] + " AND ${DbName.COLUMN_NAME_TIME}<=" + dates_end[i]
@@ -247,16 +249,18 @@ class DbManager(context: Context) {
             "WHERE $selection "
         )
         val cursor = db?.rawQuery(selectQuery, null)
+        var amount=0.0
         if(cursor!=null){
-            setPurchaseListFromCursor(cursor!!,purchaseList)
+            amount=setPurchaseListFromCursor(cursor!!,purchaseList)
             cursor!!.close()
         }
         // return note list
-        return purchaseList
+        return amount//purchaseList
     }
 
     @SuppressLint("Range")
-    private fun setPurchaseListFromCursor(cursor: Cursor, purchaseList: ArrayList<Purchase>){
+    private fun setPurchaseListFromCursor(cursor: Cursor, purchaseList: ArrayList<Purchase>):Double{
+        var amount=0.0
         while (cursor?.moveToNext()!!) {
             val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_TITLE))
             val dataContent = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_CONTENT))
@@ -277,7 +281,9 @@ class DbManager(context: Context) {
             purchase.summa=dataSumma
             purchase.idfns=dataIdFns
             purchaseList.add(purchase)
+            amount+=dataSumma
         }
+        return amount
     }
         @RequiresApi(Build.VERSION_CODES.N)
         @SuppressLint("Range")

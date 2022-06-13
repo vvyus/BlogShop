@@ -57,7 +57,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/caption_filter_summa"
-            android:textAlignment="textEnd"
+            android:textAlignment="viewStart"
+            android:textColor="@color/green_main"
             android:textStyle="bold" />
 
         <TextView
