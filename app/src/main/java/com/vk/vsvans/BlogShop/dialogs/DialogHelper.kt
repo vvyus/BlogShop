@@ -255,12 +255,11 @@ private fun createTreeArrayAdapter(
                     val amount=mainActivity.dbManager.queryPurchases(dates_begin,dates_end,purchaseList)
                     val amount_str = "${purchaseList.size} покуп на сумму ${amount.toString().format("%12.2f")}"
                     mainActivity.adapter.updateAdapter(purchaseList)
-                    mainActivity.isSetFilter=true
-                    mainActivity.showFilterPanel(amount_str)
+                    mainActivity.setFilterPanel(amount_str)
                    // adapter.searchNote(dates_begin, dates_end)
                 } else {
-                    mainActivity.isSetFilter=false
-                   mainActivity.fillAdapter("")
+                    mainActivity.resetFilterPanel("")
+                    mainActivity.fillAdapter("")
                 }
                 mCalendar.dismiss()
             }

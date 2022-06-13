@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var job: Job? = null
     private lateinit var toolbar: Toolbar
     private lateinit var searchView:SearchView
-    var isSetFilter=false
+    private var isSetFilter=false
     val adapter= PurchaseRcAdapter(object:OnClickItemCallback{
         override fun onClickItem(id:Int) {
             if(id>0) {
@@ -117,7 +117,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 str = "${purchaseList.size} покуп на сумму ${amount.toString().format("%12.2f")}"
             }
             showFilterPanel(str)
-
         }
         return str
     }
@@ -141,12 +140,22 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    fun showFilterPanel(summa:String){
+    fun setFilterPanel(amount:String){
+        isSetFilter=true
+        showFilterPanel(amount)
+    }
+
+    fun resetFilterPanel(amount:String){
+        isSetFilter=false
+        showFilterPanel(amount)
+    }
+
+    private fun showFilterPanel(amount:String){
         if(isSetFilter) {
             rootElement.mainContent.llFilterdPanel.visibility=View.VISIBLE
         }
         else rootElement.mainContent.llFilterdPanel.visibility=View.GONE
-        rootElement.mainContent.tvFilteredSumma.text=summa
+        rootElement.mainContent.tvFilteredSumma.text=amount
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -174,6 +183,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     //Toast.makeText(this@MainActivity,"Pressed new purchase", Toast.LENGTH_LONG).show()
                 }
                 R.id.id_refresh_purchase->{
+                    //resetFilterPanel("")
                     isSetFilter=false
                     fillAdapter("")
 //                    val id=adapter.getPurchaseId()
@@ -281,8 +291,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (!searchView.isIconified()) {
             searchView.onActionViewCollapsed();
             //showFilterPanel(false,"")
-            isSetFilter=false
-            showFilterPanel("")
+            resetFilterPanel("")
         } else {
             super.onBackPressed();
         }
