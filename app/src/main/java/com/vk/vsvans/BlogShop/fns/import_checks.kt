@@ -10,6 +10,7 @@ import com.vk.vsvans.BlogShop.R
 import com.vk.vsvans.BlogShop.model.Product
 import com.vk.vsvans.BlogShop.model.Purchase
 import com.vk.vsvans.BlogShop.model.PurchaseItem
+import com.vk.vsvans.BlogShop.model.Seller
 import com.vk.vsvans.BlogShop.utils.DateTimeUtils
 import com.vk.vsvans.BlogShop.utils.makeSpannableString
 import com.vk.vsvans.BlogShop.utils.plus
@@ -78,8 +79,31 @@ object import_checks {
                                             purchase!!.time= dateTimeLong as Long
                                         }
                                         purchase!!.summa=totalSum
-                                        purchase!!.title=user
+                                        val sellername=user
+                                        purchase!!.title=sellername //user==sellername
 
+                                        //!
+                                        var seller: Seller?=null
+                                        val list=db.readSellersTitle(user)
+                                        var idseller=0
+                                        if(list.size==0){
+                                            seller=Seller()
+                                            seller.name=sellername
+                                            seller.title=sellername
+                                            idseller= db.insertSeller(seller)!!
+                                            seller.id=idseller
+                                            seller.idparent=idseller
+                                            seller.fullpath=idseller.toString()
+
+                                        }else{
+                                            seller= list[0] as Seller
+                                            idseller=seller.id
+                                        }
+
+                                        db.updateSeller(seller)
+
+                                        purchase!!.idseller=idseller
+                                        //!
                                         // print chek items
                                         var content_temp="".makeSpannableString()
                                         db.removePurchaseItems(idPurchase)

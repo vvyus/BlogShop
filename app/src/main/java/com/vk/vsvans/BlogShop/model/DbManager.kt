@@ -128,6 +128,67 @@ class DbManager(context: Context) {
         db?.insert(DbName.TABLE_NAME_SELLERS,null, values)
     }
 
+    suspend fun updateSeller(seller: Seller) = withContext(Dispatchers.IO){
+        val id=seller.id
+        val selection = BaseColumns._ID + "=$id"
+        val values = ContentValues().apply {
+            put(DbName.COLUMN_NAME_NAME_SELLERS, seller.name)
+            put(DbName.COLUMN_NAME_TITLE_SELLERS, seller.title)
+            put(DbName.COLUMN_NAME_IDPARENT_SELLERS, seller.idparent)
+            put(DbName.COLUMN_NAME_LEVEL_SELLERS, seller.level)
+            put(DbName.COLUMN_NAME_FULLPATH_SELLERS, seller.fullpath)
+            put(DbName.COLUMN_NAME_COUNT_SELLERS, seller.count)
+        }
+        db?.update(DbName.TABLE_NAME_PRODUCTS, values, selection, null)
+    }
+
+//    suspend fun insertSeller( seller: Seller) :Int?= withContext(Dispatchers.IO){
+fun insertSeller( seller: Seller) :Int?{
+    val values = ContentValues().apply {
+        put(DbName.COLUMN_NAME_NAME_SELLERS, seller.name)
+        put(DbName.COLUMN_NAME_TITLE_SELLERS, seller.title)
+        put(DbName.COLUMN_NAME_DESCRIPTION_SELLERS, seller.description)
+        put(DbName.COLUMN_NAME_IDPARENT_SELLERS, seller.idparent)
+        put(DbName.COLUMN_NAME_LEVEL_SELLERS, seller.level)
+        put(DbName.COLUMN_NAME_FULLPATH_SELLERS, seller.fullpath)
+        put(DbName.COLUMN_NAME_COUNT_SELLERS, seller.count)
+    }
+    val id=db?.insert(DbName.TABLE_NAME_SELLERS,null, values)
+    return id?.toInt()
+}
+
+    @SuppressLint("Range")
+    // Используется при загрузке чеков поиск по вспом полю title для ручного ввода это пол пусто
+    suspend fun readSellersTitle(searchText:String): ArrayList<Seller> = withContext(Dispatchers.IO) {
+        val dataList = ArrayList<Seller>()
+        val selection = "${DbName.COLUMN_NAME_TITLE_SELLERS} like ?"
+        val cursor = db?.query(
+            DbName.TABLE_NAME_SELLERS, null, selection, arrayOf("%$searchText%"),
+            null, null, null
+        )
+
+        while (cursor?.moveToNext()!!) {
+            val dataId = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
+            val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_TITLE_SELLERS))
+            val dataName = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_NAME_SELLERS))
+            val idparent = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_IDPARENT_SELLERS))
+            val level = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_LEVEL_SELLERS))
+            val fullpath = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_FULLPATH_SELLERS))
+            val count = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_COUNT_SELLERS))
+            val seller = Seller()
+            seller.id = dataId
+            seller.name = dataName
+            seller.title=dataTitle
+            seller.level = level?:0
+            seller.idparent = idparent?:0
+            seller.fullpath = fullpath?:""
+            seller.count = count?:0
+            dataList.add(seller)
+        }
+        cursor.close()
+        return@withContext dataList
+    }
+
     @SuppressLint("Range")
     suspend fun readSellersFromDb(searchText:String): ArrayList<Seller> = withContext(Dispatchers.IO) {
         val dataList = ArrayList<Seller>()
@@ -186,6 +247,7 @@ class DbManager(context: Context) {
             put(DbName.COLUMN_NAME_CONTENT_HTML,purchase.content_html)
             put(DbName.COLUMN_NAME_ID_FNS, purchase.idfns)
             put(DbName.COLUMN_NAME_TIME, purchase.time)
+            put(DbName.COLUMN_NAME_SELLER_ID, purchase.idseller)
         }
         db?.update(DbName.TABLE_NAME, values, selection, null)
     }

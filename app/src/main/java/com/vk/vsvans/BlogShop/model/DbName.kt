@@ -2,16 +2,19 @@ package com.vk.vsvans.BlogShop.model
 import android.provider.BaseColumns
 
 object DbName {
-        const val DATABASE_VERSION = 18
+        const val DATABASE_VERSION = 21
         const val DATABASE_NAME = "BlogShopDb.db"
   // Table Purchase
         const val TABLE_NAME = "Purchases"
         const val COLUMN_NAME_TITLE = "title"
         const val COLUMN_NAME_CONTENT = "content"
-    const val COLUMN_NAME_CONTENT_HTML = "content_html"
+        const val COLUMN_NAME_CONTENT_HTML = "content_html"
         const val COLUMN_NAME_SUMMA_PURCHASES = "summa"
         const val COLUMN_NAME_TIME = "time"
-    const val COLUMN_NAME_ID_FNS = "id_fns"
+        const val COLUMN_NAME_ID_FNS = "id_fns"
+        const val COLUMN_NAME_SELLER_ID = "idseller"
+        const val COLUMN_NAME_SELLER_NAME = "sellername"
+
         const val CREAT_TABLE = "CREATE TABLE IF NOT EXISTS $TABLE_NAME (" +
                 "${BaseColumns._ID} INTEGER PRIMARY KEY," +
                 "$COLUMN_NAME_TITLE TEXT," +
@@ -19,21 +22,31 @@ object DbName {
                 "$COLUMN_NAME_CONTENT_HTML TEXT,"+
                 "$COLUMN_NAME_SUMMA_PURCHASES DOUBLE,"+
                 "$COLUMN_NAME_TIME LONG," +
-                "$COLUMN_NAME_ID_FNS TEXT" +
+                "$COLUMN_NAME_ID_FNS TEXT," +
+                "$COLUMN_NAME_SELLER_ID INTEGER," +
+                "$COLUMN_NAME_SELLER_NAME TEXT"+
                 ")"
         const val SQL_DELETE_TABLE = "DROP TABLE IF EXISTS $TABLE_NAME"
 
         // Table Sellers
         const val TABLE_NAME_SELLERS = "Sellers"
+    // поле title ключ для фнс
         const val COLUMN_NAME_TITLE_SELLERS = "title"
-    const val COLUMN_NAME_NAME_SELLERS = "name"
+        const val COLUMN_NAME_NAME_SELLERS = "name"
         const val COLUMN_NAME_DESCRIPTION_SELLERS = "description"
-
+        const val COLUMN_NAME_IDPARENT_SELLERS = "idparent"
+        const val COLUMN_NAME_LEVEL_SELLERS = "level"
+        const val COLUMN_NAME_FULLPATH_SELLERS = "fullpath"
+        const val COLUMN_NAME_COUNT_SELLERS = "count"
         const val CREAT_TABLE_SELLERS = "CREATE TABLE IF NOT EXISTS $TABLE_NAME_SELLERS (" +
                 "${BaseColumns._ID} INTEGER PRIMARY KEY," +
                 "$COLUMN_NAME_TITLE_SELLERS TEXT," +
                 "$COLUMN_NAME_NAME_SELLERS TEXT," +
-                "$COLUMN_NAME_DESCRIPTION_SELLERS TEXT" +
+                "$COLUMN_NAME_DESCRIPTION_SELLERS TEXT," +
+                "$COLUMN_NAME_IDPARENT_SELLERS INTEGER," +
+                "$COLUMN_NAME_LEVEL_SELLERS INTEGER," +
+                "$COLUMN_NAME_COUNT_SELLERS INTEGER," +
+                "$COLUMN_NAME_FULLPATH_SELLERS TEXT"+
                 ")"
         const val SQL_DELETE_TABLE_SELLERS = "DROP TABLE IF EXISTS $TABLE_NAME_SELLERS"
 
@@ -59,6 +72,7 @@ object DbName {
 
     // TABLE PRODUCTS
     const val TABLE_NAME_PRODUCTS = "Products"
+    // поле title ключ для фнс
     const val COLUMN_NAME_TITLE_PRODUCTS = "title"
     const val COLUMN_NAME_NAME_PRODUCTS = "name"
     const val COLUMN_NAME_BCOLOR_PRODUCTS = "bcolor"
@@ -79,9 +93,14 @@ object DbName {
     const val SQL_DELETE_TABLE_PRODUCTS = "DROP TABLE IF EXISTS $TABLE_NAME_PRODUCTS"
 
     const val WHERE_FOR_PURCHASE_QUERY = "'%WHERETRUE%'"
-    val PURCHASE_QUERY = "SELECT ${BaseColumns._ID},${COLUMN_NAME_TITLE},${COLUMN_NAME_CONTENT},${COLUMN_NAME_CONTENT_HTML}," +
-            "${COLUMN_NAME_ID_FNS},${COLUMN_NAME_TIME},${COLUMN_NAME_SUMMA_PURCHASES}" +
-            " FROM ${TABLE_NAME} " +
+    val PURCHASE_QUERY = "SELECT ${TABLE_NAME}.${BaseColumns._ID} as ${BaseColumns._ID}," +
+            "${TABLE_NAME}.${COLUMN_NAME_TITLE} as ${COLUMN_NAME_TITLE}," +
+            "${COLUMN_NAME_CONTENT},${COLUMN_NAME_CONTENT_HTML}," +
+            "${COLUMN_NAME_ID_FNS},${COLUMN_NAME_TIME},${COLUMN_NAME_SUMMA_PURCHASES}," +
+            "${TABLE_NAME_SELLERS}.${COLUMN_NAME_NAME_SELLERS} AS ${COLUMN_NAME_SELLER_NAME}," +
+            "${TABLE_NAME_SELLERS}.${BaseColumns._ID} AS ${COLUMN_NAME_SELLER_ID}" +
+            " FROM ${TABLE_NAME} " + "LEFT JOIN ${TABLE_NAME_SELLERS} "+
+            "ON ${TABLE_NAME}.${COLUMN_NAME_SELLER_ID}=${TABLE_NAME_SELLERS}.${BaseColumns._ID} " +
              WHERE_FOR_PURCHASE_QUERY +
             "ORDER BY $COLUMN_NAME_TIME DESC"
 }
