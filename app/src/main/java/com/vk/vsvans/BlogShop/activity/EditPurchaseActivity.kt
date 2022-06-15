@@ -4,7 +4,9 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
 import android.text.Html
+import android.text.TextWatcher
 import android.view.View
 import android.widget.DatePicker
 import android.widget.TimePicker
@@ -22,16 +24,14 @@ import com.vk.vsvans.BlogShop.mainActivity
 import com.vk.vsvans.BlogShop.model.DbManager
 import com.vk.vsvans.BlogShop.model.Purchase
 import com.vk.vsvans.BlogShop.model.PurchaseItem
-import com.vk.vsvans.BlogShop.utils.DateTimeUtils
-import com.vk.vsvans.BlogShop.utils.UtilsHelper
-import com.vk.vsvans.BlogShop.utils.makeSpannableString
-import com.vk.vsvans.BlogShop.utils.plus
+import com.vk.vsvans.BlogShop.utils.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import java.text.DateFormat
-import java.text.SimpleDateFormat
+import java.math.BigDecimal
+import java.math.RoundingMode
+import java.text.*
 import java.util.*
 
 
@@ -66,7 +66,6 @@ class EditPurchaseActivity : AppCompatActivity() {
         idPurchase=intent.getIntExtra(R.string.PURCHASE_ID.toString(), 0)
         initPurchase()
         init()
-
         //initToolbar()
     }
 
@@ -189,7 +188,7 @@ class EditPurchaseActivity : AppCompatActivity() {
 //                   }
                    //if(purchase==null) purchase=Purchase()
                    //здесь то что редактируется а не пришло из фрагмента
-                   purchase!!.summa= edSummaPurchase.text.toString().toDouble()
+                   purchase!!.summa= edSummaPurchase.value.toDouble();//.text.toString().toDouble()
                    purchase!!.title=edTitle.text.toString()
                    purchase!!.time= DateTimeUtils.parseDateTimeString(rootElement.edDatePart.text.toString()+" "+rootElement.edTimePart.text.toString())!!
                    if(idPurchase>0){
@@ -297,5 +296,6 @@ class EditPurchaseActivity : AppCompatActivity() {
             )
         }
     }
+
 
 }//activity

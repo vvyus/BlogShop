@@ -89,7 +89,10 @@
                         android:clickable="true"
                         android:fontFamily="sans-serif-condensed"
                         android:text="1200"
-                        android:textColor="@color/black" />
+                        android:textAlignment="textStart"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 

@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NumericEditText extends AppCompatEditText {
+    private final int FRACTION_LENGTH=2;
     private final char GROUPING_SEPARATOR = ' ';
     private final char DECIMAL_SEPARATOR = '.';
     private final String LEADING_ZERO_FILTER_REGEX = "^0+(?!$)";
@@ -192,12 +193,13 @@ public class NumericEditText extends AppCompatEditText {
                     StringUtils.reverse(number).replaceAll("(.{3})", "$1" + GROUPING_SEPARATOR));
             // remove leading grouping separator if any
             number = StringUtils.removeStart(number, String.valueOf(GROUPING_SEPARATOR));
+            //number = StringUtils.remove(number, String.valueOf(GROUPING_SEPARATOR));
         }
 
         // add fraction part if any
         if (parts.length > 1) {
-            if (parts[1].length() > 4) {
-                number += mDecimalSeparator + parts[1].substring(0, 3);
+            if (parts[1].length() > FRACTION_LENGTH) {
+                number += mDecimalSeparator + parts[1].substring(0, FRACTION_LENGTH-1);
             } else {
                 number += mDecimalSeparator + parts[1];
             }

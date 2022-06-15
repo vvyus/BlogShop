@@ -263,7 +263,7 @@
                             android:textStyle="bold" />
 
 
-                        <EditText
+                        <com.vk.vsvans.BlogShop.utils.NumberEditText
                             android:id="@+id/edSummaPurchase"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -273,7 +273,11 @@
                             android:inputType="numberDecimal"
                             android:selectAllOnFocus="true"
                             android:padding="10dp"
-                            android:textColorHint="@color/gray_dark" />
+                            android:textColorHint="@color/gray_dark"
+                            app:digits_after_dot="2"
+                            app:digits_before_dot="10"
+                            app:show_soft_input_on_focus="false"
+                            />
 
 
                         <LinearLayout
