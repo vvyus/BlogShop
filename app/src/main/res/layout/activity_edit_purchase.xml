@@ -276,7 +276,7 @@
                             android:textColorHint="@color/gray_dark"
                             app:digits_after_dot="2"
                             app:digits_before_dot="10"
-                            app:show_soft_input_on_focus="false"
+                            app:show_soft_input_on_focus="true"
                             />
 
 
