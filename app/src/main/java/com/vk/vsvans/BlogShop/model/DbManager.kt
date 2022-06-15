@@ -139,7 +139,7 @@ class DbManager(context: Context) {
             put(DbName.COLUMN_NAME_FULLPATH_SELLERS, seller.fullpath)
             put(DbName.COLUMN_NAME_COUNT_SELLERS, seller.count)
         }
-        db?.update(DbName.TABLE_NAME_PRODUCTS, values, selection, null)
+        db?.update(DbName.TABLE_NAME_SELLERS, values, selection, null)
     }
 
 //    suspend fun insertSeller( seller: Seller) :Int?= withContext(Dispatchers.IO){

@@ -2,7 +2,7 @@ package com.vk.vsvans.BlogShop.model
 import android.provider.BaseColumns
 
 object DbName {
-        const val DATABASE_VERSION = 21
+        const val DATABASE_VERSION = 22
         const val DATABASE_NAME = "BlogShopDb.db"
   // Table Purchase
         const val TABLE_NAME = "Purchases"
