@@ -39,7 +39,7 @@ class DbManager(context: Context) {
         val dataList = ArrayList<Seller>()
         val selection = "${DbName.COLUMN_NAME_NAME_SELLERS} like ?"
         val cursor = db?.query(
-            DbName.TABLE_NAME_SELLERS, arrayOf("_id","idparent","name","id_fns","level","count","fullpath"), selection, arrayOf("%$searchText%"),
+            DbName.TABLE_NAME_SELLERS,null,selection,arrayOf("%$searchText%"), //arrayOf("_id","idparent","name","id_fns","level","count","fullpath"), selection, arrayOf("%$searchText%"),
             null, null, "fullpath ASC"
         )
         while (cursor?.moveToNext()!!) {
@@ -70,7 +70,7 @@ class DbManager(context: Context) {
         val dataList = ArrayList<Product>()
         val selection = "${DbName.COLUMN_NAME_NAME_PRODUCTS} like ?"
         val cursor = db?.query(
-            DbName.TABLE_NAME_PRODUCTS, arrayOf("_id","idparent","name","id_fns","level","count","fullpath"), selection, arrayOf("%$searchText%"),
+            DbName.TABLE_NAME_PRODUCTS,null,selection,arrayOf("%$searchText%"),//, arrayOf("_id","idparent","name","id_fns","level","count","fullpath"), selection, arrayOf("%$searchText%"),
             null, null, "fullpath ASC"
         )
 
