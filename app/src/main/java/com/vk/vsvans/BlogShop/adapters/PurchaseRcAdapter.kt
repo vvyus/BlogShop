@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.vk.vsvans.BlogShop.R
 import com.vk.vsvans.BlogShop.databinding.ItemPurchaseListBinding
 import com.vk.vsvans.BlogShop.interfaces.OnClickItemCallback
+import com.vk.vsvans.BlogShop.mainActivity
 import com.vk.vsvans.BlogShop.model.Purchase
 import com.vk.vsvans.BlogShop.utils.UtilsHelper
 import com.vk.vsvans.BlogShop.utils.makeSpannableString
@@ -79,6 +80,9 @@ class PurchaseRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
                 tvPurchaseTime.setOnClickListener{
                     println(tvPurchaseTime.text)
                     if(clickItemCallback!=null) clickItemCallback!!.onTimeClick()
+                }
+                tvSeller.setOnClickListener{
+                    mainActivity!!.onSellerClick(purchase)
                 }
                 //tvTitle.tag= com.vk.vsvans.BlogShop.helper.Tag(purchase.id,se)
             }

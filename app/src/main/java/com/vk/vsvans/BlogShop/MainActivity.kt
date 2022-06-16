@@ -64,6 +64,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         override fun onTimeClick() {
             DialogHelper.getCalendarDialog(this@MainActivity)
         } // onItemClick
+
     }
 )
 //    ,object: IDialogGetDateListener {
@@ -137,6 +138,26 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             //если просто указатб this это будет ссылка на rootElement поэтому this@MainActivity
             mainContent.rcView.layoutManager= LinearLayoutManager(this@MainActivity)
             mainContent.rcView.adapter=adapter
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    fun onSellerClick(purchase: Purchase) {
+        var str=""
+        job?.cancel()
+        job = CoroutineScope(Dispatchers.Main).launch{
+            if(isSetFilter) {
+                fillAdapter(str)
+                resetFilterPanel(str)
+            }else{
+                val purchaseList = ArrayList<Purchase>()
+                val amount = dbManager.queryPurchases(purchase.idseller,purchaseList)
+                adapter.updateAdapter(purchaseList)
+
+                isSetFilter=true
+                str = "${purchaseList.size} покуп на сумму ${amount.toString().format("%12.2f")}"
+            }
+            showFilterPanel(str)
         }
     }
 

@@ -290,26 +290,29 @@ fun insertSeller( seller: Seller) :Int?{
 
     @RequiresApi(Build.VERSION_CODES.N)
     @SuppressLint("Range")
-//    suspend fun readPurchases(searchText:String): ArrayList<Purchase> = withContext(Dispatchers.IO) {
-//        val purchaseList = ArrayList<Purchase>()
-//        val selection = "${DbName.COLUMN_NAME_TITLE} like ?"
-//        val cursor = db?.query(
-//            DbName.TABLE_NAME, null, selection, arrayOf("%$searchText%"),
-//            null, null, "${DbName.COLUMN_NAME_TIME} DESC"
-//        )
-//        if(cursor!=null){
-//            setPurchaseListFromCursor(cursor!!,purchaseList)
-//            cursor!!.close()
-//        }
-//        return@withContext purchaseList
-//    }
+    //filter query
+    suspend fun queryPurchases(idSeller:Int,purchaseList: ArrayList<Purchase>):Double = withContext(Dispatchers.IO) {
+
+        val selection = "${DbName.COLUMN_NAME_SELLER_ID} = ?"
+        val selectionArgs = arrayOf(idSeller.toString())
+
+        val temp: String = DbName.PURCHASE_QUERY
+        val selectQuery: String = temp.replace(
+            DbName.WHERE_FOR_PURCHASE_QUERY,
+            "WHERE $selection "
+        )
+        val cursor = db?.rawQuery(selectQuery, selectionArgs)
+        var amount=0.0
+        if(cursor!=null){
+            amount=setPurchaseListFromCursor(cursor!!,purchaseList)
+            cursor!!.close()
+        }
+        //return@withContext purchaseList
+        return@withContext amount
+    }
 
     suspend fun queryPurchases(searchText:String,purchaseList: ArrayList<Purchase>):Double = withContext(Dispatchers.IO) {
-//        val purchaseList = ArrayList<Purchase>()
-//        val cursor = db?.query(
-//            DbName.TABLE_NAME, null, selection, arrayOf("%$searchText%"),
-//            null, null, "${DbName.COLUMN_NAME_TIME} DESC"
-//        )
+
         val selection = "${DbName.COLUMN_NAME_CONTENT} like ?"
         val selectionArgs = arrayOf("%"+searchText + "%")
 
