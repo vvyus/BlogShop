@@ -35,11 +35,42 @@ class DbManager(context: Context) {
     }
 
     @SuppressLint("Range")
+    suspend fun readSellers(searchText: String): ArrayList<Seller> = withContext(Dispatchers.IO) {
+        val dataList = ArrayList<Seller>()
+        val selection = "${DbName.COLUMN_NAME_NAME_SELLERS} like ?"
+        val cursor = db?.query(
+            DbName.TABLE_NAME_SELLERS, arrayOf("_id","idparent","name","id_fns","level","count","fullpath"), selection, arrayOf("%$searchText%"),
+            null, null, "fullpath ASC"
+        )
+        while (cursor?.moveToNext()!!) {
+            val dataId = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
+            val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_ID_FNS_PRODUCTS))
+            val dataName = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_NAME_PRODUCTS))
+            val idparent = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_IDPARENT_PRODUCTS))
+            val level = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_LEVEL_PRODUCTS))
+            val fullpath = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_FULLPATH_PRODUCTS))
+            val count = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_COUNT_PRODUCTS))
+            val seller = Seller()
+            seller.id = dataId
+            seller.name = dataName
+            seller.id_fns=dataTitle
+            seller.level = level?:0
+            seller.idparent = idparent?:0
+            seller.fullpath = fullpath?:""
+            seller.count = count?:0
+            dataList.add(seller)
+        }
+        cursor.close()
+
+        return@withContext dataList
+    }
+
+    @SuppressLint("Range")
     suspend fun readProducts(searchText:String): ArrayList<Product> = withContext(Dispatchers.IO) {
         val dataList = ArrayList<Product>()
         val selection = "${DbName.COLUMN_NAME_NAME_PRODUCTS} like ?"
         val cursor = db?.query(
-            DbName.TABLE_NAME_PRODUCTS, arrayOf("_id","idparent","name","title","level","count","fullpath"), selection, arrayOf("%$searchText%"),
+            DbName.TABLE_NAME_PRODUCTS, arrayOf("_id","idparent","name","id_fns","level","count","fullpath"), selection, arrayOf("%$searchText%"),
             null, null, "fullpath ASC"
         )
 
@@ -525,6 +556,7 @@ fun insertSeller( seller: Seller) :Int?{
     fun closeDb(){
         myDbHelper.close()
     }
+
 
     interface ReadDataCallback {
         fun readData(list: ArrayList<Purchase>)

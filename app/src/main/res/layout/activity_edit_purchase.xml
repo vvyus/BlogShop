@@ -202,7 +202,7 @@
                             android:id="@+id/tvSellerSelect"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:onClick="onClickSelectCategory"
+                            android:onClick="onClickSelectSeller"
                             android:padding="10dp"
                             android:text="@string/select_seller"
                             android:textColor="@color/black"

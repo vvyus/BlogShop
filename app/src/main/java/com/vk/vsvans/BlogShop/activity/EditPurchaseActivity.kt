@@ -16,14 +16,14 @@ import com.vk.vsvans.BlogShop.R
 import com.vk.vsvans.BlogShop.adapters.CardItemPurchaseRcAdapter
 import com.vk.vsvans.BlogShop.databinding.ActivityEditPurchaseBinding
 import com.vk.vsvans.BlogShop.dialogs.DialogHelper
+import com.vk.vsvans.BlogShop.dialogs.DialogSpinnerHelper
 import com.vk.vsvans.BlogShop.fragments.PurchaseItemListFragment
+import com.vk.vsvans.BlogShop.helper.SpinnerHelper
 import com.vk.vsvans.BlogShop.interfaces.IFragmentCallBack
 import com.vk.vsvans.BlogShop.interfaces.IFragmentCloseInterface
 import com.vk.vsvans.BlogShop.interfaces.IUpdatePurchaseItemList
 import com.vk.vsvans.BlogShop.mainActivity
-import com.vk.vsvans.BlogShop.model.DbManager
-import com.vk.vsvans.BlogShop.model.Purchase
-import com.vk.vsvans.BlogShop.model.PurchaseItem
+import com.vk.vsvans.BlogShop.model.*
 import com.vk.vsvans.BlogShop.utils.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -112,7 +112,14 @@ class EditPurchaseActivity : AppCompatActivity() {
     private fun init(){
         cardItemPurchaseAdapter= CardItemPurchaseRcAdapter()
         rootElement.vpPurchaseItems.adapter=cardItemPurchaseAdapter
-
+        rootElement.tvSellerSelect.setOnClickListener {
+            val dialog= DialogSpinnerHelper()
+            DialogHelper.job?.cancel()
+            DialogHelper.job = CoroutineScope(Dispatchers.Main).launch {
+                val listSeller = SpinnerHelper.getAllSeller(this@EditPurchaseActivity)
+                dialog.showSpinnerSellerDialog(this@EditPurchaseActivity, listSeller, rootElement.tvSellerSelect)
+            }
+        }
     }
 
     private fun initDateTime(){
@@ -168,7 +175,7 @@ class EditPurchaseActivity : AppCompatActivity() {
         listResultArray.clear()
     }
 
-    fun onClickSelectCategory(view:View){
+    fun onClickSelectSeller(view:View){
 //        val listCategory=resources.getStringArray(R.array.Category).toMutableList() as ArrayList
 //        dialog.showSpinnerDialog(this,listCategory,rootElement.tvCategory)
 
@@ -191,6 +198,11 @@ class EditPurchaseActivity : AppCompatActivity() {
                    //здесь то что редактируется а не пришло из фрагмента
                    purchase!!.summa= edSummaPurchase.value.toDouble();//.text.toString().toDouble()
                    //purchase!!.title=edTitle.text.toString()
+                   if(tvSellerSelect.tag!=null) {
+                       val seller=tvSellerSelect.tag as Seller
+                       purchase!!.idseller=seller.id
+                       purchase!!.sellername=seller.name
+                   }
                    purchase!!.time= DateTimeUtils.parseDateTimeString(rootElement.edDatePart.text.toString()+" "+rootElement.edTimePart.text.toString())!!
                    if(idPurchase>0){
                        //dbManager.updatePurchase(idPurchase,edTitle.text.toString(),edDescription.text.toString())
