@@ -151,6 +151,7 @@
                                 android:focusable="false"
                                 android:fontFamily="sans-serif-medium"
                                 android:inputType="none|textNoSuggestions"
+                                android:cursorVisible="false"
                                 android:singleLine="false"
                                 android:text="13 июня 2022"
                                 android:textAlignment="textStart"
@@ -168,6 +169,7 @@
                                 android:focusable="false"
                                 android:fontFamily="sans-serif-medium"
                                 android:inputType="none|textNoSuggestions"
+                                android:cursorVisible="false"
                                 android:singleLine="false"
                                 android:text="10:05"
                                 android:textAlignment="textStart"
@@ -185,24 +187,24 @@
                             android:orientation="horizontal"></LinearLayout>
 
                         <TextView
-                            android:id="@+id/tvTitleCategory"
+                            android:id="@+id/tvCaptionSeller"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:layout_marginTop="10dp"
                             android:fontFamily="sans-serif-medium"
-                            android:text="@string/category"
+                            android:text="@string/seller"
                             android:textColor="@color/green_main"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/tvCategory"
+                            android:id="@+id/tvSellerSelect"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:onClick="onClickSelectCategory"
                             android:padding="10dp"
-                            android:text="@string/select_category"
+                            android:text="@string/select_seller"
                             android:textColor="@color/black"
                             android:textSize="18sp"
                             android:textStyle="bold" />
@@ -215,40 +217,6 @@
                             android:layout_marginEnd="10dp"
                             android:background="@color/green_main"
                             android:orientation="horizontal"></LinearLayout>
-
-                        <TextView
-                            android:id="@+id/tvProductName"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:layout_marginTop="10dp"
-                            android:fontFamily="sans-serif-medium"
-                            android:text="@string/title"
-                            android:textColor="@color/green_main"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-
-                        <EditText
-                            android:id="@+id/edTitle"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@null"
-                            android:ems="10"
-                            android:hint="@string/title_hint"
-                            android:inputType="textPersonName"
-                            android:padding="10dp"
-                            android:textColorHint="@color/gray_dark" />
-
-                        <LinearLayout
-                            android:id="@+id/divider1"
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginStart="10dp"
-                            android:layout_marginEnd="10dp"
-                            android:background="@color/green_main"
-                            android:orientation="horizontal">
-
-                        </LinearLayout>
 
                         <TextView
                             android:id="@+id/tvTitleSumma"

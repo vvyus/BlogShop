@@ -90,7 +90,8 @@ class EditPurchaseActivity : AppCompatActivity() {
                 if(purchase!=null){
                     rootElement.apply {
                         //content_temp=Html.fromHtml(purchase!!.content_html,0).makeSpannableString()
-                        edTitle.setText(purchase!!.title)
+                        //edTitle.setText(purchase!!.title)
+                        tvSellerSelect.text=purchase!!.sellername
                         edSummaPurchase.setText(purchase!!.summa.toString())
                         initDateTime()
                     }
@@ -189,7 +190,7 @@ class EditPurchaseActivity : AppCompatActivity() {
                    //if(purchase==null) purchase=Purchase()
                    //здесь то что редактируется а не пришло из фрагмента
                    purchase!!.summa= edSummaPurchase.value.toDouble();//.text.toString().toDouble()
-                   purchase!!.title=edTitle.text.toString()
+                   //purchase!!.title=edTitle.text.toString()
                    purchase!!.time= DateTimeUtils.parseDateTimeString(rootElement.edDatePart.text.toString()+" "+rootElement.edTimePart.text.toString())!!
                    if(idPurchase>0){
                        //dbManager.updatePurchase(idPurchase,edTitle.text.toString(),edDescription.text.toString())

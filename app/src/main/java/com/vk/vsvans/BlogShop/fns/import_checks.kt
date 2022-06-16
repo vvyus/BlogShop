@@ -79,7 +79,7 @@ object import_checks {
                                             purchase!!.time= dateTimeLong as Long
                                         }
                                         purchase!!.summa=totalSum
-                                        val sellername=user
+                                        var sellername=user
                                         purchase!!.title=sellername //user==sellername
 
                                         //!
@@ -89,7 +89,7 @@ object import_checks {
                                         if(list.size==0){
                                             seller=Seller()
                                             seller.name=sellername
-                                            seller.title=sellername
+                                            seller.id_fns=sellername
                                             idseller= db.insertSeller(seller)!!
                                             seller.id=idseller
                                             seller.idparent=idseller
@@ -98,10 +98,11 @@ object import_checks {
                                         }else{
                                             seller= list[0] as Seller
                                             idseller=seller.id
+                                            sellername=seller.name
                                         }
 
                                         db.updateSeller(seller)
-
+                                        purchase!!.sellername=sellername
                                         purchase!!.idseller=idseller
                                         //!
                                         // print chek items
@@ -126,7 +127,7 @@ object import_checks {
                                                     if(list.size==0){
                                                         product=Product()
                                                         product.name=pit!!.productName
-                                                        product.title=pit!!.productName
+                                                        product.id_fns=pit!!.productName
                                                         idproduct= db.insertProduct(product)!!
                                                         product.id=idproduct
                                                         product.idparent=idproduct

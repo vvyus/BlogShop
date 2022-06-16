@@ -190,7 +190,7 @@ private fun createTreeArrayAdapter(
     arrayAdapter.add("" + "─ "+"Root")//ascii 196
     for (node in nodes) {
         // исключим переносы из фнс для них поле title не пусто
-        if(node.title.isEmpty()) {
+        if(node.id_fns.isEmpty()) {
             var prefix = "\t"
             for (i in 0 until node.level) {
                 prefix = prefix + "\t\t"

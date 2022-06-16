@@ -47,4 +47,6 @@
     <string name="ent_date">Дата</string>
     <string name="ent_time">Время</string>
     <string name="caption_filter_summa">Итого</string>
+    <string name="seller">Продавец</string>
+    <string name="select_seller">Выберите продавца</string>
 </resources>

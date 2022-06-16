@@ -3,7 +3,7 @@ package com.vk.vsvans.BlogShop.model
 class Seller : Comparable<Seller> {
     var id = 0
     var name = ""
-    var title = ""
+    var id_fns = ""
     var description = ""
     var idparent=0
     var fullpath=""

@@ -24,7 +24,7 @@ class DbManager(context: Context) {
     fun insertProduct( product:Product):Int?{
         val values = ContentValues().apply {
             put(DbName.COLUMN_NAME_NAME_PRODUCTS, product.name)
-            put(DbName.COLUMN_NAME_TITLE_PRODUCTS, product.title)
+            put(DbName.COLUMN_NAME_ID_FNS_PRODUCTS, product.id_fns)
             put(DbName.COLUMN_NAME_IDPARENT_PRODUCTS, product.idparent)
             put(DbName.COLUMN_NAME_LEVEL_PRODUCTS, product.level)
             put(DbName.COLUMN_NAME_FULLPATH_PRODUCTS, product.fullpath)
@@ -45,7 +45,7 @@ class DbManager(context: Context) {
 
         while (cursor?.moveToNext()!!) {
             val dataId = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
-            val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_TITLE_PRODUCTS))
+            val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_ID_FNS_PRODUCTS))
             val dataName = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_NAME_PRODUCTS))
             val idparent = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_IDPARENT_PRODUCTS))
             val level = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_LEVEL_PRODUCTS))
@@ -54,7 +54,7 @@ class DbManager(context: Context) {
             val product = Product()
             product.id = dataId
             product.name = dataName
-            product.title=dataTitle
+            product.id_fns=dataTitle
             product.level = level?:0
             product.idparent = idparent?:0
             product.fullpath = fullpath?:""
@@ -69,7 +69,7 @@ class DbManager(context: Context) {
     // Используется при загрузке чеков поиск по вспом полю title для ручного ввода это пол пусто
     suspend fun readProductsTitle(searchText:String): ArrayList<Product> = withContext(Dispatchers.IO) {
         val dataList = ArrayList<Product>()
-        val selection = "${DbName.COLUMN_NAME_TITLE_PRODUCTS} like ?"
+        val selection = "${DbName.COLUMN_NAME_ID_FNS_PRODUCTS} like ?"
         val cursor = db?.query(
             DbName.TABLE_NAME_PRODUCTS, null, selection, arrayOf("%$searchText%"),
             null, null, null
@@ -77,7 +77,7 @@ class DbManager(context: Context) {
 
         while (cursor?.moveToNext()!!) {
             val dataId = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
-            val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_TITLE_PRODUCTS))
+            val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_ID_FNS_PRODUCTS))
             val dataName = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_NAME_PRODUCTS))
             val idparent = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_IDPARENT_PRODUCTS))
             val level = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_LEVEL_PRODUCTS))
@@ -86,7 +86,7 @@ class DbManager(context: Context) {
             val product = Product()
             product.id = dataId
             product.name = dataName
-            product.title=dataTitle
+            product.id_fns=dataTitle
             product.level = level?:0
             product.idparent = idparent?:0
             product.fullpath = fullpath?:""
@@ -103,7 +103,7 @@ class DbManager(context: Context) {
         val selection = BaseColumns._ID + "=$id"
         val values = ContentValues().apply {
             put(DbName.COLUMN_NAME_NAME_PRODUCTS, product.name)
-            put(DbName.COLUMN_NAME_TITLE_PRODUCTS, product.title)
+            put(DbName.COLUMN_NAME_ID_FNS_PRODUCTS, product.id_fns)
             put(DbName.COLUMN_NAME_IDPARENT_PRODUCTS, product.idparent)
             put(DbName.COLUMN_NAME_LEVEL_PRODUCTS, product.level)
             put(DbName.COLUMN_NAME_FULLPATH_PRODUCTS, product.fullpath)
@@ -121,7 +121,7 @@ class DbManager(context: Context) {
     suspend fun insertSellerToDb( title: String, description: String) = withContext(Dispatchers.IO){
         val values = ContentValues().apply {
 
-            put(DbName.COLUMN_NAME_TITLE_SELLERS, title)
+            put(DbName.COLUMN_NAME_ID_FNS_SELLERS, title)
             put(DbName.COLUMN_NAME_DESCRIPTION_SELLERS, description)
 
         }
@@ -133,7 +133,7 @@ class DbManager(context: Context) {
         val selection = BaseColumns._ID + "=$id"
         val values = ContentValues().apply {
             put(DbName.COLUMN_NAME_NAME_SELLERS, seller.name)
-            put(DbName.COLUMN_NAME_TITLE_SELLERS, seller.title)
+            put(DbName.COLUMN_NAME_ID_FNS_SELLERS, seller.id_fns)
             put(DbName.COLUMN_NAME_IDPARENT_SELLERS, seller.idparent)
             put(DbName.COLUMN_NAME_LEVEL_SELLERS, seller.level)
             put(DbName.COLUMN_NAME_FULLPATH_SELLERS, seller.fullpath)
@@ -146,7 +146,7 @@ class DbManager(context: Context) {
 fun insertSeller( seller: Seller) :Int?{
     val values = ContentValues().apply {
         put(DbName.COLUMN_NAME_NAME_SELLERS, seller.name)
-        put(DbName.COLUMN_NAME_TITLE_SELLERS, seller.title)
+        put(DbName.COLUMN_NAME_ID_FNS_SELLERS, seller.id_fns)
         put(DbName.COLUMN_NAME_DESCRIPTION_SELLERS, seller.description)
         put(DbName.COLUMN_NAME_IDPARENT_SELLERS, seller.idparent)
         put(DbName.COLUMN_NAME_LEVEL_SELLERS, seller.level)
@@ -161,7 +161,7 @@ fun insertSeller( seller: Seller) :Int?{
     // Используется при загрузке чеков поиск по вспом полю title для ручного ввода это пол пусто
     suspend fun readSellersTitle(searchText:String): ArrayList<Seller> = withContext(Dispatchers.IO) {
         val dataList = ArrayList<Seller>()
-        val selection = "${DbName.COLUMN_NAME_TITLE_SELLERS} like ?"
+        val selection = "${DbName.COLUMN_NAME_ID_FNS_SELLERS} like ?"
         val cursor = db?.query(
             DbName.TABLE_NAME_SELLERS, null, selection, arrayOf("%$searchText%"),
             null, null, null
@@ -169,7 +169,7 @@ fun insertSeller( seller: Seller) :Int?{
 
         while (cursor?.moveToNext()!!) {
             val dataId = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
-            val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_TITLE_SELLERS))
+            val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_ID_FNS_SELLERS))
             val dataName = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_NAME_SELLERS))
             val idparent = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_IDPARENT_SELLERS))
             val level = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_LEVEL_SELLERS))
@@ -178,7 +178,7 @@ fun insertSeller( seller: Seller) :Int?{
             val seller = Seller()
             seller.id = dataId
             seller.name = dataName
-            seller.title=dataTitle
+            seller.id_fns=dataTitle
             seller.level = level?:0
             seller.idparent = idparent?:0
             seller.fullpath = fullpath?:""
@@ -192,7 +192,7 @@ fun insertSeller( seller: Seller) :Int?{
     @SuppressLint("Range")
     suspend fun readSellersFromDb(searchText:String): ArrayList<Seller> = withContext(Dispatchers.IO) {
         val dataList = ArrayList<Seller>()
-        val selection = "${DbName.COLUMN_NAME_TITLE_SELLERS} like ?"
+        val selection = "${DbName.COLUMN_NAME_ID_FNS_SELLERS} like ?"
         val cursor = db?.query(
             DbName.TABLE_NAME_SELLERS, null, selection, arrayOf("%$searchText%"),
             null, null, null
@@ -201,11 +201,11 @@ fun insertSeller( seller: Seller) :Int?{
         while (cursor?.moveToNext()!!) {
             val dataId =
                 cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
-            val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_TITLE_SELLERS))
+            val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_ID_FNS_SELLERS))
             val dataDescription =
                 cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_DESCRIPTION_SELLERS))
             val item = Seller()
-            item.title = dataTitle
+            item.id_fns = dataTitle
             item.description = dataDescription
             item.id = dataId
             dataList.add(item)
@@ -333,6 +333,8 @@ fun insertSeller( seller: Seller) :Int?{
             val dataId = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
             val time = cursor.getLong(cursor.getColumnIndex(DbName.COLUMN_NAME_TIME))
             val dataSumma = cursor.getDouble(cursor.getColumnIndex(DbName.COLUMN_NAME_SUMMA_PURCHASES))
+            val sellername=cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_SELLER_NAME))
+            val sellerid=cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_SELLER_ID))
             val purchase = Purchase()
             purchase.title = dataTitle
             purchase.content = dataContent
@@ -342,6 +344,8 @@ fun insertSeller( seller: Seller) :Int?{
             purchase.time = time
             purchase.summa=dataSumma
             purchase.idfns=dataIdFns
+            purchase.idseller=sellerid
+            purchase.sellername=sellername
             purchaseList.add(purchase)
             amount+=dataSumma
         }
@@ -349,48 +353,63 @@ fun insertSeller( seller: Seller) :Int?{
     }
         @RequiresApi(Build.VERSION_CODES.N)
         @SuppressLint("Range")
-        suspend fun readOnePurchase(id:Int): Purchase = withContext(Dispatchers.IO) {
-     //  fun readPurchasesItemFromDb(id:Int): ArrayList<Purchase>  {
+        suspend fun readOnePurchase(id:Int): Purchase? = withContext(Dispatchers.IO) {
 
-            val selection = BaseColumns._ID + " =?"
-            //arrayOf(id.toString())
-            //arrayOf(BaseColumns._ID,DbName.COLUMN_NAME_TITLE,DbName.COLUMN_NAME_CONTENT,DbName.COLUMN_NAME_TIME
-            val cursor = db?.query(
-                DbName.TABLE_NAME,
-                null,
-                selection, arrayOf(id.toString()),
-                null, null, null
+            val selection ="${DbName.TABLE_NAME}"+"."+BaseColumns._ID + "=?"
+            val selectionArgs = arrayOf(id.toString())
+            val temp: String = DbName.PURCHASE_QUERY
+            val selectQuery: String = temp.replace(
+                DbName.WHERE_FOR_PURCHASE_QUERY,
+                "WHERE $selection "
             )
-            val purchase = Purchase()
-            while (cursor?.moveToNext()!!) {
-
-                val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_TITLE))
-                val dataContent =
-                    cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_CONTENT))
-                val dataContentHtml =
-                    cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_CONTENT_HTML))
-                val dataIdFns =
-                    cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_ID_FNS))
-                val dataId =
-                    cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
-                val time =
-                    cursor.getLong(cursor.getColumnIndex(DbName.COLUMN_NAME_TIME))
-                val dataSumma =
-                    cursor.getDouble(cursor.getColumnIndex(DbName.COLUMN_NAME_SUMMA_PURCHASES))
-
-                purchase.title = dataTitle
-                purchase.content = dataContent
-                purchase.content_html = dataContentHtml
-                purchase.id = dataId
-                purchase.time = time
-                purchase.summa=dataSumma
-                purchase.idfns=dataIdFns
-                break
-
+            val cursor = db?.rawQuery(selectQuery, selectionArgs)
+            var amount=0.0
+            var purchase :Purchase?= null
+            val purchaseList= ArrayList<Purchase>()
+            if(cursor!=null){
+                amount=setPurchaseListFromCursor(cursor!!,purchaseList)
+                purchase=if(purchaseList.size>0) purchaseList[0] else null
+                cursor!!.close()
             }
-            //if(readDataCallback!=null)readDataCallback.readData(dataList)
-
-            cursor.close()
+//            val cursor = db?.query(
+//                DbName.TABLE_NAME,
+//                null,
+//                selection, arrayOf(id.toString()),
+//                null, null, null
+//            )
+//            val purchase = Purchase()
+//            while (cursor?.moveToNext()!!) {
+//
+//                val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_TITLE))
+//                val dataContent =
+//                    cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_CONTENT))
+//                val dataContentHtml =
+//                    cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_CONTENT_HTML))
+//                val dataIdFns =
+//                    cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_ID_FNS))
+//                val dataId =
+//                    cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
+//                val time =
+//                    cursor.getLong(cursor.getColumnIndex(DbName.COLUMN_NAME_TIME))
+//                val dataSumma =
+//                    cursor.getDouble(cursor.getColumnIndex(DbName.COLUMN_NAME_SUMMA_PURCHASES))
+//                val sellername=cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_SELLER_NAME))
+//                val sellerid=cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_SELLER_ID))
+//                purchase.title = dataTitle
+//                purchase.content = dataContent
+//                purchase.content_html = dataContentHtml
+//                purchase.id = dataId
+//                purchase.time = time
+//                purchase.summa=dataSumma
+//                purchase.idfns=dataIdFns
+//                purchase.sellername=sellername
+//                purchase.idseller=sellerid
+//                break
+//
+//            }
+//            //if(readDataCallback!=null)readDataCallback.readData(dataList)
+//
+//            cursor.close()
             return@withContext purchase
             //return dataList
         }

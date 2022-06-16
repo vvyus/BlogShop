@@ -74,7 +74,7 @@ class PurchaseRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
 //                tvDescription.setMovementMethod(LinkMovementMethod.getInstance())
 //                Linkify.addLinks(tvDescription, Linkify.ALL);
                 tvSummaPuchase.text= purchase.summa.toString()
-                tvTitle.text=purchase.title
+                tvSeller.text=purchase.sellername
                 tvPurchaseTime.setText(UtilsHelper.getDate(purchase.time))
                 tvPurchaseTime.setOnClickListener{
                     println(tvPurchaseTime.text)
