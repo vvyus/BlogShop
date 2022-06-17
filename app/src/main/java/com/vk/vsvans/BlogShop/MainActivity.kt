@@ -4,7 +4,6 @@ import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -13,11 +12,13 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.core.view.MenuItemCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.navigation.NavigationView
 import com.vk.vsvans.BlogShop.activity.EditPurchaseActivity
@@ -26,11 +27,11 @@ import com.vk.vsvans.BlogShop.adapters.PurchaseRcAdapter
 import com.vk.vsvans.BlogShop.databinding.ActivityMainBinding
 import com.vk.vsvans.BlogShop.dialogs.DialogHelper
 import com.vk.vsvans.BlogShop.fns.import_checks
-import com.vk.vsvans.BlogShop.interfaces.*
+import com.vk.vsvans.BlogShop.interfaces.IDeleteItem
+import com.vk.vsvans.BlogShop.interfaces.OnClickItemCallback
 import com.vk.vsvans.BlogShop.model.DbManager
 import com.vk.vsvans.BlogShop.model.Product
 import com.vk.vsvans.BlogShop.model.Purchase
-import com.vk.vsvans.BlogShop.model.PurchaseItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -81,14 +82,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         rootElement= ActivityMainBinding.inflate(layoutInflater)
         val view=rootElement.root
         setContentView(view)
-    //устанавливаем тоолбар
-    toolbar=rootElement.mainContent.toolbar
-    //setUpToolbar()
-    setSupportActionBar(toolbar)
-    toolbar.title=""
 
-//
-    init()
+        init()
+
         initRecyclerView()
         bottomMenuOnClick()
 
@@ -122,15 +118,23 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return str
     }
     private fun init(){
-        // строка с подключенным toolbar(какой тоолбар исп в активити) должна стоять выше всех
-        setSupportActionBar(rootElement.mainContent.toolbar)
+        rootElement.navView.setNavigationItemSelectedListener(this)
+
+        toolbar=rootElement.mainContent.toolbar
+        toolbar.title=""
+        setSupportActionBar(toolbar)
+
         val toggle= ActionBarDrawerToggle(this,rootElement.drawerLayout,toolbar,R.string.open,R.string.close)
         rootElement.drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
-        rootElement.navView.setNavigationItemSelectedListener(this)
-        //header с нулевой позиции
-       // tvAccount=rootElement.navView.getHeaderView(0).findViewById(R.id.tvAccountEmail)
-        //showFilterPanel(false,"")
+
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        getMenuInflater().inflate(R.menu.menu_choose_purchase_item, menu)
+        setUpToolbar()
+        //return super.onCreateOptionsMenu(menu)
+        return true
     }
 
     private fun initRecyclerView(){
@@ -186,9 +190,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             R.id.id_purchase_drug->{
                 Toast.makeText(this,"Pressed drug", Toast.LENGTH_LONG).show()
-            }
+            }else-> rootElement.drawerLayout.closeDrawer(GravityCompat.START)
+
         }
-        rootElement.drawerLayout.closeDrawer(GravityCompat.START)
         return true
     }
 
@@ -249,12 +253,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        getMenuInflater().inflate(R.menu.menu_choose_purchase_item, menu)
-        setUpToolbar()
-        return super.onCreateOptionsMenu(menu)
-    }
-
     private fun setUpToolbar() {
         rootElement.apply {
 
@@ -302,19 +300,31 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             // GO BACK
             toolbar.setNavigationOnClickListener {
-                onBackPressed()
+ //               onBackPressed()
+                val drawer = rootElement.drawerLayout//findViewById<DrawerLayout>(R.id.drawerLayout)
+
+                if (!drawer.isDrawerOpen(GravityCompat.START)) {
+                    drawer.openDrawer(GravityCompat.START)
+                }else{
+                    drawer.closeDrawer(GravityCompat.START)
+                }
             }
         }
     }//setupToolbar
 
     override fun onBackPressed() {
-        //super.onBackPressed()
-        if (!searchView.isIconified()) {
-            searchView.onActionViewCollapsed();
-            //showFilterPanel(false,"")
-            resetFilterPanel("")
-        } else {
-            super.onBackPressed();
+        val drawer =rootElement.drawerLayout //findViewById<DrawerLayout>(R.id.drawerLayout)
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START)
+        }else {
+            //super.onBackPressed()
+            if (!searchView.isIconified()) {
+                searchView.onActionViewCollapsed();
+                //showFilterPanel(false,"")
+                resetFilterPanel("")
+            } else {
+                super.onBackPressed();
+            }
         }
     }
 }
