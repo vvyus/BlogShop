@@ -36,4 +36,17 @@
     <string name="product">Товар</string>
     <string name="select_product">Выберите товар</string>
     <string name="import_fns">ФНС</string>
+
+    <string name="sun">Вс</string>
+    <string name="mon">Пн</string>
+    <string name="tue">Вт</string>
+    <string name="wed">Ср</string>
+    <string name="thu">Чт</string>
+    <string name="fri">Пт</string>
+    <string name="sat">Сб</string>
+    <string name="ent_date">Дата</string>
+    <string name="ent_time">Время</string>
+    <string name="caption_filter_summa">Итого</string>
+    <string name="seller">Продавец</string>
+    <string name="select_seller">Выберите продавца</string>
 </resources>

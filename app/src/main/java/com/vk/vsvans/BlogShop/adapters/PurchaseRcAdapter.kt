@@ -3,15 +3,20 @@ package com.vk.vsvans.BlogShop.adapters
 import android.graphics.Color
 import android.os.Build
 import android.text.Html
+import android.text.method.LinkMovementMethod
+import android.text.util.Linkify
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.vk.vsvans.BlogShop.R
-import com.vk.vsvans.BlogShop.databinding.PurchaseListItemBinding
+import com.vk.vsvans.BlogShop.databinding.ItemPurchaseListBinding
 import com.vk.vsvans.BlogShop.interfaces.OnClickItemCallback
+import com.vk.vsvans.BlogShop.mainActivity
 import com.vk.vsvans.BlogShop.model.Purchase
+import com.vk.vsvans.BlogShop.utils.UtilsHelper
 import com.vk.vsvans.BlogShop.utils.makeSpannableString
 
 class PurchaseRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerView.Adapter<PurchaseRcAdapter.PurchaseHolder>() {
@@ -24,10 +29,11 @@ class PurchaseRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
         selected_color=parent.context.resources.getColor(R.color.color_red)
 
         val binding=
-            PurchaseListItemBinding.inflate(LayoutInflater.from(parent.context),parent,false)
-        return PurchaseHolder(binding)
+            ItemPurchaseListBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        return PurchaseHolder(binding,clickItemCallback)
     }
     //fill and show holder in position
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onBindViewHolder(holder: PurchaseHolder, position: Int) {
         holder.setData(purchaseArray[position])
         holder.itemView.setOnClickListener{
@@ -60,14 +66,24 @@ class PurchaseRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
         notifyDataSetChanged()
     }
 
-    class PurchaseHolder(val binding:PurchaseListItemBinding): RecyclerView.ViewHolder(binding.root) {
+    class PurchaseHolder(val binding:ItemPurchaseListBinding,val clickItemCallback: OnClickItemCallback?): RecyclerView.ViewHolder(binding.root) {
 
         @RequiresApi(Build.VERSION_CODES.N)
         fun setData(purchase:Purchase){
             binding.apply {
                 tvDescription.text= Html.fromHtml(purchase.content_html,0)
+//                tvDescription.setMovementMethod(LinkMovementMethod.getInstance())
+//                Linkify.addLinks(tvDescription, Linkify.ALL);
                 tvSummaPuchase.text= purchase.summa.toString()
-                tvTitle.text=purchase.title
+                tvSeller.text=purchase.sellername
+                tvPurchaseTime.setText(UtilsHelper.getDate(purchase.time))
+                tvPurchaseTime.setOnClickListener{
+                    println(tvPurchaseTime.text)
+                    if(clickItemCallback!=null) clickItemCallback!!.onTimeClick()
+                }
+                tvSeller.setOnClickListener{
+                    mainActivity!!.onSellerClick(purchase)
+                }
                 //tvTitle.tag= com.vk.vsvans.BlogShop.helper.Tag(purchase.id,se)
             }
             showEditPanel(true)

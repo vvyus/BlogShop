@@ -10,6 +10,7 @@ import com.vk.vsvans.BlogShop.R
 import com.vk.vsvans.BlogShop.model.Product
 import com.vk.vsvans.BlogShop.model.Purchase
 import com.vk.vsvans.BlogShop.model.PurchaseItem
+import com.vk.vsvans.BlogShop.model.Seller
 import com.vk.vsvans.BlogShop.utils.DateTimeUtils
 import com.vk.vsvans.BlogShop.utils.makeSpannableString
 import com.vk.vsvans.BlogShop.utils.plus
@@ -78,8 +79,32 @@ object import_checks {
                                             purchase!!.time= dateTimeLong as Long
                                         }
                                         purchase!!.summa=totalSum
-                                        purchase!!.title=user
+                                        var sellername=user
+                                        purchase!!.title=sellername //user==sellername
 
+                                        //!
+                                        var seller: Seller?=null
+                                        val list=db.readSellersTitle(user)
+                                        var idseller=0
+                                        if(list.size==0){
+                                            seller=Seller()
+                                            seller.name=sellername
+                                            seller.id_fns=sellername
+                                            idseller= db.insertSeller(seller)!!
+                                            seller.id=idseller
+                                            seller.idparent=idseller
+                                            seller.fullpath=idseller.toString()
+
+                                        }else{
+                                            seller= list[0] as Seller
+                                            idseller=seller.id
+                                            sellername=seller.name
+                                        }
+
+                                        db.updateSeller(seller)
+                                        purchase!!.sellername=sellername
+                                        purchase!!.idseller=idseller
+                                        //!
                                         // print chek items
                                         var content_temp="".makeSpannableString()
                                         db.removePurchaseItems(idPurchase)
@@ -94,19 +119,26 @@ object import_checks {
                                                     pit!!.quantity= item.getLong("quantity").toDouble()
                                                     pit!!.summa=item.getLong("sum") / 100.0
                                                     pit!!.productName=item.getString("name")
-                                                    content_temp+= pit!!.getContent(title_color)+"\n\n"
+                                                    content_temp+= pit!!.getContentShort(title_color)+"\n\n"
                                                     println("${pit!!.productName}  ${pit!!.quantity}  ${pit!!.summa}")
-                                                    val product=Product()
+                                                    var product:Product?=null
                                                     val list=db.readProductsTitle(pit!!.productName)
                                                     var idproduct=0
                                                     if(list.size==0){
+                                                        product=Product()
                                                         product.name=pit!!.productName
-                                                        product.title=pit!!.productName
+                                                        product.id_fns=pit!!.productName
                                                         idproduct= db.insertProduct(product)!!
-                                                        pit!!.idProduct=idproduct
+                                                        product.id=idproduct
+                                                        product.idparent=idproduct
+                                                        product.fullpath=idproduct.toString()
+
                                                     }else{
-                                                        pit!!.idProduct=list[0].id
+                                                        product= list[0] as Product
+                                                        idproduct=product.id
                                                     }
+                                                    db.updateProduct(product)
+                                                    pit!!.idProduct=idproduct
                                                     db.insertPurchaseItem(pit!!)
                                                 }
                                             }

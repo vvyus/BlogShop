@@ -1,33 +1,39 @@
 package com.vk.vsvans.BlogShop.activity
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
 import android.text.Html
-import android.text.SpannableString
+import android.text.TextWatcher
 import android.view.View
+import android.widget.DatePicker
+import android.widget.TimePicker
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import com.vk.vsvans.BlogShop.R
 import com.vk.vsvans.BlogShop.adapters.CardItemPurchaseRcAdapter
 import com.vk.vsvans.BlogShop.databinding.ActivityEditPurchaseBinding
 import com.vk.vsvans.BlogShop.dialogs.DialogHelper
+import com.vk.vsvans.BlogShop.dialogs.DialogSpinnerHelper
 import com.vk.vsvans.BlogShop.fragments.PurchaseItemListFragment
-import com.vk.vsvans.BlogShop.interfaces.IFragmentCloseInterface
+import com.vk.vsvans.BlogShop.helper.SpinnerHelper
 import com.vk.vsvans.BlogShop.interfaces.IFragmentCallBack
+import com.vk.vsvans.BlogShop.interfaces.IFragmentCloseInterface
 import com.vk.vsvans.BlogShop.interfaces.IUpdatePurchaseItemList
-import com.vk.vsvans.BlogShop.interfaces.OnClickItemCallback
 import com.vk.vsvans.BlogShop.mainActivity
-import com.vk.vsvans.BlogShop.model.DbManager
-import com.vk.vsvans.BlogShop.model.Purchase
-import com.vk.vsvans.BlogShop.model.PurchaseItem
-import com.vk.vsvans.BlogShop.utils.UtilsHelper
-import com.vk.vsvans.BlogShop.utils.makeSpannableString
-import com.vk.vsvans.BlogShop.utils.plus
+import com.vk.vsvans.BlogShop.model.*
+import com.vk.vsvans.BlogShop.utils.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.math.BigDecimal
+import java.math.RoundingMode
+import java.text.*
+import java.util.*
+
 
 class EditPurchaseActivity : AppCompatActivity() {
 
@@ -84,8 +90,10 @@ class EditPurchaseActivity : AppCompatActivity() {
                 if(purchase!=null){
                     rootElement.apply {
                         //content_temp=Html.fromHtml(purchase!!.content_html,0).makeSpannableString()
-                        edTitle.setText(purchase!!.title)
+                        //edTitle.setText(purchase!!.title)
+                        tvSellerSelect.text=purchase!!.sellername
                         edSummaPurchase.setText(purchase!!.summa.toString())
+                        initDateTime()
                     }
                     val purchaseItems=dbManager.readPurchaseItems(idPurchase)
                     (rootElement.vpPurchaseItems.adapter as CardItemPurchaseRcAdapter).update(purchaseItems)
@@ -94,20 +102,80 @@ class EditPurchaseActivity : AppCompatActivity() {
         }else {
             //idPurchase==0
             purchase= Purchase()
+            if(purchase!=null){
+                purchase!!.time=UtilsHelper.getCurrentDate()
+                initDateTime()
+            }
         }
     }
 
     private fun init(){
         cardItemPurchaseAdapter= CardItemPurchaseRcAdapter()
         rootElement.vpPurchaseItems.adapter=cardItemPurchaseAdapter
+        rootElement.tvSellerSelect.setOnClickListener {
+            val dialog= DialogSpinnerHelper()
+            DialogHelper.job?.cancel()
+            DialogHelper.job = CoroutineScope(Dispatchers.Main).launch {
+                val listSeller = SpinnerHelper.getAllSeller(this@EditPurchaseActivity)
+                dialog.showSpinnerSellerDialog(this@EditPurchaseActivity, listSeller, rootElement.tvSellerSelect)
+            }
+        }
+    }
 
+    private fun initDateTime(){
+        initDateTimeButtons()
+        rootElement.edDatePart.setOnClickListener{
+            val calendar: Calendar = Calendar.getInstance()
+            calendar.setTime(Date(purchase!!.time))
+            DatePickerDialog(
+                this,
+                { datePicker: DatePicker?, year: Int, monthOfYear: Int, dayOfMonth: Int ->
+                    val calendar1: Calendar = Calendar.getInstance()
+                    calendar1.setTime(Date(purchase!!.time))
+                    calendar1.set(year, monthOfYear, dayOfMonth)
+                    purchase!!.time=calendar1.getTimeInMillis()
+                    initDateTimeButtons()
+                },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+            )
+                .show()
+        }
+        rootElement.edTimePart.setOnClickListener{
+            val calendar = Calendar.getInstance()
+            calendar.time = Date(purchase!!.time)
+            TimePickerDialog(
+                this,
+                { timePicker: TimePicker?, hourOfDay: Int, minute: Int ->
+                    val calendar1 = Calendar.getInstance()
+                    calendar1.time = Date(purchase!!.time)
+                    calendar1[calendar1[Calendar.YEAR], calendar1[Calendar.MONTH], calendar1[Calendar.DAY_OF_MONTH], hourOfDay] =
+                        minute
+                    purchase!!.time=calendar1.getTimeInMillis()
+                    initDateTimeButtons()
+                },
+                calendar[Calendar.HOUR_OF_DAY],
+                calendar[Calendar.MINUTE],
+                true
+            ).show()
+        }
+    }
+
+    private fun initDateTimeButtons(){
+        //val mDateMediumFormat = SimpleDateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault())
+        //
+        val mDateMediumFormat = SimpleDateFormat("dd MMMM yyyy",Locale.getDefault())
+        rootElement.edDatePart.setText(mDateMediumFormat.format(Date(purchase!!.time)))
+        val mDateShortFormat =  SimpleDateFormat("HH:mm", Locale.getDefault())
+        rootElement.edTimePart.setText(mDateShortFormat.format(Date(purchase!!.time)))
     }
 
     fun clearResultArray(){
         listResultArray.clear()
     }
 
-    fun onClickSelectCategory(view:View){
+    fun onClickSelectSeller(view:View){
 //        val listCategory=resources.getStringArray(R.array.Category).toMutableList() as ArrayList
 //        dialog.showSpinnerDialog(this,listCategory,rootElement.tvCategory)
 
@@ -128,9 +196,14 @@ class EditPurchaseActivity : AppCompatActivity() {
 //                   }
                    //if(purchase==null) purchase=Purchase()
                    //здесь то что редактируется а не пришло из фрагмента
-                   purchase!!.summa= edSummaPurchase.text.toString().toDouble()
-                   purchase!!.title=edTitle.text.toString()
-                   purchase!!.time=UtilsHelper.getCurrentDate()
+                   purchase!!.summa= edSummaPurchase.value.toDouble();//.text.toString().toDouble()
+                   //purchase!!.title=edTitle.text.toString()
+                   if(tvSellerSelect.tag!=null) {
+                       val seller=tvSellerSelect.tag as Seller
+                       purchase!!.idseller=seller.id
+                       purchase!!.sellername=seller.name
+                   }
+                   purchase!!.time= DateTimeUtils.parseDateTimeString(rootElement.edDatePart.text.toString()+" "+rootElement.edTimePart.text.toString())!!
                    if(idPurchase>0){
                        //dbManager.updatePurchase(idPurchase,edTitle.text.toString(),edDescription.text.toString())
                        dbManager.updatePurchase(purchase!!)
@@ -189,7 +262,7 @@ class EditPurchaseActivity : AppCompatActivity() {
                 val title_color=getColor(R.color.green_main)
                 var content_temp="".makeSpannableString()
                 for(pit:PurchaseItem in list){
-                    content_temp+=pit.getContent(title_color)+"\n\n"
+                    content_temp+=pit.getContentShort(title_color)+"\n\n"
                     summa+=pit.summa
                 }
                 purchase!!.content= content_temp.toString()
@@ -236,5 +309,6 @@ class EditPurchaseActivity : AppCompatActivity() {
             )
         }
     }
+
 
 }//activity

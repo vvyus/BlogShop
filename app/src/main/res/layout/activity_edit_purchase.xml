@@ -6,9 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/gray_dark"
-    tools:context=".activity.EditPurchaseActivity"
+    android:gravity="center_vertical"
     android:orientation="vertical"
-    >
+    tools:context=".activity.EditPurchaseActivity">
 
     <ScrollView
         android:id="@+id/scrollViewMain"
@@ -64,6 +64,7 @@
                         android:background="@drawable/edit_image_button"
                         android:onClick="onClickGetPurchaseItems"
                         android:padding="5dp"
+                        android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/ic_edit_purchase" />
@@ -93,23 +94,117 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
 
+                        <LinearLayout
+                            android:id="@+id/llCaptionDateTime"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginEnd="10dp"
+                            android:orientation="horizontal"
+                            android:paddingStart="10dp">
+
+                            <TextView
+                                android:id="@+id/tvCaptionDate"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="40dp"
+                                android:layout_weight="2"
+                                android:fontFamily="sans-serif-medium"
+                                android:text="@string/ent_date"
+                                android:textAlignment="textStart"
+                                android:textColor="@color/green_main"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tvCaptionTime"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:fontFamily="sans-serif-medium"
+                                android:text="@string/ent_time"
+                                android:textAlignment="textStart"
+                                android:textColor="@color/green_main"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/llDateTime"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginEnd="10dp"
+                            android:baselineAligned="false"
+                            android:orientation="horizontal">
+
+                            <EditText
+                                android:id="@+id/edDatePart"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="40dp"
+                                android:layout_weight="1"
+                                android:backgroundTint="@color/white"
+                                android:drawableEnd="@drawable/ic_arrow_drop_down"
+                                android:ems="10"
+                                android:focusable="false"
+                                android:fontFamily="sans-serif-medium"
+                                android:inputType="none|textNoSuggestions"
+                                android:cursorVisible="false"
+                                android:singleLine="false"
+                                android:text="13 июня 2022"
+                                android:textAlignment="textStart"
+                                android:textColorHint="@color/green_main"
+                                />
+
+                            <EditText
+                                android:id="@+id/edTimePart"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+                                android:backgroundTint="@color/white"
+                                android:drawableEnd="@drawable/ic_arrow_drop_down"
+                                android:ems="10"
+                                android:focusable="false"
+                                android:fontFamily="sans-serif-medium"
+                                android:inputType="none|textNoSuggestions"
+                                android:cursorVisible="false"
+                                android:singleLine="false"
+                                android:text="10:05"
+                                android:textAlignment="textStart"
+                                android:textColorHint="@color/green_main"
+                                />
+
+                        </LinearLayout>
+                        <LinearLayout
+                            android:id="@+id/divider9"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:background="@color/green_main"
+                            android:orientation="horizontal"></LinearLayout>
+
                         <TextView
-                            android:id="@+id/tvTitleCategory"
+                            android:id="@+id/tvCaptionSeller"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:layout_marginTop="10dp"
-                            android:text="@string/category"
+                            android:fontFamily="sans-serif-medium"
+                            android:text="@string/seller"
                             android:textColor="@color/green_main"
+                            android:textSize="16sp"
                             android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/tvCategory"
+                            android:id="@+id/tvSellerSelect"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:onClick="onClickSelectCategory"
+                            android:onClick="onClickSelectSeller"
                             android:padding="10dp"
-                            android:text="@string/select_category"
+                            android:text="@string/select_seller"
                             android:textColor="@color/black"
                             android:textSize="18sp"
                             android:textStyle="bold" />
@@ -124,58 +219,33 @@
                             android:orientation="horizontal"></LinearLayout>
 
                         <TextView
-                            android:id="@+id/tvProductName"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:layout_marginTop="10dp"
-                            android:text="@string/title"
-                            android:textColor="@color/green_main"
-                            android:textStyle="bold" />
-
-                        <EditText
-                            android:id="@+id/edTitle"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@null"
-                            android:ems="10"
-                            android:hint="@string/title_hint"
-                            android:inputType="textPersonName"
-                            android:padding="10dp"
-                            android:textColorHint="@color/gray_dark" />
-
-                        <LinearLayout
-                            android:id="@+id/divider1"
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginStart="10dp"
-                            android:layout_marginEnd="10dp"
-                            android:background="@color/green_main"
-                            android:orientation="horizontal">
-
-                        </LinearLayout>
-
-                        <TextView
                             android:id="@+id/tvTitleSumma"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:layout_marginTop="10dp"
+                            android:fontFamily="sans-serif-medium"
                             android:text="@string/summa"
                             android:textColor="@color/green_main"
+                            android:textSize="16sp"
                             android:textStyle="bold" />
 
 
-                        <EditText
+                        <com.vk.vsvans.BlogShop.utils.NumberEditText
                             android:id="@+id/edSummaPurchase"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@null"
                             android:ems="10"
                             android:hint="@string/summa_hint"
-                            android:inputType="number"
+                            android:inputType="numberDecimal"
+                            android:selectAllOnFocus="true"
                             android:padding="10dp"
-                            android:textColorHint="@color/gray_dark" />
+                            android:textColorHint="@color/gray_dark"
+                            app:digits_after_dot="2"
+                            app:digits_before_dot="10"
+                            app:show_soft_input_on_focus="true"
+                            />
 
 
                         <LinearLayout

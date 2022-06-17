@@ -120,7 +120,7 @@
                     android:textColor="@color/green_main"
                     android:textStyle="bold" />
 
-                <EditText
+                <com.vk.vsvans.BlogShop.utils.NumberEditText
                     android:id="@+id/edPriceItem"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -130,7 +130,11 @@
                     android:inputType="numberDecimal"
                     android:minHeight="48dp"
                     android:padding="10dp"
-                    android:textColorHint="@color/gray_dark" />
+                    android:textColorHint="@color/gray_dark"
+                    app:digits_after_dot="2"
+                    app:digits_before_dot="10"
+                    app:show_soft_input_on_focus="true"
+                    />
 
                 <LinearLayout
                     android:id="@+id/divider1"
@@ -153,7 +157,7 @@
                     android:textColor="@color/green_main"
                     android:textStyle="bold" />
 
-                <EditText
+                <com.vk.vsvans.BlogShop.utils.NumberEditText
                     android:id="@+id/edQuantityItem"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -163,7 +167,11 @@
                     android:inputType="numberDecimal"
                     android:minHeight="48dp"
                     android:padding="10dp"
-                    android:textColorHint="@color/gray_dark" />
+                    android:textColorHint="@color/gray_dark"
+                    app:digits_after_dot="3"
+                    app:digits_before_dot="10"
+                    app:show_soft_input_on_focus="true"
+                    />
 
                 <LinearLayout
                     android:id="@+id/divider2"
@@ -186,7 +194,7 @@
                     android:textColor="@color/green_main"
                     android:textStyle="bold" />
 
-                <EditText
+                <com.vk.vsvans.BlogShop.utils.NumberEditText
                     android:id="@+id/edSummaItem"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -196,7 +204,11 @@
                     android:inputType="numberDecimal"
                     android:minHeight="48dp"
                     android:padding="10dp"
-                    android:textColorHint="@color/gray_dark" />
+                    android:textColorHint="@color/gray_dark"
+                    app:digits_after_dot="2"
+                    app:digits_before_dot="10"
+                    app:show_soft_input_on_focus="true"
+                    />
 
                 <LinearLayout
                     android:id="@+id/divider3"

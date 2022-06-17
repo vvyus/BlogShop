@@ -17,6 +17,7 @@ import com.vk.vsvans.BlogShop.adapters.PurchaseItemRcAdapter
 import com.vk.vsvans.BlogShop.databinding.ListPurchaseItemFragBinding
 import com.vk.vsvans.BlogShop.dialogs.DialogHelper
 import com.vk.vsvans.BlogShop.interfaces.*
+import com.vk.vsvans.BlogShop.model.Product
 
 import com.vk.vsvans.BlogShop.model.PurchaseItem
 
@@ -87,6 +88,11 @@ class PurchaseItemListFragment(private val fragCloseInterface:IFragmentCloseInte
                     Toast.makeText(activity as EditPurchaseActivity,R.string.no_selected_item, Toast.LENGTH_LONG).show()
                 }
             }
+
+            override fun onNewItem(parent: Product) {}
+            override fun refreshItem() {}
+            override fun onParentItem() {}
+            override fun onTimeClick() {}
         })
 // end assign adapter
 

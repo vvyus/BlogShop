@@ -22,12 +22,12 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
+        <item name="colorAccent">@color/blue_color</item>
     </style>
 
-    <style name="ActionBarCustom" >
+    <style name="ActionBarCustom">
         <!-- Primary brand color. -->
         <item name="android:textColorSecondary">@color/green_main</item>
-
     </style>
 
     <style name="ToolbarMainStyle" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -36,4 +36,4 @@
         <item name="fontFamily">sans-serif-condensed</item>
     </style>
 
-</resources>
+ </resources>
