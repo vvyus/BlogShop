@@ -23,12 +23,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.navigation.NavigationView
 import com.vk.vsvans.BlogShop.activity.EditPurchaseActivity
 import com.vk.vsvans.BlogShop.activity.ProductActivity
+import com.vk.vsvans.BlogShop.activity.SellerActivity
 import com.vk.vsvans.BlogShop.adapters.PurchaseRcAdapter
 import com.vk.vsvans.BlogShop.databinding.ActivityMainBinding
 import com.vk.vsvans.BlogShop.dialogs.DialogHelper
 import com.vk.vsvans.BlogShop.fns.import_checks
 import com.vk.vsvans.BlogShop.interfaces.IDeleteItem
 import com.vk.vsvans.BlogShop.interfaces.OnClickItemCallback
+import com.vk.vsvans.BlogShop.model.BaseList
 import com.vk.vsvans.BlogShop.model.DbManager
 import com.vk.vsvans.BlogShop.model.Product
 import com.vk.vsvans.BlogShop.model.Purchase
@@ -59,7 +61,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         override fun onEditItem() {}
 
         override fun onDeleteItem() {}
-        override fun onNewItem(parent: Product) {}
+        override fun onNewItem(parent: BaseList) {}
         override fun refreshItem() {}
         override fun onParentItem() {}
         override fun onTimeClick() {
@@ -207,18 +209,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     startActivity(i)
                     //Toast.makeText(this@MainActivity,"Pressed new purchase", Toast.LENGTH_LONG).show()
                 }
-                R.id.id_refresh_purchase->{
-                    //resetFilterPanel("")
-                    isSetFilter=false
-                    fillAdapter("")
-//                    val id=adapter.getPurchaseId()
-//                    if(id>0) {
-//                        val i = Intent(this@MainActivity, EditPurchaseActivity::class.java)
-//                        i.putExtra(R.string.PURCHASE_ID.toString(), id)
-//                        // сообщаем системе о запуске активити
-//                        startActivity(i)
-//                    }
-                }
+
+//                R.id.id_refresh_purchase->{
+//                    //resetFilterPanel("")
+//                    isSetFilter=false
+//                    fillAdapter("")
+//                }
+//
                 R.id.id_delete_purchase->{
                     val id=adapter.getPurchaseId()
                     if(id>0) {
@@ -236,6 +233,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
                 R.id.id_product->{
                     val intent= Intent(this@MainActivity, ProductActivity::class.java)
+                    intent.putExtra(R.string.PURCHASE_ID.toString(),0)
+                    // сообщаем системе о запуске активити
+                    startActivity(intent)
+                    //Toast.makeText(this@MainActivity,"Pressed new purchase", Toast.LENGTH_LONG).show()
+                }
+                R.id.id_seller->{
+                    val intent= Intent(this@MainActivity, SellerActivity::class.java)
                     intent.putExtra(R.string.PURCHASE_ID.toString(),0)
                     // сообщаем системе о запуске активити
                     startActivity(intent)

@@ -17,6 +17,7 @@ import com.vk.vsvans.BlogShop.adapters.PurchaseItemRcAdapter
 import com.vk.vsvans.BlogShop.databinding.ListPurchaseItemFragBinding
 import com.vk.vsvans.BlogShop.dialogs.DialogHelper
 import com.vk.vsvans.BlogShop.interfaces.*
+import com.vk.vsvans.BlogShop.model.BaseList
 import com.vk.vsvans.BlogShop.model.Product
 
 import com.vk.vsvans.BlogShop.model.PurchaseItem
@@ -89,7 +90,7 @@ class PurchaseItemListFragment(private val fragCloseInterface:IFragmentCloseInte
                 }
             }
 
-            override fun onNewItem(parent: Product) {}
+            override fun onNewItem(parent: BaseList) {}
             override fun refreshItem() {}
             override fun onParentItem() {}
             override fun onTimeClick() {}

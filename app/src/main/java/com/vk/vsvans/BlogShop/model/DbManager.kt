@@ -34,36 +34,6 @@ class DbManager(context: Context) {
         return id?.toInt()
     }
 
-    @SuppressLint("Range")
-    suspend fun readSellers(searchText: String): ArrayList<Seller> = withContext(Dispatchers.IO) {
-        val dataList = ArrayList<Seller>()
-        val selection = "${DbName.COLUMN_NAME_NAME_SELLERS} like ?"
-        val cursor = db?.query(
-            DbName.TABLE_NAME_SELLERS,null,selection,arrayOf("%$searchText%"), //arrayOf("_id","idparent","name","id_fns","level","count","fullpath"), selection, arrayOf("%$searchText%"),
-            null, null, "fullpath ASC"
-        )
-        while (cursor?.moveToNext()!!) {
-            val dataId = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
-            val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_ID_FNS_PRODUCTS))
-            val dataName = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_NAME_PRODUCTS))
-            val idparent = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_IDPARENT_PRODUCTS))
-            val level = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_LEVEL_PRODUCTS))
-            val fullpath = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_FULLPATH_PRODUCTS))
-            val count = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_COUNT_PRODUCTS))
-            val seller = Seller()
-            seller.id = dataId
-            seller.name = dataName
-            seller.id_fns=dataTitle
-            seller.level = level?:0
-            seller.idparent = idparent?:0
-            seller.fullpath = fullpath?:""
-            seller.count = count?:0
-            dataList.add(seller)
-        }
-        cursor.close()
-
-        return@withContext dataList
-    }
 
     @SuppressLint("Range")
     suspend fun readProducts(searchText:String): ArrayList<Product> = withContext(Dispatchers.IO) {
@@ -159,7 +129,8 @@ class DbManager(context: Context) {
         db?.insert(DbName.TABLE_NAME_SELLERS,null, values)
     }
 
-    suspend fun updateSeller(seller: Seller) = withContext(Dispatchers.IO){
+//    suspend fun updateSeller(seller: Seller) = withContext(Dispatchers.IO){
+    fun updateSeller(seller: Seller){
         val id=seller.id
         val selection = BaseColumns._ID + "=$id"
         val values = ContentValues().apply {
@@ -187,6 +158,57 @@ fun insertSeller( seller: Seller) :Int?{
     val id=db?.insert(DbName.TABLE_NAME_SELLERS,null, values)
     return id?.toInt()
 }
+
+    //suspend fun updateProduct(product:Product) = withContext(Dispatchers.IO){
+//    suspend fun updateSeller(seller: Seller) = withContext(Dispatchers.IO){
+//        val id=seller.id
+//        val selection = BaseColumns._ID + "=$id"
+//        val values = ContentValues().apply {
+//            put(DbName.COLUMN_NAME_NAME_SELLERS, seller.name)
+//            put(DbName.COLUMN_NAME_ID_FNS_SELLERS, seller.id_fns)
+//            put(DbName.COLUMN_NAME_IDPARENT_SELLERS, seller.idparent)
+//            put(DbName.COLUMN_NAME_LEVEL_SELLERS, seller.level)
+//            put(DbName.COLUMN_NAME_FULLPATH_SELLERS, seller.fullpath)
+//            put(DbName.COLUMN_NAME_COUNT_SELLERS, seller.count)
+//        }
+//        db?.update(DbName.TABLE_NAME_SELLERS, values, selection, null)
+//    }
+
+    fun removeSeller(id: Int){
+        val selection = BaseColumns._ID + "=$id"
+        db?.delete(DbName.TABLE_NAME_SELLERS,selection, null)
+    }
+
+    @SuppressLint("Range")
+    suspend fun readSellers(searchText: String): ArrayList<Seller> = withContext(Dispatchers.IO) {
+        val dataList = ArrayList<Seller>()
+        val selection = "${DbName.COLUMN_NAME_NAME_SELLERS} like ?"
+        val cursor = db?.query(
+            DbName.TABLE_NAME_SELLERS,null,selection,arrayOf("%$searchText%"), //arrayOf("_id","idparent","name","id_fns","level","count","fullpath"), selection, arrayOf("%$searchText%"),
+            null, null, "fullpath ASC"
+        )
+        while (cursor?.moveToNext()!!) {
+            val dataId = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
+            val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_ID_FNS_PRODUCTS))
+            val dataName = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_NAME_PRODUCTS))
+            val idparent = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_IDPARENT_PRODUCTS))
+            val level = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_LEVEL_PRODUCTS))
+            val fullpath = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_FULLPATH_PRODUCTS))
+            val count = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_COUNT_PRODUCTS))
+            val seller = Seller()
+            seller.id = dataId
+            seller.name = dataName
+            seller.id_fns=dataTitle
+            seller.level = level?:0
+            seller.idparent = idparent?:0
+            seller.fullpath = fullpath?:""
+            seller.count = count?:0
+            dataList.add(seller)
+        }
+        cursor.close()
+
+        return@withContext dataList
+    }
 
     @SuppressLint("Range")
     // Используется при загрузке чеков поиск по вспом полю title для ручного ввода это пол пусто
@@ -220,33 +242,7 @@ fun insertSeller( seller: Seller) :Int?{
         return@withContext dataList
     }
 
-    @SuppressLint("Range")
-    suspend fun readSellersFromDb(searchText:String): ArrayList<Seller> = withContext(Dispatchers.IO) {
-        val dataList = ArrayList<Seller>()
-        val selection = "${DbName.COLUMN_NAME_ID_FNS_SELLERS} like ?"
-        val cursor = db?.query(
-            DbName.TABLE_NAME_SELLERS, null, selection, arrayOf("%$searchText%"),
-            null, null, null
-        )
 
-        while (cursor?.moveToNext()!!) {
-            val dataId =
-                cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
-            val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_ID_FNS_SELLERS))
-            val dataDescription =
-                cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_DESCRIPTION_SELLERS))
-            val item = Seller()
-            item.id_fns = dataTitle
-            item.description = dataDescription
-            item.id = dataId
-            dataList.add(item)
-        }
-
-        //if(readDataCallback!=null)readDataCallback.readData(dataList)
-
-        cursor.close()
-        return@withContext dataList
-    }
 
     //    PURCHASES
     @RequiresApi(Build.VERSION_CODES.N)

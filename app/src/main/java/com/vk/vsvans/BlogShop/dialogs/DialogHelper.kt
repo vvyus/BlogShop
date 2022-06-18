@@ -16,11 +16,13 @@ import androidx.annotation.RequiresApi
 import com.vk.vsvans.BlogShop.MainActivity
 import com.vk.vsvans.BlogShop.activity.EditPurchaseActivity
 import com.vk.vsvans.BlogShop.activity.ProductActivity
+import com.vk.vsvans.BlogShop.activity.SellerActivity
 import com.vk.vsvans.BlogShop.adapters.PurchaseRcAdapter
 import com.vk.vsvans.BlogShop.calendar.CalendarAlertDialog
 import com.vk.vsvans.BlogShop.calendar.CalendarDialogAdapter
 import com.vk.vsvans.BlogShop.helper.SpinnerHelper
 import com.vk.vsvans.BlogShop.interfaces.*
+import com.vk.vsvans.BlogShop.model.BaseList
 import com.vk.vsvans.BlogShop.model.Product
 import com.vk.vsvans.BlogShop.model.Purchase
 import com.vk.vsvans.BlogShop.model.PurchaseItem
@@ -122,10 +124,12 @@ object DialogHelper {
 
     }
 
-    fun showProductInputDialog(context: Context, product: Product, iupdateProductItemList: IUpdateProductItemList) {
+    fun showBaseListInputDialog(context: Context, product: BaseList, iupdateBaseListItemList: IUpdateBaseListItemList) {
         val customDialog = AlertDialog.Builder(context, 0).create()
-        val inflater: LayoutInflater =(context as ProductActivity).layoutInflater
-
+        var inflater: LayoutInflater?=null
+        if(context is ProductActivity)
+            inflater =(context as ProductActivity).layoutInflater
+        else  inflater =(context as SellerActivity).layoutInflater
         val view: View = inflater.inflate(R1.layout.input_product_item, null)
         customDialog.setView(view)
         val rootView=view.rootView
@@ -139,7 +143,7 @@ object DialogHelper {
             product.name=edTitle.text.toString()
             //product.title=edTitle.text.toString()//title синоним для поиска продуктов с чека фнс
             // (context as EditPurchaseActivity).up
-            if(iupdateProductItemList!=null)iupdateProductItemList.onUpdateProductItemList(product)
+            if(iupdateBaseListItemList!=null)iupdateBaseListItemList.onUpdateBaseListItemList(product)
             customDialog.dismiss()
         }
 
@@ -153,14 +157,18 @@ object DialogHelper {
 
     }
 //
-fun showSelectParentProductDialog(title: String?, activity: Activity,
+fun showSelectParentBaseListDialog(title: String?, activity: Activity,
 //                                     tree: Product
 //    excludeNode: Product?,
-                                  eventsListener: IDialogListener?
+                                   eventsListener: IDialogListener?
 ) {
     val builder = AlertDialog.Builder(activity)
-    val nodes: List<Product> =(activity as ProductActivity).adapter.productArray
-    val filterNodes=ArrayList<Product>()
+    var nodes: List<BaseList>? =null
+    if(activity is ProductActivity)
+        nodes =(activity as ProductActivity).adapter.BaseListArray
+    else
+        nodes =(activity as SellerActivity).adapter.BaseListArray
+    val filterNodes=ArrayList<BaseList>()
     builder.setTitle(title)
         .setNegativeButton(
             ( activity).resources.getString(R.string.cancel)
@@ -182,8 +190,8 @@ fun showSelectParentProductDialog(title: String?, activity: Activity,
 
 private fun createTreeArrayAdapter(
     activity: Activity,
-    nodes: List<Product>,
-    filterNodes: ArrayList<Product>,
+    nodes: List<BaseList>,
+    filterNodes: ArrayList<BaseList>,
 ): ArrayAdapter<String> {
     val arrayAdapter = ArrayAdapter<String>(activity, R.layout.simple_list_item_1)
     var i=0
