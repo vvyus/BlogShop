@@ -91,6 +91,29 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
+    fun onSellerClick(purchase: Purchase) {
+        var str=""
+        job?.cancel()
+        job = CoroutineScope(Dispatchers.Main).launch{
+            if(isSetFilter) {
+                fillAdapter(str)
+                resetFilterPanel(str,str)
+            }else{
+                val purchaseList = ArrayList<Purchase>()
+                val amount = dbManager.queryPurchases(purchase.idseller,purchaseList)
+                adapter.updateAdapter(purchaseList)
+
+                isSetFilter=true
+                val str_amount="${amount.toString().format("%12.2i")}"
+                val str_count="${purchaseList.size.toString().format("%10i")}"
+                showFilterPanel(str_amount,str_count)
+               //str = "${purchaseList.size} покуп на сумму ${amount.toString().format("%12.2f")}"
+            }
+                //showFilterPanel(str)
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onResume() {
         super.onResume()
         dbManager.openDb()
@@ -111,9 +134,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             val amount = dbManager.queryPurchases(text,purchaseList)
             adapter.updateAdapter(purchaseList)
             if(isSetFilter) {
-                str = "${purchaseList.size} покуп на сумму ${amount.toString().format("%12.2f")}"
-            }
-            showFilterPanel(str)
+                val amount="${amount.toString().format("%12.2i")}"
+                val count="${purchaseList.size.toString().format("%10i")}"
+                //str = "${purchaseList.size} покуп на сумму ${amount.toString().format("%12.2f")}"
+                showFilterPanel(amount,count)
+            }else showFilterPanel(str,str)
         }
         return str
     }
@@ -145,42 +170,25 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
-    fun onSellerClick(purchase: Purchase) {
-        var str=""
-        job?.cancel()
-        job = CoroutineScope(Dispatchers.Main).launch{
-            if(isSetFilter) {
-                fillAdapter(str)
-                resetFilterPanel(str)
-            }else{
-                val purchaseList = ArrayList<Purchase>()
-                val amount = dbManager.queryPurchases(purchase.idseller,purchaseList)
-                adapter.updateAdapter(purchaseList)
-
-                isSetFilter=true
-                str = "${purchaseList.size} покуп на сумму ${amount.toString().format("%12.2f")}"
-            }
-            showFilterPanel(str)
-        }
-    }
-
-    fun setFilterPanel(amount:String){
+    fun setFilterPanel(amount:String,count:String){
         isSetFilter=true
-        showFilterPanel(amount)
+        showFilterPanel(amount,count)
     }
 
-    fun resetFilterPanel(amount:String){
+    fun resetFilterPanel(amount:String,count: String){
         isSetFilter=false
-        showFilterPanel(amount)
+        showFilterPanel(amount,count)
     }
 
-    private fun showFilterPanel(amount:String){
+    private fun showFilterPanel(amount:String,count:String){
         if(isSetFilter) {
             rootElement.mainContent.llFilterdPanel.visibility=View.VISIBLE
         }
-        else rootElement.mainContent.llFilterdPanel.visibility=View.GONE
+        else {
+            rootElement.mainContent.llFilterdPanel.visibility=View.GONE
+        }
         rootElement.mainContent.tvFilteredSumma.text=amount
+        rootElement.mainContent.tvFilteredCount.text=count
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -323,7 +331,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             if (!searchView.isIconified()) {
                 searchView.onActionViewCollapsed();
                 //showFilterPanel(false,"")
-                resetFilterPanel("")
+                resetFilterPanel("","")
             } else {
                 super.onBackPressed();
             }

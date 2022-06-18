@@ -174,7 +174,7 @@ class SellerActivity : AppCompatActivity() {
                     })
             }
 
-            override fun onTimeClick() {}
+            //override fun onTimeClick() {}
 
         })
         val rcView=rootElement.rcViewSellerList

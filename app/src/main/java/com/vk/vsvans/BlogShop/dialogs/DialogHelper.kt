@@ -261,12 +261,15 @@ private fun createTreeArrayAdapter(
                     }
                     var purchaseList  = ArrayList<Purchase>()
                     val amount=mainActivity.dbManager.queryPurchases(dates_begin,dates_end,purchaseList)
-                    val amount_str = "${purchaseList.size} покуп на сумму ${amount.toString().format("%12.2f")}"
+                    //val amount_str = "${purchaseList.size} покуп на сумму ${amount.toString().format("%12.2f")}"
+                    val str_amount="${amount.toString().format("%12.2i")}"
+                    val str_count="${purchaseList.size.toString().format("%10i")}"
+
                     mainActivity.adapter.updateAdapter(purchaseList)
-                    mainActivity.setFilterPanel(amount_str)
+                    mainActivity.setFilterPanel(str_amount,str_count)
                    // adapter.searchNote(dates_begin, dates_end)
                 } else {
-                    mainActivity.resetFilterPanel("")
+                    mainActivity.resetFilterPanel("","")
                     mainActivity.fillAdapter("")
                 }
                 mCalendar.dismiss()

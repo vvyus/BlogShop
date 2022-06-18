@@ -93,7 +93,7 @@ class PurchaseItemListFragment(private val fragCloseInterface:IFragmentCloseInte
             override fun onNewItem(parent: BaseList) {}
             override fun refreshItem() {}
             override fun onParentItem() {}
-            override fun onTimeClick() {}
+//            override fun onTimeClick() {}
         })
 // end assign adapter
 

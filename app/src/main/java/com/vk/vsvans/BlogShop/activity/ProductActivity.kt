@@ -174,7 +174,7 @@ class ProductActivity : AppCompatActivity() {
                   })
             }
 
-            override fun onTimeClick() {}
+            //override fun onTimeClick() {}
 
         })
         val rcView=rootElement.rcViewProductList
