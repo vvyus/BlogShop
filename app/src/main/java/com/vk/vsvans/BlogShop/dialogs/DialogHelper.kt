@@ -130,11 +130,11 @@ object DialogHelper {
         if(context is ProductActivity)
             inflater =(context as ProductActivity).layoutInflater
         else  inflater =(context as SellerActivity).layoutInflater
-        val view: View = inflater.inflate(R1.layout.input_product_item, null)
+        val view: View = inflater.inflate(R1.layout.input_baselist_item, null)
         customDialog.setView(view)
         val rootView=view.rootView
 
-        val edTitle=rootView.findViewById<EditText>(R1.id.edTitleProduct)
+        val edTitle=rootView.findViewById<EditText>(R1.id.edTitleBaselist)
         edTitle.setText(product.name.toString())
 
         val btnOk=rootView.findViewById<Button>(R1.id.btnOk)
