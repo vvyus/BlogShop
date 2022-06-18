@@ -13,6 +13,7 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.vk.vsvans.BlogShop.R
 import com.vk.vsvans.BlogShop.databinding.ItemPurchaseListBinding
+import com.vk.vsvans.BlogShop.interfaces.IFilterCallBack
 import com.vk.vsvans.BlogShop.interfaces.OnClickItemCallback
 import com.vk.vsvans.BlogShop.mainActivity
 import com.vk.vsvans.BlogShop.model.Purchase
@@ -24,13 +25,14 @@ class PurchaseRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
     val purchaseArray=ArrayList<Purchase>()
     var selected_position =RecyclerView.NO_POSITION;
     var selected_color =0
+    private var filterCallback:IFilterCallBack?=null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PurchaseHolder {
 
         selected_color=parent.context.resources.getColor(R.color.color_red)
 
         val binding=
             ItemPurchaseListBinding.inflate(LayoutInflater.from(parent.context),parent,false)
-        return PurchaseHolder(binding,clickItemCallback)
+        return PurchaseHolder(binding,clickItemCallback,filterCallback)
     }
     //fill and show holder in position
     @RequiresApi(Build.VERSION_CODES.N)
@@ -66,7 +68,11 @@ class PurchaseRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
         notifyDataSetChanged()
     }
 
-    class PurchaseHolder(val binding:ItemPurchaseListBinding,val clickItemCallback: OnClickItemCallback?): RecyclerView.ViewHolder(binding.root) {
+    fun setFilterCallback(filterCallback:IFilterCallBack){
+        this.filterCallback=filterCallback
+    }
+
+    class PurchaseHolder(val binding:ItemPurchaseListBinding,val clickItemCallback: OnClickItemCallback?,val filterCallback: IFilterCallBack?): RecyclerView.ViewHolder(binding.root) {
 
         @RequiresApi(Build.VERSION_CODES.N)
         fun setData(purchase:Purchase){
@@ -78,11 +84,13 @@ class PurchaseRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
                 tvSeller.text=purchase.sellername
                 tvPurchaseTime.setText(UtilsHelper.getDate(purchase.time))
                 tvPurchaseTime.setOnClickListener{
-                    println(tvPurchaseTime.text)
-                    if(clickItemCallback!=null) clickItemCallback!!.onTimeClick()
+                    //println(tvPurchaseTime.text)
+                    //if(clickItemCallback!=null) clickItemCallback!!.onTimeClick()
+                    if(filterCallback!=null) filterCallback.onTimeClick()
                 }
                 tvSeller.setOnClickListener{
-                    mainActivity!!.onSellerClick(purchase)
+                    //mainActivity!!.onSellerClick(purchase)
+                    if(filterCallback!=null) filterCallback.onSellerClick(purchase)
                 }
                 //tvTitle.tag= com.vk.vsvans.BlogShop.helper.Tag(purchase.id,se)
             }

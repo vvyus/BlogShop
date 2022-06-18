@@ -29,6 +29,7 @@ import com.vk.vsvans.BlogShop.databinding.ActivityMainBinding
 import com.vk.vsvans.BlogShop.dialogs.DialogHelper
 import com.vk.vsvans.BlogShop.fns.import_checks
 import com.vk.vsvans.BlogShop.interfaces.IDeleteItem
+import com.vk.vsvans.BlogShop.interfaces.IFilterCallBack
 import com.vk.vsvans.BlogShop.interfaces.OnClickItemCallback
 import com.vk.vsvans.BlogShop.model.BaseList
 import com.vk.vsvans.BlogShop.model.DbManager
@@ -64,19 +65,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         override fun onNewItem(parent: BaseList) {}
         override fun refreshItem() {}
         override fun onParentItem() {}
-        override fun onTimeClick() {
-            DialogHelper.getCalendarDialog(this@MainActivity)
-        } // onItemClick
 
-    }
-)
-//    ,object: IDialogGetDateListener {
-//        override fun onOkClick(dates_begin: ArrayList<String>, dates_end: ArrayList<String>) {
-//            val list=dbManager.getSelectedPurchases(dates_begin,dates_end)
-//            //
-//            // adapter.updateAdapter(list )
-//        }
-//    }
+    })
+
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,8 +80,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         initRecyclerView()
         bottomMenuOnClick()
-
-}
+        adapter.setFilterCallback(object: IFilterCallBack {
+            override fun onTimeClick() {
+                DialogHelper.getCalendarDialog(this@MainActivity)
+            }
+            override fun onSellerClick(purchase: Purchase) {
+                this@MainActivity.onSellerClick(purchase)
+            }
+        })
+    }
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onResume() {

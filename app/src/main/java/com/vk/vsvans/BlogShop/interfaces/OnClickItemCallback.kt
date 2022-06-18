@@ -11,5 +11,4 @@ interface OnClickItemCallback {
     fun onNewItem(parent: BaseList)
     fun refreshItem()
     fun onParentItem()
-    fun onTimeClick()
 }
