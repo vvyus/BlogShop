@@ -99,19 +99,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                                     }else return 0
                                 }
                             })
-                            val dates_begin = ArrayList<String>()
-                            val dates_end = ArrayList<String>()
+                            filter_fact.dates_begin = ArrayList<String>()
+                            filter_fact.dates_end = ArrayList<String>()
                             var str: String?
                             for (i in 0 until selected_date.size) {
                                 str =
                                     java.lang.String.valueOf(UtilsHelper.correct_date_begin(dates[i]!!.time))
-                                dates_begin.add(str)
+                                filter_fact.dates_begin!!.add(str)
                                 str =
                                     java.lang.String.valueOf(UtilsHelper.correct_date_end(dates[i]!!.time))
-                                dates_end.add(str)
+                                filter_fact.dates_end!!.add(str)
                             }
-                            filter_fact.dates_begin?.addAll(dates_begin)
-                            filter_fact.dates_end?.addAll(dates_end)
+//                            filter_fact.dates_begin?.addAll(dates_begin)
+//                            filter_fact.dates_end?.addAll(dates_end)
 
                             // get PurchaseList
                             fillAdapter()
