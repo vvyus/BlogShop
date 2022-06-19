@@ -218,7 +218,7 @@ private fun createTreeArrayAdapter(
     return arrayAdapter
 }
 
-    fun getCalendarDialog(activity: Activity) {
+    fun getCalendarDialog(activity: Activity,iFilter:IDialogDateFiterCallback) {
         val mainActivity: MainActivity = activity as MainActivity
         val adapter: PurchaseRcAdapter = mainActivity.adapter
         val selected_date = HashMap<String, Date?>()
@@ -241,36 +241,10 @@ private fun createTreeArrayAdapter(
             @RequiresApi(Build.VERSION_CODES.N)
             override fun onClick() {
                 if (selected_date.size != 0) {
-                    val dates = ArrayList(selected_date.values)
-                    Collections.sort(dates, object : Comparator<Date?> {
-
-                        override fun compare(o1: Date?, o2: Date?): Int {
-                            if (o1 != null) {
-                                return o1.compareTo(o2)
-                            }else return 0
-                        }
-                    })
-                    val dates_begin = ArrayList<String>()
-                    val dates_end = ArrayList<String>()
-                    var str: String?
-                    for (i in 0 until selected_date.size) {
-                        str = valueOf(UtilsHelper.correct_date_begin(dates[i]!!.time))
-                        dates_begin.add(str)
-                        str = valueOf(UtilsHelper.correct_date_end(dates[i]!!.time))
-                        dates_end.add(str)
-                    }
-                    var purchaseList  = ArrayList<Purchase>()
-                    val amount=mainActivity.dbManager.queryPurchases(dates_begin,dates_end,purchaseList)
-                    //val amount_str = "${purchaseList.size} покуп на сумму ${amount.toString().format("%12.2f")}"
-                    val str_amount="${amount.toString().format("%12.2i")}"
-                    val str_count="${purchaseList.size.toString().format("%10i")}"
-
-                    mainActivity.adapter.updateAdapter(purchaseList)
-                    mainActivity.setFilterPanel(str_amount,str_count)
-                   // adapter.searchNote(dates_begin, dates_end)
+                    if(iFilter!=null) iFilter.confirmFilter(selected_date)
                 } else {
-                    mainActivity.resetFilterPanel("","")
-                    mainActivity.fillAdapter("")
+                    // если нет выбранных дат то сброс фильтра
+                    if(iFilter!=null) iFilter.cancelFilter()
                 }
                 mCalendar.dismiss()
             }

@@ -29,16 +29,20 @@ import com.vk.vsvans.BlogShop.databinding.ActivityMainBinding
 import com.vk.vsvans.BlogShop.dialogs.DialogHelper
 import com.vk.vsvans.BlogShop.fns.import_checks
 import com.vk.vsvans.BlogShop.interfaces.IDeleteItem
+import com.vk.vsvans.BlogShop.interfaces.IDialogDateFiterCallback
 import com.vk.vsvans.BlogShop.interfaces.IFilterCallBack
 import com.vk.vsvans.BlogShop.interfaces.OnClickItemCallback
 import com.vk.vsvans.BlogShop.model.BaseList
 import com.vk.vsvans.BlogShop.model.DbManager
 import com.vk.vsvans.BlogShop.model.Product
 import com.vk.vsvans.BlogShop.model.Purchase
+import com.vk.vsvans.BlogShop.utils.UtilsHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -82,7 +86,46 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         bottomMenuOnClick()
         adapter.setFilterCallback(object: IFilterCallBack {
             override fun onTimeClick() {
-                DialogHelper.getCalendarDialog(this@MainActivity)
+                DialogHelper.getCalendarDialog(this@MainActivity,object: IDialogDateFiterCallback {
+                    override fun confirmFilter(selected_date: HashMap<String, Date?>) {
+                        if (selected_date.size != 0) {
+                            val dates = ArrayList(selected_date.values)
+                            Collections.sort(dates, object : Comparator<Date?> {
+
+                                override fun compare(o1: Date?, o2: Date?): Int {
+                                    if (o1 != null) {
+                                        return o1.compareTo(o2)
+                                    }else return 0
+                                }
+                            })
+                            val dates_begin = ArrayList<String>()
+                            val dates_end = ArrayList<String>()
+                            var str: String?
+                            for (i in 0 until selected_date.size) {
+                                str =
+                                    java.lang.String.valueOf(UtilsHelper.correct_date_begin(dates[i]!!.time))
+                                dates_begin.add(str)
+                                str =
+                                    java.lang.String.valueOf(UtilsHelper.correct_date_end(dates[i]!!.time))
+                                dates_end.add(str)
+                            }
+                            // get PurchaseList
+                            var purchaseList  = ArrayList<Purchase>()
+                            val amount=dbManager.queryPurchases(dates_begin,dates_end,purchaseList)
+
+                            val str_amount=amount.toString().format("%12.2d")
+                            val str_count=purchaseList.size.toString().format("%10d")
+
+                            adapter.updateAdapter(purchaseList)
+                            setFilterPanel(str_amount,str_count)
+                        }
+                    }
+
+                    override fun cancelFilter() {
+                        resetFilterPanel("","")
+                        fillAdapter("")
+                    }
+                })
             }
             override fun onSellerClick(purchase: Purchase) {
                 this@MainActivity.onSellerClick(purchase)
@@ -104,8 +147,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 adapter.updateAdapter(purchaseList)
 
                 isSetFilter=true
-                val str_amount="${amount.toString().format("%12.2i")}"
-                val str_count="${purchaseList.size.toString().format("%10i")}"
+                val str_amount=amount.toString().format("%12.2d")
+                val str_count=purchaseList.size.toString().format("%10d")
                 showFilterPanel(str_amount,str_count)
                //str = "${purchaseList.size} покуп на сумму ${amount.toString().format("%12.2f")}"
             }
@@ -134,8 +177,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             val amount = dbManager.queryPurchases(text,purchaseList)
             adapter.updateAdapter(purchaseList)
             if(isSetFilter) {
-                val amount="${amount.toString().format("%12.2i")}"
-                val count="${purchaseList.size.toString().format("%10i")}"
+                val amount=amount.toString().format("%12.2d")
+                val count=purchaseList.size.toString().format("%10d")
                 //str = "${purchaseList.size} покуп на сумму ${amount.toString().format("%12.2f")}"
                 showFilterPanel(amount,count)
             }else showFilterPanel(str,str)
