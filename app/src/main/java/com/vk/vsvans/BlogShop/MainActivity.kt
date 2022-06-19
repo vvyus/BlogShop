@@ -113,16 +113,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                             var purchaseList  = ArrayList<Purchase>()
                             val amount=dbManager.queryPurchases(dates_begin,dates_end,purchaseList)
 
-                            val str_amount=amount.toString().format("%12.2d")
-                            val str_count=purchaseList.size.toString().format("%10d")
-
                             adapter.updateAdapter(purchaseList)
-                            setFilterPanel(str_amount,str_count)
+                            setFilterPanel(amount,purchaseList.size)
                         }
                     }
 
                     override fun cancelFilter() {
-                        resetFilterPanel("","")
+                        resetFilterPanel()
                         fillAdapter("")
                     }
                 })
@@ -140,17 +137,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         job = CoroutineScope(Dispatchers.Main).launch{
             if(isSetFilter) {
                 fillAdapter(str)
-                resetFilterPanel(str,str)
+                resetFilterPanel()
             }else{
                 val purchaseList = ArrayList<Purchase>()
                 val amount = dbManager.queryPurchases(purchase.idseller,purchaseList)
                 adapter.updateAdapter(purchaseList)
 
-                isSetFilter=true
-                val str_amount=amount.toString().format("%12.2d")
-                val str_count=purchaseList.size.toString().format("%10d")
-                showFilterPanel(str_amount,str_count)
-               //str = "${purchaseList.size} покуп на сумму ${amount.toString().format("%12.2f")}"
+                //isSetFilter=true
+                //showFilterPanel(amount,purchaseList.size)
+                setFilterPanel(amount,purchaseList.size)
             }
                 //showFilterPanel(str)
         }
@@ -176,12 +171,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             val purchaseList = ArrayList<Purchase>()
             val amount = dbManager.queryPurchases(text,purchaseList)
             adapter.updateAdapter(purchaseList)
-            if(isSetFilter) {
-                val amount=amount.toString().format("%12.2d")
-                val count=purchaseList.size.toString().format("%10d")
-                //str = "${purchaseList.size} покуп на сумму ${amount.toString().format("%12.2f")}"
-                showFilterPanel(amount,count)
-            }else showFilterPanel(str,str)
+
+            if(isSetFilter) setFilterPanel(amount,purchaseList.size)
+            else resetFilterPanel()
         }
         return str
     }
@@ -213,25 +205,28 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    fun setFilterPanel(amount:String,count:String){
+    fun setFilterPanel(amount:Double,count:Int){
         isSetFilter=true
         showFilterPanel(amount,count)
     }
 
-    fun resetFilterPanel(amount:String,count: String){
+    fun resetFilterPanel(){
         isSetFilter=false
-        showFilterPanel(amount,count)
+        showFilterPanel()
     }
 
-    private fun showFilterPanel(amount:String,count:String){
-        if(isSetFilter) {
-            rootElement.mainContent.llFilterdPanel.visibility=View.VISIBLE
-        }
-        else {
-            rootElement.mainContent.llFilterdPanel.visibility=View.GONE
-        }
-        rootElement.mainContent.tvFilteredSumma.text=amount
-        rootElement.mainContent.tvFilteredCount.text=count
+    private fun showFilterPanel(amount:Double,count: Int){
+        val str_amount=amount.toString().format("%12.2d")
+        val str_count=count.toString().format("%10d")
+        rootElement.mainContent.tvFilteredSumma.text=str_amount
+        rootElement.mainContent.tvFilteredCount.text=str_count
+        rootElement.mainContent.llFilterdPanel.visibility=View.VISIBLE
+    }
+
+    private fun showFilterPanel(){
+        rootElement.mainContent.tvFilteredSumma.text=""
+        rootElement.mainContent.tvFilteredCount.text=""
+        rootElement.mainContent.llFilterdPanel.visibility=View.GONE
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -374,7 +369,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             if (!searchView.isIconified()) {
                 searchView.onActionViewCollapsed();
                 //showFilterPanel(false,"")
-                resetFilterPanel("","")
+                resetFilterPanel()
             } else {
                 super.onBackPressed();
             }
