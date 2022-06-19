@@ -219,11 +219,10 @@ private fun createTreeArrayAdapter(
 }
 
     fun getCalendarDialog(activity: Activity,iFilter:IDialogDateFiterCallback) {
-        val mainActivity: MainActivity = activity as MainActivity
-        val adapter: PurchaseRcAdapter = mainActivity.adapter
+       // val mainActivity: MainActivity = activity as MainActivity
         val selected_date = HashMap<String, Date?>()
         val mCalendar = CalendarAlertDialog(
-            mainActivity,
+            activity,//mainActivity,
             object : CalendarDialogAdapter.onItemClickListener {
                 override fun onClick(date: Date) {
                     //to do
@@ -252,6 +251,7 @@ private fun createTreeArrayAdapter(
         mCalendar.setOnClickCancelListener(object : CalendarAlertDialog.onClickListener {
             override fun onClick() {
                 selected_date.clear()
+                if(iFilter!=null) iFilter.cancelFilter()
                 mCalendar.dismiss()
             }
         })
