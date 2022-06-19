@@ -291,20 +291,20 @@ fun insertSeller( seller: Seller) :Int?{
         var selection =""
         var args = ArrayList<String>()
         if(filter.idSeller!=null){
-            selection += "${DbName.COLUMN_NAME_SELLER_ID} = ? and "
+            selection += "${DbName.COLUMN_NAME_SELLER_ID} = ? AND "
             args.add(filter.idSeller.toString())
         }
         if(filter.content!=null) {
-            selection = "${DbName.COLUMN_NAME_CONTENT} like ? and "
+            selection = "${DbName.COLUMN_NAME_CONTENT} like ? AND "
             args.add("%"+filter.content + "%")
         }
         if(filter.dates_begin!=null && filter.dates_end!=null) {
             for (i in filter.dates_begin!!.indices) {
                 selection += "${DbName.COLUMN_NAME_TIME} >= " + filter.dates_begin!![i] + " AND ${DbName.COLUMN_NAME_TIME}<=" + filter.dates_end!![i]
-                if (i < filter.dates_begin!!.size - 1) selection += " OR "
+                if (i < filter.dates_begin!!.size - 1) selection += " OR " else selection += " AND "
             }
         }
-        if(selection.endsWith(" and "))selection=selection.substring(0, selection.length - 4)
+        if(selection.endsWith(" AND "))selection=selection.substring(0, selection.length - 5)
         val selectionArgs: Array<String> = args.toTypedArray()
         //selectionArgs = arrayOf(idSeller.toString())
 
