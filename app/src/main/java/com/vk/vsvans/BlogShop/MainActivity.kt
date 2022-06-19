@@ -18,7 +18,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.core.view.MenuItemCompat
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.navigation.NavigationView
 import com.vk.vsvans.BlogShop.activity.EditPurchaseActivity
@@ -34,7 +33,6 @@ import com.vk.vsvans.BlogShop.interfaces.IFilterCallBack
 import com.vk.vsvans.BlogShop.interfaces.OnClickItemCallback
 import com.vk.vsvans.BlogShop.model.BaseList
 import com.vk.vsvans.BlogShop.model.DbManager
-import com.vk.vsvans.BlogShop.model.Product
 import com.vk.vsvans.BlogShop.model.Purchase
 import com.vk.vsvans.BlogShop.utils.FilterForActivity
 import com.vk.vsvans.BlogShop.utils.UtilsHelper
@@ -116,7 +114,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                             filter_fact.dates_end?.addAll(dates_end)
 
                             // get PurchaseList
-                            fillAdapter("")
+                            fillAdapter()
 //                            var purchaseList  = ArrayList<Purchase>()
 //                            val amount = dbManager.queryPurchases(filter_fact,purchaseList)
 //                            adapter.updateAdapter(purchaseList)
@@ -129,7 +127,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         filter_fact.dates_begin=null
                         filter_fact.dates_end=null
                         resetFilterPanel()
-                        fillAdapter("")
+                        fillAdapter()
                     }
                 })
             }
@@ -170,7 +168,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onResume() {
         super.onResume()
         dbManager.openDb()
-        fillAdapter("")
+        fillAdapter()
     }
 
     override fun onDestroy() {
@@ -179,7 +177,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
-    fun fillAdapter(text: String){
+    fun fillAdapter() {
         job?.cancel()
         job = CoroutineScope(Dispatchers.Main).launch{
             val purchaseList = ArrayList<Purchase>()
@@ -285,7 +283,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                             @RequiresApi(Build.VERSION_CODES.N)
                             override fun onDeleteItem(id: Int) {
                                 dbManager.removePurchase(id)
-                                fillAdapter("")
+                                fillAdapter()
                             }
 
                         })
@@ -309,7 +307,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     job?.cancel()
                     job = CoroutineScope(Dispatchers.Main).launch{
                         import_checks.doImport(this@MainActivity)
-                        fillAdapter("")
+                        fillAdapter()
                     }
                 }
                 }//when
@@ -357,7 +355,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                                 filter_fact.content=newText
                                 //isSetFilter=true
                             }
-                            fillAdapter(newText)//call to showFilterPanel
+                            fillAdapter()//call to showFilterPanel
                             //val amount = dbManager.queryPurchases(filter_fact,purchaseList)
                         }
                         return true

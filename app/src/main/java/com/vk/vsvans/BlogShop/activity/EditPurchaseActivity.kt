@@ -4,9 +4,7 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Build
 import android.os.Bundle
-import android.text.Editable
 import android.text.Html
-import android.text.TextWatcher
 import android.view.View
 import android.widget.DatePicker
 import android.widget.TimePicker
@@ -29,8 +27,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import java.math.BigDecimal
-import java.math.RoundingMode
 import java.text.*
 import java.util.*
 
@@ -244,7 +240,7 @@ class EditPurchaseActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onBackPressed() {
         //listDeletedPurchaseItems=ArrayList<PurchaseItem>()
-        if(mainActivity!=null)mainActivity!!.fillAdapter("")
+        if(mainActivity!=null)mainActivity!!.fillAdapter()
         super.onBackPressed()
     }
 
