@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.os.Build
 import android.provider.BaseColumns
 import androidx.annotation.RequiresApi
+import com.vk.vsvans.BlogShop.utils.FilterForActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -286,6 +287,42 @@ fun insertSeller( seller: Seller) :Int?{
 
     @RequiresApi(Build.VERSION_CODES.N)
     @SuppressLint("Range")
+    suspend fun queryPurchases(filter:FilterForActivity,purchaseList: ArrayList<Purchase>):Double = withContext(Dispatchers.IO) {
+        var selection =""
+        var args = ArrayList<String>()
+        if(filter.idSeller!=null){
+            selection += "${DbName.COLUMN_NAME_SELLER_ID} = ? and "
+            args.add(filter.idSeller.toString())
+        }
+        if(filter.content!=null) {
+            selection = "${DbName.COLUMN_NAME_CONTENT} like ? and "
+            args.add("%"+filter.content + "%")
+        }
+        if(filter.dates_begin!=null && filter.dates_end!=null) {
+            for (i in filter.dates_begin!!.indices) {
+                selection += "${DbName.COLUMN_NAME_TIME} >= " + filter.dates_begin!![i] + " AND ${DbName.COLUMN_NAME_TIME}<=" + filter.dates_end!![i]
+                if (i < filter.dates_begin!!.size - 1) selection += " OR "
+            }
+        }
+        if(selection.endsWith(" and "))selection=selection.substring(0, selection.length - 4)
+        val selectionArgs: Array<String> = args.toTypedArray()
+        //selectionArgs = arrayOf(idSeller.toString())
+
+        val temp: String = DbName.PURCHASE_QUERY
+        val selectQuery: String = temp.replace(
+            DbName.WHERE_FOR_PURCHASE_QUERY,
+            if(selection=="") "" else "WHERE $selection "
+        )
+        val cursor = db?.rawQuery(selectQuery, selectionArgs)
+        var amount=0.0
+        if(cursor!=null){
+            amount=setPurchaseListFromCursor(cursor!!,purchaseList)
+            cursor!!.close()
+        }
+        //return@withContext purchaseList
+        return@withContext amount
+    }
+
     //filter query
     suspend fun queryPurchases(idSeller:Int,purchaseList: ArrayList<Purchase>):Double = withContext(Dispatchers.IO) {
 

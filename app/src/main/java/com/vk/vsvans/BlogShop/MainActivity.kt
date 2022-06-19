@@ -36,6 +36,7 @@ import com.vk.vsvans.BlogShop.model.BaseList
 import com.vk.vsvans.BlogShop.model.DbManager
 import com.vk.vsvans.BlogShop.model.Product
 import com.vk.vsvans.BlogShop.model.Purchase
+import com.vk.vsvans.BlogShop.utils.FilterForActivity
 import com.vk.vsvans.BlogShop.utils.UtilsHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -52,7 +53,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var job: Job? = null
     private lateinit var toolbar: Toolbar
     private lateinit var searchView:SearchView
-    private var isSetFilter=false
+    //private var isSetFilter=false
+    private val filter_fact=FilterForActivity("main")
+
     val adapter= PurchaseRcAdapter(object:OnClickItemCallback{
         override fun onClickItem(id:Int) {
             if(id>0) {
@@ -109,16 +112,22 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                                     java.lang.String.valueOf(UtilsHelper.correct_date_end(dates[i]!!.time))
                                 dates_end.add(str)
                             }
-                            // get PurchaseList
-                            var purchaseList  = ArrayList<Purchase>()
-                            val amount=dbManager.queryPurchases(dates_begin,dates_end,purchaseList)
+                            filter_fact.dates_begin?.addAll(dates_begin)
+                            filter_fact.dates_end?.addAll(dates_end)
 
-                            adapter.updateAdapter(purchaseList)
-                            setFilterPanel(amount,purchaseList.size)
+                            // get PurchaseList
+                            fillAdapter("")
+//                            var purchaseList  = ArrayList<Purchase>()
+//                            val amount = dbManager.queryPurchases(filter_fact,purchaseList)
+//                            adapter.updateAdapter(purchaseList)
+//                            if(isSetFilter()) setFilterPanel(amount,purchaseList.size)
+//                            else resetFilterPanel()
                         }
                     }
 
                     override fun cancelFilter() {
+                        filter_fact.dates_begin=null
+                        filter_fact.dates_end=null
                         resetFilterPanel()
                         fillAdapter("")
                     }
@@ -135,22 +144,28 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         var str=""
         job?.cancel()
         job = CoroutineScope(Dispatchers.Main).launch{
-            if(isSetFilter) {
-                fillAdapter(str)
-                resetFilterPanel()
+            if(isSetFilter() && filter_fact.idSeller!=null) {
+                filter_fact.idSeller=null
+//                fillAdapter(str)
+//                resetFilterPanel()
             }else{
-                val purchaseList = ArrayList<Purchase>()
-                val amount = dbManager.queryPurchases(purchase.idseller,purchaseList)
-                adapter.updateAdapter(purchaseList)
-
-                //isSetFilter=true
-                //showFilterPanel(amount,purchaseList.size)
-                setFilterPanel(amount,purchaseList.size)
+                filter_fact.idSeller=purchase.idseller
+//                val purchaseList = ArrayList<Purchase>()
+//                val amount = dbManager.queryPurchases(purchase.idseller,purchaseList)
+//                adapter.updateAdapter(purchaseList)
+//                setFilterPanel(amount,purchaseList.size)
             }
-                //showFilterPanel(str)
+            val purchaseList = ArrayList<Purchase>()
+            val amount = dbManager.queryPurchases(filter_fact,purchaseList)
+            adapter.updateAdapter(purchaseList)
+            if(isSetFilter()) setFilterPanel(amount,purchaseList.size)
+            else resetFilterPanel()
         }
     }
 
+    fun isSetFilter():Boolean{
+        return !(filter_fact.idSeller==null && filter_fact.dates_begin==null && filter_fact.dates_end==null && filter_fact.content==null)
+    }
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onResume() {
         super.onResume()
@@ -164,18 +179,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
-    fun fillAdapter(text: String):String{
-        var str=""
+    fun fillAdapter(text: String){
         job?.cancel()
         job = CoroutineScope(Dispatchers.Main).launch{
             val purchaseList = ArrayList<Purchase>()
-            val amount = dbManager.queryPurchases(text,purchaseList)
+            //val amount = dbManager.queryPurchases(text,purchaseList)
+//            if(text.isEmpty()) filter_fact.content=null
+//            else filter_fact.content=text
+            val amount = dbManager.queryPurchases(filter_fact,purchaseList)
             adapter.updateAdapter(purchaseList)
 
-            if(isSetFilter) setFilterPanel(amount,purchaseList.size)
+            if(isSetFilter()) setFilterPanel(amount,purchaseList.size)
             else resetFilterPanel()
         }
-        return str
     }
     private fun init(){
         rootElement.navView.setNavigationItemSelectedListener(this)
@@ -206,18 +222,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     fun setFilterPanel(amount:Double,count:Int){
-        isSetFilter=true
+       // isSetFilter=true
         showFilterPanel(amount,count)
     }
 
     fun resetFilterPanel(){
-        isSetFilter=false
+       // isSetFilter=false
         showFilterPanel()
     }
 
     private fun showFilterPanel(amount:Double,count: Int){
-        val str_amount=amount.toString().format("%12.2d")
-        val str_count=count.toString().format("%10d")
+        val str_amount=amount.toString().format(R.string.double_format)
+        val str_count=count.toString().format(R.string.int_format)
         rootElement.mainContent.tvFilteredSumma.text=str_amount
         rootElement.mainContent.tvFilteredCount.text=str_count
         rootElement.mainContent.llFilterdPanel.visibility=View.VISIBLE
@@ -334,8 +350,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     @RequiresApi(Build.VERSION_CODES.N)
                     override fun onQueryTextChange(newText: String?): Boolean {
                         if (newText != null) {
-                            if(newText.isEmpty())isSetFilter=false else isSetFilter=true
+                            if(newText.isEmpty()){
+                                //isSetFilter=false
+                                filter_fact.content=null
+                            } else {
+                                filter_fact.content=newText
+                                //isSetFilter=true
+                            }
                             fillAdapter(newText)//call to showFilterPanel
+                            //val amount = dbManager.queryPurchases(filter_fact,purchaseList)
                         }
                         return true
                     }
