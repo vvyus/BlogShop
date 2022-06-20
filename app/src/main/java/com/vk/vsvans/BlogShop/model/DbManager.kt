@@ -295,7 +295,7 @@ fun insertSeller( seller: Seller) :Int?{
             args.add(filter.idSeller.toString())
         }
         if(filter.content!=null) {
-            selection = "${DbName.COLUMN_NAME_CONTENT} like ? AND "
+            selection += "${DbName.COLUMN_NAME_CONTENT} like ? AND "
             args.add("%"+filter.content + "%")
         }
         if(filter.dates_begin!=null && filter.dates_end!=null) {

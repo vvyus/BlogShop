@@ -142,7 +142,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         var str=""
         job?.cancel()
         job = CoroutineScope(Dispatchers.Main).launch{
-            if(isSetFilter() && filter_fact.idSeller!=null) {
+            if( filter_fact.idSeller!=null ) {
                 filter_fact.idSeller=null
 //                fillAdapter(str)
 //                resetFilterPanel()
