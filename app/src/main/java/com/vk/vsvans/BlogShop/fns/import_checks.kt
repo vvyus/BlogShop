@@ -1,5 +1,6 @@
 package com.vk.vsvans.BlogShop.fns
 
+import android.app.Activity
 import android.content.Context
 import android.os.Build
 import android.os.Environment
@@ -7,6 +8,7 @@ import android.text.Html
 import androidx.annotation.RequiresApi
 import com.vk.vsvans.BlogShop.MainActivity
 import com.vk.vsvans.BlogShop.R
+import com.vk.vsvans.BlogShop.dialogs.ProgressDialog
 import com.vk.vsvans.BlogShop.model.Product
 import com.vk.vsvans.BlogShop.model.Purchase
 import com.vk.vsvans.BlogShop.model.PurchaseItem
@@ -39,9 +41,10 @@ object import_checks {
        var dateTimeLong:Long?=0
         val path= Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath
         val files= File(path).listFiles()
-
+       val dialog = ProgressDialog.createProgressDialog(context)
         files?.forEach{ itf ->
             println(itf.name)
+
             try {
                 if(itf.name.endsWith(".json")) {
                     val bufferedReader: BufferedReader = File(itf.absolutePath).bufferedReader()
@@ -155,7 +158,8 @@ object import_checks {
                 } // if json
             }catch (e: IOException){
             }
-        }
 
-    }
+        }//files
+       dialog.dismiss()
+    }//func
 }

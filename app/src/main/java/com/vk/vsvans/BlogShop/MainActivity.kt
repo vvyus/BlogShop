@@ -1,16 +1,24 @@
 package com.vk.vsvans.BlogShop
 
+import android.Manifest
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.AttributeSet
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContract
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.registerForActivityResult
 import androidx.annotation.RequiresApi
+import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -36,6 +44,7 @@ import com.vk.vsvans.BlogShop.model.DbManager
 import com.vk.vsvans.BlogShop.model.Purchase
 import com.vk.vsvans.BlogShop.utils.FilterForActivity
 import com.vk.vsvans.BlogShop.utils.UtilsHelper
+import com.vk.vsvans.BlogShop.utils.isPermissinGrant
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -52,6 +61,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var toolbar: Toolbar
     private lateinit var searchView:SearchView
     //private var isSetFilter=false
+    lateinit var pLauncher:ActivityResultLauncher<String>
     private val filter_fact=FilterForActivity("main")
 
     val adapter= PurchaseRcAdapter(object:OnClickItemCallback{
@@ -76,6 +86,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        checkPermission()
         mainActivity=this
         rootElement= ActivityMainBinding.inflate(layoutInflater)
         val view=rootElement.root
@@ -137,7 +148,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         })
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
+     @RequiresApi(Build.VERSION_CODES.N)
     fun onSellerClick(purchase: Purchase) {
         var str=""
         job?.cancel()
@@ -304,6 +315,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     //Toast.makeText(this@MainActivity,"Pressed new purchase", Toast.LENGTH_LONG).show()
                 }
                 R.id.id_import_checks->{
+
                     job?.cancel()
                     job = CoroutineScope(Dispatchers.Main).launch{
                         import_checks.doImport(this@MainActivity)
@@ -313,6 +325,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }//when
             true
         }
+    }
+
+    private fun permissionListener(){
+        pLauncher=registerForActivityResult( ActivityResultContracts.RequestPermission() ) {
+        }
+    }
+
+    private fun checkPermission(){
+        permissionListener()
+        if(!isPermissinGrant(Manifest.permission.READ_EXTERNAL_STORAGE))
+            pLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
     }
 
     private fun setUpToolbar() {

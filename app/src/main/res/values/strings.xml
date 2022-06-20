@@ -50,4 +50,5 @@
     <string name="seller">Продавец</string>
     <string name="select_seller">Выберите продавца</string>
     <string name="caption_filter_count">Покупок</string>
+    <string name="ProgressJsonLoading">Загрузка файлов...</string>
 </resources>
