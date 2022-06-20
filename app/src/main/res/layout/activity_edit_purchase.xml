@@ -95,84 +95,90 @@
                         app:layout_constraintTop_toTopOf="parent">
 
                         <LinearLayout
-                            android:id="@+id/llCaptionDateTime"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginStart="10dp"
-                            android:layout_marginTop="16dp"
-                            android:layout_marginEnd="10dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/tvCaptionDate"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:fontFamily="sans-serif-medium"
-                                android:text="@string/ent_date"
-                                android:textAlignment="textStart"
-                                android:textColor="@color/green_main"
-                                android:textSize="16sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:id="@+id/tvCaptionTime"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:fontFamily="sans-serif-medium"
-                                android:paddingStart="40dp"
-                                android:text="@string/ent_time"
-                                android:textAlignment="textStart"
-                                android:textColor="@color/green_main"
-                                android:textSize="16sp"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-
-                        <LinearLayout
                             android:id="@+id/llDateTime"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_marginStart="10dp"
-                            android:layout_marginTop="5dp"
-                            android:layout_marginEnd="10dp"
-                            android:baselineAligned="false"
                             android:orientation="horizontal">
 
-                            <EditText
-                                android:id="@+id/edDatePart"
+                            <LinearLayout
+                                android:id="@+id/llDate"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_marginStart="10dp"
+                                android:layout_marginTop="@dimen/default_margin"
+                                android:layout_marginEnd="10dp"
                                 android:layout_weight="1"
-                                android:backgroundTint="@color/white"
-                                android:cursorVisible="false"
-                                android:drawableEnd="@drawable/ic_arrow_drop_down"
-                                android:focusable="false"
-                                android:fontFamily="sans-serif-medium"
-                                android:inputType="none|textNoSuggestions"
-                                android:singleLine="false"
-                                android:text="13 июня 2022"
-                                android:textAlignment="textStart"
-                                android:textColorHint="@color/green_main" />
+                                android:orientation="vertical">
 
-                            <EditText
-                                android:id="@+id/edTimePart"
+                                <TextView
+                                    android:id="@+id/tvCaptionDate"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="sans-serif-medium"
+                                    android:text="@string/ent_date"
+                                    android:textAlignment="textStart"
+                                    android:textColor="@color/green_main"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold" />
+
+                                <EditText
+                                    android:id="@+id/edDatePart"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:backgroundTint="@color/white"
+                                    android:cursorVisible="false"
+                                    android:drawableEnd="@drawable/ic_arrow_drop_down"
+                                    android:focusable="false"
+                                    android:fontFamily="sans-serif-medium"
+                                    android:inputType="none|textNoSuggestions"
+                                    android:singleLine="false"
+                                    android:text="13 июня 2022"
+                                    android:textAlignment="textStart"
+                                    android:textColorHint="@color/green_main" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/llTime"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_marginStart="40dp"
+                                android:layout_marginTop="@dimen/default_margin"
+                                android:layout_marginEnd="10dp"
                                 android:layout_weight="1"
-                                android:backgroundTint="@color/white"
-                                android:cursorVisible="false"
-                                android:drawableEnd="@drawable/ic_arrow_drop_down"
-                                android:focusable="false"
-                                android:fontFamily="sans-serif-medium"
-                                android:inputType="none|textNoSuggestions"
-                                android:paddingStart="40dp"
-                                android:singleLine="false"
-                                android:text="10:05"
-                                android:textAlignment="textStart"
-                                android:textColorHint="@color/green_main" />
+                                android:baselineAligned="false"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tvCaptionTime"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="sans-serif-medium"
+                                    android:text="@string/ent_time"
+                                    android:textAlignment="textStart"
+                                    android:textColor="@color/green_main"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold" />
+
+                                <EditText
+                                    android:id="@+id/edTimePart"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:backgroundTint="@color/white"
+                                    android:cursorVisible="false"
+                                    android:drawableEnd="@drawable/ic_arrow_drop_down"
+                                    android:focusable="false"
+                                    android:fontFamily="sans-serif-medium"
+                                    android:inputType="none|textNoSuggestions"
+                                    android:singleLine="false"
+                                    android:text="10:05"
+                                    android:textAlignment="textStart"
+                                    android:textColorHint="@color/green_main" />
+
+                            </LinearLayout>
 
                         </LinearLayout>
+
                         <LinearLayout
                             android:id="@+id/divider9"
                             android:layout_width="match_parent"
@@ -235,13 +241,12 @@
                             android:ems="10"
                             android:hint="@string/summa_hint"
                             android:inputType="numberDecimal"
-                            android:selectAllOnFocus="true"
                             android:padding="10dp"
+                            android:selectAllOnFocus="true"
                             android:textColorHint="@color/gray_dark"
                             app:digits_after_dot="2"
                             app:digits_before_dot="10"
-                            app:show_soft_input_on_focus="true"
-                            />
+                            app:show_soft_input_on_focus="true" />
 
 
                         <LinearLayout
