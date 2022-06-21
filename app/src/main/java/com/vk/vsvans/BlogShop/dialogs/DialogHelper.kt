@@ -240,15 +240,17 @@ private fun createTreeArrayAdapter(
                     iFilter.confirmFilter(selected_date)
                 } else {
                     // если нет выбранных дат то сброс фильтра
-                    if(iFilter!=null) iFilter.cancelFilter()
+
+                    iFilter.cancelFilter()
                 }
+                selected_date.clear()
                 mCalendar.dismiss()
             }
         })
         mCalendar.setOnClickCancelListener(object : CalendarAlertDialog.onClickListener {
             override fun onClick() {
                 selected_date.clear()
-                if(iFilter!=null) iFilter.cancelFilter()
+                iFilter.cancelFilter()
                 mCalendar.dismiss()
             }
         })
@@ -267,6 +269,7 @@ private fun createTreeArrayAdapter(
                 } else {
                     selected_date.remove(key)
                 }
+
             }
         // no filter set
         } else {
@@ -279,7 +282,7 @@ private fun createTreeArrayAdapter(
                 selected_date.remove(key)
             }
         }
-
+println("Ok")
     }
 
 }
