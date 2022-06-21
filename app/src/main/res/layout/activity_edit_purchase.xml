@@ -10,6 +10,7 @@
     android:orientation="vertical"
     tools:context=".activity.EditPurchaseActivity">
 
+
     <ScrollView
         android:id="@+id/scrollViewMain"
         android:layout_width="match_parent"

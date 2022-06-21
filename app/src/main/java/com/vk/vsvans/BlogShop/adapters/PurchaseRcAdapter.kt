@@ -86,7 +86,7 @@ class PurchaseRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
                 tvPurchaseTime.setOnClickListener{
                     //println(tvPurchaseTime.text)
                     //if(clickItemCallback!=null) clickItemCallback!!.onTimeClick()
-                    if(filterCallback!=null) filterCallback.onTimeClick()
+                    if(filterCallback!=null) filterCallback.onTimeClick(purchase.time)
                 }
                 tvSeller.setOnClickListener{
                     //mainActivity!!.onSellerClick(purchase)

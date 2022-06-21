@@ -13,28 +13,23 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.annotation.RequiresApi
-import com.vk.vsvans.BlogShop.MainActivity
 import com.vk.vsvans.BlogShop.activity.EditPurchaseActivity
 import com.vk.vsvans.BlogShop.activity.ProductActivity
 import com.vk.vsvans.BlogShop.activity.SellerActivity
-import com.vk.vsvans.BlogShop.adapters.PurchaseRcAdapter
 import com.vk.vsvans.BlogShop.calendar.CalendarAlertDialog
 import com.vk.vsvans.BlogShop.calendar.CalendarDialogAdapter
 import com.vk.vsvans.BlogShop.helper.SpinnerHelper
 import com.vk.vsvans.BlogShop.interfaces.*
 import com.vk.vsvans.BlogShop.model.BaseList
 import com.vk.vsvans.BlogShop.model.Product
-import com.vk.vsvans.BlogShop.model.Purchase
 import com.vk.vsvans.BlogShop.model.PurchaseItem
+import com.vk.vsvans.BlogShop.utils.FilterForActivity
 import com.vk.vsvans.BlogShop.utils.UtilsHelper
-
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import java.lang.String.valueOf
 import java.util.*
-import kotlin.collections.ArrayList
 import com.vk.vsvans.BlogShop.R as R1
 
 
@@ -218,7 +213,7 @@ private fun createTreeArrayAdapter(
     return arrayAdapter
 }
 
-    fun getCalendarDialog(activity: Activity,iFilter:IDialogDateFiterCallback) {
+    fun getCalendarDialog(activity: Activity,iFilter:IDialogDateFiterCallback,filter:FilterForActivity,time:Long) {
        // val mainActivity: MainActivity = activity as MainActivity
         val selected_date = HashMap<String, Date?>()
         val mCalendar = CalendarAlertDialog(
@@ -239,8 +234,20 @@ private fun createTreeArrayAdapter(
         mCalendar.setOnClickOkListener(object : CalendarAlertDialog.onClickListener {
             @RequiresApi(Build.VERSION_CODES.N)
             override fun onClick() {
+
+//                if(filter.dates_begin!=null && filter.dates_begin!!.size>0){
+//                    var key=""
+//                    for(i in 0 until filter.dates_begin!!.size){
+//                        key=filter.dates_begin!![i]
+//                        if (selected_date[key] == null) {
+//                            selected_date[key] = Date(key.toLong())
+//                        } else {
+//                            selected_date.remove(key)
+//                        }
+//                    }
+//                }
                 if (selected_date.size != 0) {
-                    if(iFilter!=null) iFilter.confirmFilter(selected_date)
+                    iFilter.confirmFilter(selected_date)
                 } else {
                     // если нет выбранных дат то сброс фильтра
                     if(iFilter!=null) iFilter.cancelFilter()
@@ -256,6 +263,35 @@ private fun createTreeArrayAdapter(
             }
         })
         mCalendar.show()
+        // set prev selected stored date from filter
+        if(filter.dates_begin!=null && filter.dates_begin!!.size>0){
+            var key=""
+            for(i in 0 until filter.dates_begin!!.size){
+                key=filter.dates_begin!![i]
+            //println("Key is :"+key) 1653782400000
+                val date= key.toLong()
+                println("Date is:")
+                println(key)
+                println(date)
+                mCalendar.setSelectedDate(date)
+                if (selected_date[key] == null) {
+                    selected_date[key] = Date(date)
+                } else {
+                    selected_date.remove(key)
+                }
+            }
+        // no filter set
+        } else {
+            // current clicked date on list purchases is selected
+            mCalendar.setSelectedDate(time)
+            val key: String = UtilsHelper.getDate(time)
+            if (selected_date[key] == null) {
+                selected_date[key] = Date(time)
+            } else {
+                selected_date.remove(key)
+            }
+        }
+
     }
 
 }

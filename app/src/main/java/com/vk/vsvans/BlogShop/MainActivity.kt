@@ -97,7 +97,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         initRecyclerView()
         bottomMenuOnClick()
         adapter.setFilterCallback(object: IFilterCallBack {
-            override fun onTimeClick() {
+            override fun onTimeClick(time:Long) {
                 DialogHelper.getCalendarDialog(this@MainActivity,object: IDialogDateFiterCallback {
                     override fun confirmFilter(selected_date: HashMap<String, Date?>) {
                         if (selected_date.size != 0) {
@@ -121,16 +121,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                                     java.lang.String.valueOf(UtilsHelper.correct_date_end(dates[i]!!.time))
                                 filter_fact.dates_end!!.add(str)
                             }
-//                            filter_fact.dates_begin?.addAll(dates_begin)
-//                            filter_fact.dates_end?.addAll(dates_end)
 
-                            // get PurchaseList
                             fillAdapter()
-//                            var purchaseList  = ArrayList<Purchase>()
-//                            val amount = dbManager.queryPurchases(filter_fact,purchaseList)
-//                            adapter.updateAdapter(purchaseList)
-//                            if(isSetFilter()) setFilterPanel(amount,purchaseList.size)
-//                            else resetFilterPanel()
                         }
                     }
 
@@ -140,7 +132,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         resetFilterPanel()
                         fillAdapter()
                     }
-                })
+                },filter_fact,time)
             }
             override fun onSellerClick(purchase: Purchase) {
                 this@MainActivity.onSellerClick(purchase)
