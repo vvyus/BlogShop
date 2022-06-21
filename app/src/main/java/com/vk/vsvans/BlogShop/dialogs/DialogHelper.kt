@@ -226,26 +226,16 @@ private fun createTreeArrayAdapter(
                         selected_date[key] = date
                     } else {
                         selected_date.remove(key)
+                        Log.d("DATECLICK", date.toString())
                     }
-                    Log.d("DATECLICK", date.toString())
+                    //Log.d("DATECLICK", date.toString())
                 }
-            }, 1
+            }, 1,Date(time)
         )
         mCalendar.setOnClickOkListener(object : CalendarAlertDialog.onClickListener {
             @RequiresApi(Build.VERSION_CODES.N)
             override fun onClick() {
 
-//                if(filter.dates_begin!=null && filter.dates_begin!!.size>0){
-//                    var key=""
-//                    for(i in 0 until filter.dates_begin!!.size){
-//                        key=filter.dates_begin!![i]
-//                        if (selected_date[key] == null) {
-//                            selected_date[key] = Date(key.toLong())
-//                        } else {
-//                            selected_date.remove(key)
-//                        }
-//                    }
-//                }
                 if (selected_date.size != 0) {
                     iFilter.confirmFilter(selected_date)
                 } else {
@@ -266,13 +256,11 @@ private fun createTreeArrayAdapter(
         // set prev selected stored date from filter
         if(filter.dates_begin!=null && filter.dates_begin!!.size>0){
             var key=""
+            selected_date.clear()
             for(i in 0 until filter.dates_begin!!.size){
                 key=filter.dates_begin!![i]
             //println("Key is :"+key) 1653782400000
                 val date= key.toLong()
-                println("Date is:")
-                println(key)
-                println(date)
                 mCalendar.setSelectedDate(date)
                 if (selected_date[key] == null) {
                     selected_date[key] = Date(date)

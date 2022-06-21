@@ -70,11 +70,12 @@ public class CalendarDialogAdapter extends BaseAdapter {
         //!calendar_events=RemindersActivity.getInstance().getCalendarEvents();
     }
 
-    public CalendarDialogAdapter(Context context, int type_event){
+    public CalendarDialogAdapter(Context context, int type_event,Date startTime){
         mContext = context;
         //float dp = mContext.getResources().getDisplayMetrics().density;
         mLayoutInflater = LayoutInflater.from(mContext);
-        mDateManager = new DateManager();
+        mDateManager = new DateManager(startTime);
+        //mDateManager = new DateManager();
         dateArray = mDateManager.getDays();
         select_position=-1;
         // currentDayColor=//context.getResources().getColor(R.color.teal_200);

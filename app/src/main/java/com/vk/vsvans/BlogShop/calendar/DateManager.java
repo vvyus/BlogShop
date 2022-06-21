@@ -17,7 +17,11 @@ public class DateManager {
     public DateManager(){
         mCalendar = Calendar.getInstance();
     }
-
+    public DateManager(Date startTme){
+        mCalendar = Calendar.getInstance();
+        //mStartTime=startTme;
+        mCalendar.setTime(startTme);
+    }
     //Get the elements of the month
     public List<Date> getDays(){
         //Keep current state
