@@ -147,7 +147,7 @@ public class CalendarAlertDialog extends AlertDialog {
 
 
 
-    private void clearSelectedDate() {
+    public void clearSelectedDate() {
         mCalendarAdapter.clearSelectedDate();
     }
     public void setSelectedDate(long date) {

@@ -213,7 +213,7 @@ private fun createTreeArrayAdapter(
     return arrayAdapter
 }
 
-    fun getCalendarDialog(activity: Activity,iFilter:IDialogDateFiterCallback,filter:FilterForActivity,time:Long) {
+    fun getCalendarDialog(activity: Activity, iFilter:IDialogDateFiterCallback, filter_fact:FilterForActivity, time:Long) {
        // val mainActivity: MainActivity = activity as MainActivity
         val selected_date = HashMap<String, Date?>()
         val mCalendar = CalendarAlertDialog(
@@ -221,7 +221,7 @@ private fun createTreeArrayAdapter(
             object : CalendarDialogAdapter.onItemClickListener {
                 override fun onClick(date: Date) {
                     //to do
-                    val key: String = UtilsHelper.getDate(date.time)
+                    val key: String =UtilsHelper.getDate(date.time)
                     if (selected_date[key] == null) {
                         selected_date[key] = date
                     } else {
@@ -240,7 +240,6 @@ private fun createTreeArrayAdapter(
                     iFilter.confirmFilter(selected_date)
                 } else {
                     // если нет выбранных дат то сброс фильтра
-
                     iFilter.cancelFilter()
                 }
                 selected_date.clear()
@@ -255,17 +254,19 @@ private fun createTreeArrayAdapter(
             }
         })
         mCalendar.show()
+        selected_date.clear()
+        mCalendar.clearSelectedDate()
         // set prev selected stored date from filter
-        if(filter.dates_begin!=null && filter.dates_begin!!.size>0){
+        if(filter_fact.dates_begin!=null && filter_fact.dates_begin!!.size>0){
             var key=""
-            selected_date.clear()
-            for(i in 0 until filter.dates_begin!!.size){
-                key=filter.dates_begin!![i]
+
+            for(i in 0 until filter_fact.dates_begin!!.size){
+                val date=filter_fact.dates_begin!![i]
             //println("Key is :"+key) 1653782400000
-                val date= key.toLong()
-                mCalendar.setSelectedDate(date)
+                val key=UtilsHelper.getDate(date.toLong()) //key.toLong()
+                mCalendar.setSelectedDate(date.toLong())
                 if (selected_date[key] == null) {
-                    selected_date[key] = Date(date)
+                    selected_date[key] = Date(date.toLong())
                 } else {
                     selected_date.remove(key)
                 }

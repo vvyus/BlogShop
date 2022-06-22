@@ -110,15 +110,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                                     }else return 0
                                 }
                             })
+                            println("Dates size is :"+dates.size+" selected date size is "+selected_date.size)
                             filter_fact.dates_begin = ArrayList<String>()
                             filter_fact.dates_end = ArrayList<String>()
                             var str: String?
-                            for (i in 0 until selected_date.size) {
-                                str =
-                                    java.lang.String.valueOf(UtilsHelper.correct_date_begin(dates[i]!!.time))
+                            for (i in 0 until dates.size) {
+                                println("To filter Date is :"+dates[i])
+                                str = java.lang.String.valueOf(UtilsHelper.correct_date_begin(dates[i]!!.time))
                                 filter_fact.dates_begin!!.add(str)
-                                str =
-                                    java.lang.String.valueOf(UtilsHelper.correct_date_end(dates[i]!!.time))
+                                str = java.lang.String.valueOf(UtilsHelper.correct_date_end(dates[i]!!.time))
                                 filter_fact.dates_end!!.add(str)
                             }
 
