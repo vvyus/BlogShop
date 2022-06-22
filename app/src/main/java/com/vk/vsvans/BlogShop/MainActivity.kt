@@ -137,7 +137,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             override fun onSellerClick(purchase: Purchase) {
                 this@MainActivity.onSellerClick(purchase)
             }
-        })
+        })//adapter set call back
     }
 
      @RequiresApi(Build.VERSION_CODES.N)
@@ -194,6 +194,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             else resetFilterPanel()
         }
     }
+
+    @RequiresApi(Build.VERSION_CODES.N)
     private fun init(){
         rootElement.navView.setNavigationItemSelectedListener(this)
 
@@ -204,6 +206,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val toggle= ActionBarDrawerToggle(this,rootElement.drawerLayout,toolbar,R.string.open,R.string.close)
         rootElement.drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
+        rootElement.mainContent.imCloseFilter.setOnClickListener{
+            resetFilter_For_Activity()
+            fillAdapter()
+        }
 
     }
 
@@ -230,6 +236,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     fun resetFilterPanel(){
        // isSetFilter=false
         showFilterPanel()
+    }
+
+    fun resetFilter_For_Activity() {
+        if (!searchView.isIconified()) {
+            searchView.onActionViewCollapsed();
+        }
+        filter_fact.content=null
+        filter_fact.idSeller=null
+        filter_fact.dates_begin=null
+        filter_fact.dates_end=null
     }
 
     private fun showFilterPanel(amount:Double,count: Int){
