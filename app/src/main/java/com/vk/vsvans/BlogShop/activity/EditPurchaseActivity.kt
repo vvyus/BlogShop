@@ -16,7 +16,6 @@ import com.vk.vsvans.BlogShop.databinding.ActivityEditPurchaseBinding
 import com.vk.vsvans.BlogShop.dialogs.DialogHelper
 import com.vk.vsvans.BlogShop.dialogs.DialogSpinnerHelper
 import com.vk.vsvans.BlogShop.fragments.PurchaseItemListFragment
-import com.vk.vsvans.BlogShop.helper.SpinnerHelper
 import com.vk.vsvans.BlogShop.interfaces.IFragmentCallBack
 import com.vk.vsvans.BlogShop.interfaces.IFragmentCloseInterface
 import com.vk.vsvans.BlogShop.interfaces.IUpdatePurchaseItemList
@@ -112,7 +111,7 @@ class EditPurchaseActivity : AppCompatActivity() {
             val dialog= DialogSpinnerHelper()
             DialogHelper.job?.cancel()
             DialogHelper.job = CoroutineScope(Dispatchers.Main).launch {
-                val listSeller = SpinnerHelper.getAllSeller(this@EditPurchaseActivity)
+                val listSeller = dialog.getAllSeller(this@EditPurchaseActivity)
                 dialog.showSpinnerSellerDialog(this@EditPurchaseActivity, listSeller, rootElement.tvSellerSelect)
             }
         }

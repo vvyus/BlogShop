@@ -19,9 +19,7 @@ import com.vk.vsvans.BlogShop.activity.ProductActivity
 import com.vk.vsvans.BlogShop.activity.SellerActivity
 import com.vk.vsvans.BlogShop.calendar.CalendarAlertDialog
 import com.vk.vsvans.BlogShop.calendar.CalendarDialogAdapter
-import com.vk.vsvans.BlogShop.helper.SpinnerHelper
 import com.vk.vsvans.BlogShop.interfaces.*
-import com.vk.vsvans.BlogShop.mainActivity
 import com.vk.vsvans.BlogShop.model.BaseList
 import com.vk.vsvans.BlogShop.model.Product
 import com.vk.vsvans.BlogShop.model.PurchaseItem
@@ -90,7 +88,7 @@ object DialogHelper {
             val dialog=DialogSpinnerHelper()
             job?.cancel()
             job = CoroutineScope(Dispatchers.Main).launch {
-                val listProduct = SpinnerHelper.getAllProduct(context)
+                val listProduct = dialog.getAllProduct(context)
                 dialog.showSpinnerProductDialog(context, listProduct, tvProduct)
             }
         }

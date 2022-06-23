@@ -7,15 +7,16 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.vk.vsvans.BlogShop.R
-import com.vk.vsvans.BlogShop.model.Product
+import com.vk.vsvans.BlogShop.model.BaseList
 
-class DialogSpinnerProductRcAdapter(var tvSelection: TextView, var dialog: AlertDialog) : RecyclerView.Adapter<DialogSpinnerProductRcAdapter.SpViewHolder>() {
+class DialogSpinnerBaselistAdapter(var tvSelection: TextView, var dialog: AlertDialog) : RecyclerView.Adapter<DialogSpinnerBaselistAdapter.SpViewHolder>() {
 
-    private val mainList=ArrayList<Product>()
+    private val mainList=ArrayList<BaseList>()
     //private val context=context
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SpViewHolder {
-        val view=LayoutInflater.from(parent.context).inflate(R.layout.spinner_list_item,parent,false)
+        val view=
+            LayoutInflater.from(parent.context).inflate(R.layout.spinner_list_item,parent,false)
         return SpViewHolder(view,tvSelection,dialog)
     }
 
@@ -29,15 +30,17 @@ class DialogSpinnerProductRcAdapter(var tvSelection: TextView, var dialog: Alert
     }
     // столько viewholder сколько элементов
     //var context для доступности в функциях класса аналог переменой класса контекст
-    class SpViewHolder(itemView: View, var tvSelection: TextView, var dialog: AlertDialog) :RecyclerView.ViewHolder(itemView),View.OnClickListener {
+    class SpViewHolder(itemView: View, var tvSelection: TextView, var dialog: AlertDialog) :
+        RecyclerView.ViewHolder(itemView), View.OnClickListener {
         private var itemText=""
-        private var itemProduct:Product?=null
-        fun setData(product:Product){
-            val text=product.name
+        private var itemBaseList: BaseList?=null
+
+        fun setData(baseList: BaseList){
+            val text=baseList.name
             val tvSpItem=itemView.findViewById<TextView>(R.id.tvSpItem)
             tvSpItem.text=text
             itemText=text
-            itemProduct=product
+            itemBaseList=baseList
             // присваиваем onClick выбранному элементу
             itemView.setOnClickListener(this)
         }
@@ -45,12 +48,12 @@ class DialogSpinnerProductRcAdapter(var tvSelection: TextView, var dialog: Alert
         override fun onClick(v: View?) {
             //(tvSelection as EditAdsAct).rootElement.tvCountry.setText(itemText)
             tvSelection.text=itemText
-            tvSelection.setTag(itemProduct)
+            tvSelection.setTag(itemBaseList)
             dialog.dismiss()
         }
     }
 
-    fun updateAdapter(list:ArrayList<Product>){
+    fun updateAdapter(list:ArrayList<BaseList>){
         mainList.clear()
         mainList.addAll(list)
         notifyDataSetChanged()
