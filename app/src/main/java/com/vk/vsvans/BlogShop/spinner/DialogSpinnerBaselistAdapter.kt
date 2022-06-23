@@ -1,4 +1,4 @@
-package com.vk.vsvans.BlogShop.adapters
+package com.vk.vsvans.BlogShop.spinner
 
 import android.app.AlertDialog
 import android.view.LayoutInflater

@@ -14,7 +14,7 @@ import com.vk.vsvans.BlogShop.R
 import com.vk.vsvans.BlogShop.adapters.CardItemPurchaseRcAdapter
 import com.vk.vsvans.BlogShop.databinding.ActivityEditPurchaseBinding
 import com.vk.vsvans.BlogShop.dialogs.DialogHelper
-import com.vk.vsvans.BlogShop.dialogs.DialogSpinnerHelper
+import com.vk.vsvans.BlogShop.spinner.DialogSpinnerHelper
 import com.vk.vsvans.BlogShop.fragments.PurchaseItemListFragment
 import com.vk.vsvans.BlogShop.interfaces.IFragmentCallBack
 import com.vk.vsvans.BlogShop.interfaces.IFragmentCloseInterface

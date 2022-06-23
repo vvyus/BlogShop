@@ -1,4 +1,4 @@
-package com.vk.vsvans.BlogShop.dialogs
+package com.vk.vsvans.BlogShop.spinner
 
 import android.app.AlertDialog
 import android.content.Context
@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.vk.vsvans.BlogShop.R
 import com.vk.vsvans.BlogShop.activity.EditPurchaseActivity
-import com.vk.vsvans.BlogShop.adapters.DialogSpinnerBaselistAdapter
 import com.vk.vsvans.BlogShop.model.BaseList
 
 class DialogSpinnerHelper {
