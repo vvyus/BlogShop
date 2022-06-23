@@ -9,6 +9,7 @@ import android.os.Build
 import android.provider.BaseColumns
 import androidx.annotation.RequiresApi
 import com.vk.vsvans.BlogShop.utils.FilterForActivity
+import com.vk.vsvans.BlogShop.utils.UtilsHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -286,7 +287,44 @@ fun insertSeller( seller: Seller) :Int?{
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
+    suspend fun queryPurchases(filter:FilterForActivity,purchaseList: ArrayList<Purchase>,calendar_events:HashMap<String, Int>):Double = withContext(Dispatchers.IO) {
+        var selection =""
+        var args = ArrayList<String>()
+        if(filter.idSeller!=null){
+            selection += "${DbName.COLUMN_NAME_SELLER_ID} = ? AND "
+            args.add(filter.idSeller.toString())
+        }
+        if(filter.content!=null) {
+            selection += "${DbName.COLUMN_NAME_CONTENT} like ? AND "
+            args.add("%"+filter.content + "%")
+        }
+        if(filter.dates_begin!=null && filter.dates_end!=null) {
+            for (i in filter.dates_begin!!.indices) {
+                selection += "${DbName.COLUMN_NAME_TIME} >= " + filter.dates_begin!![i] + " AND ${DbName.COLUMN_NAME_TIME}<=" + filter.dates_end!![i]
+                if (i < filter.dates_begin!!.size - 1) selection += " OR " else selection += " AND "
+            }
+        }
+        if(selection.endsWith(" AND "))selection=selection.substring(0, selection.length - 5)
+        val selectionArgs: Array<String> = args.toTypedArray()
+        //selectionArgs = arrayOf(idSeller.toString())
+
+        val temp: String = DbName.PURCHASE_QUERY
+        val selectQuery: String = temp.replace(
+            DbName.WHERE_FOR_PURCHASE_QUERY,
+            if(selection=="") "" else "WHERE $selection "
+        )
+        val cursor = db?.rawQuery(selectQuery, selectionArgs)
+        var amount=0.0
+        if(cursor!=null){
+            amount=setPurchaseListFromCursor(cursor!!,purchaseList,calendar_events)
+            cursor!!.close()
+        }
+        //return@withContext purchaseList
+        return@withContext amount
+    }
+
     @SuppressLint("Range")
+    //, calendar_events:HashMap<String, Integer>
     suspend fun queryPurchases(filter:FilterForActivity,purchaseList: ArrayList<Purchase>):Double = withContext(Dispatchers.IO) {
         var selection =""
         var args = ArrayList<String>()
@@ -323,163 +361,88 @@ fun insertSeller( seller: Seller) :Int?{
         return@withContext amount
     }
 
-    //filter query
-    suspend fun queryPurchases(idSeller:Int,purchaseList: ArrayList<Purchase>):Double = withContext(Dispatchers.IO) {
-
-        val selection = "${DbName.COLUMN_NAME_SELLER_ID} = ?"
-        val selectionArgs = arrayOf(idSeller.toString())
-
-        val temp: String = DbName.PURCHASE_QUERY
-        val selectQuery: String = temp.replace(
-            DbName.WHERE_FOR_PURCHASE_QUERY,
-            "WHERE $selection "
-        )
-        val cursor = db?.rawQuery(selectQuery, selectionArgs)
-        var amount=0.0
-        if(cursor!=null){
-            amount=setPurchaseListFromCursor(cursor!!,purchaseList)
-            cursor!!.close()
-        }
-        //return@withContext purchaseList
-        return@withContext amount
-    }
-
-    suspend fun queryPurchases(searchText:String,purchaseList: ArrayList<Purchase>):Double = withContext(Dispatchers.IO) {
-
-        val selection = "${DbName.COLUMN_NAME_CONTENT} like ?"
-        val selectionArgs = arrayOf("%"+searchText + "%")
-
-        val temp: String = DbName.PURCHASE_QUERY
-        val selectQuery: String = temp.replace(
-            DbName.WHERE_FOR_PURCHASE_QUERY,
-            "WHERE $selection "
-        )
-        val cursor = db?.rawQuery(selectQuery, selectionArgs)
-        var amount=0.0
-        if(cursor!=null){
-            amount=setPurchaseListFromCursor(cursor!!,purchaseList)
-            cursor!!.close()
-        }
-        //return@withContext purchaseList
-        return@withContext amount
-    }
-
-    fun queryPurchases(dates_begin: ArrayList<String>, dates_end: ArrayList<String>,purchaseList: ArrayList<Purchase>):Double {
-        //val db: SQLiteDatabase = MyDbHelper.getWritableDatabase()
-        //var purchaseList  = ArrayList<Purchase>()
-        var selection = ""
-        for (i in dates_begin.indices) {
-            selection += "${DbName.COLUMN_NAME_TIME} >= " + dates_begin[i] + " AND ${DbName.COLUMN_NAME_TIME}<=" + dates_end[i]
-            if (i < dates_begin.size - 1) selection += " OR "
-        }
-        val temp: String = DbName.PURCHASE_QUERY
-        val selectQuery: String = temp.replace(
-            DbName.WHERE_FOR_PURCHASE_QUERY,
-            "WHERE $selection "
-        )
-        val cursor = db?.rawQuery(selectQuery, null)
-        var amount=0.0
-        if(cursor!=null){
-            amount=setPurchaseListFromCursor(cursor!!,purchaseList)
-            cursor!!.close()
-        }
-        // return note list
-        return amount//purchaseList
-    }
-
     @SuppressLint("Range")
     private fun setPurchaseListFromCursor(cursor: Cursor, purchaseList: ArrayList<Purchase>):Double{
         var amount=0.0
         while (cursor?.moveToNext()!!) {
-            val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_TITLE))
-            val dataContent = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_CONTENT))
-            val dataContentHtml = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_CONTENT_HTML))
 
-            val dataIdFns = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_ID_FNS))
-
-            val dataId = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
-            val time = cursor.getLong(cursor.getColumnIndex(DbName.COLUMN_NAME_TIME))
-            val dataSumma = cursor.getDouble(cursor.getColumnIndex(DbName.COLUMN_NAME_SUMMA_PURCHASES))
-            val sellername=cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_SELLER_NAME))
-            val sellerid=cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_SELLER_ID))
-            val purchase = Purchase()
-            purchase.title = dataTitle
-            purchase.content = dataContent
-
-            purchase.content_html= dataContentHtml
-            purchase.id = dataId
-            purchase.time = time
-            purchase.summa=dataSumma
-            purchase.idfns=dataIdFns
-            purchase.idseller=sellerid
-            purchase.sellername=sellername
+            val purchase=getPurchaseFromCursor(cursor)
+            amount+=purchase.summa
             purchaseList.add(purchase)
-            amount+=dataSumma
         }
         return amount
     }
-        @RequiresApi(Build.VERSION_CODES.N)
-        @SuppressLint("Range")
-        suspend fun readOnePurchase(id:Int): Purchase? = withContext(Dispatchers.IO) {
 
-            val selection ="${DbName.TABLE_NAME}"+"."+BaseColumns._ID + "=?"
-            val selectionArgs = arrayOf(id.toString())
-            val temp: String = DbName.PURCHASE_QUERY
-            val selectQuery: String = temp.replace(
-                DbName.WHERE_FOR_PURCHASE_QUERY,
-                "WHERE $selection "
-            )
-            val cursor = db?.rawQuery(selectQuery, selectionArgs)
-            var amount=0.0
-            var purchase :Purchase?= null
-            val purchaseList= ArrayList<Purchase>()
-            if(cursor!=null){
-                amount=setPurchaseListFromCursor(cursor!!,purchaseList)
-                purchase=if(purchaseList.size>0) purchaseList[0] else null
-                cursor!!.close()
-            }
-//            val cursor = db?.query(
-//                DbName.TABLE_NAME,
-//                null,
-//                selection, arrayOf(id.toString()),
-//                null, null, null
-//            )
-//            val purchase = Purchase()
-//            while (cursor?.moveToNext()!!) {
-//
-//                val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_TITLE))
-//                val dataContent =
-//                    cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_CONTENT))
-//                val dataContentHtml =
-//                    cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_CONTENT_HTML))
-//                val dataIdFns =
-//                    cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_ID_FNS))
-//                val dataId =
-//                    cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
-//                val time =
-//                    cursor.getLong(cursor.getColumnIndex(DbName.COLUMN_NAME_TIME))
-//                val dataSumma =
-//                    cursor.getDouble(cursor.getColumnIndex(DbName.COLUMN_NAME_SUMMA_PURCHASES))
-//                val sellername=cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_SELLER_NAME))
-//                val sellerid=cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_SELLER_ID))
-//                purchase.title = dataTitle
-//                purchase.content = dataContent
-//                purchase.content_html = dataContentHtml
-//                purchase.id = dataId
-//                purchase.time = time
-//                purchase.summa=dataSumma
-//                purchase.idfns=dataIdFns
-//                purchase.sellername=sellername
-//                purchase.idseller=sellerid
-//                break
-//
-//            }
-//            //if(readDataCallback!=null)readDataCallback.readData(dataList)
-//
-//            cursor.close()
-            return@withContext purchase
-            //return dataList
+    @SuppressLint("Range")
+    private fun setPurchaseListFromCursor(cursor: Cursor, purchaseList: ArrayList<Purchase>,calendar_events:HashMap<String, Int>):Double{
+        var amount=0.0
+        while (cursor?.moveToNext()!!) {
+
+            val purchase=getPurchaseFromCursor(cursor)
+            amount+=purchase.summa
+            purchaseList.add(purchase)
+
+            val event_key: String = UtilsHelper.getDate(purchase.time)
+            var event_int: Int? = calendar_events[event_key]
+
+            if (event_int == null)
+                calendar_events[event_key] = 1
+            else
+                calendar_events[event_key] = ++event_int
         }
+        return amount
+    }
+
+    @SuppressLint("Range")
+    private fun getPurchaseFromCursor(cursor: Cursor):Purchase {
+        val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_TITLE))
+        val dataContent = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_CONTENT))
+        val dataContentHtml = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_CONTENT_HTML))
+
+        val dataIdFns = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_ID_FNS))
+
+        val dataId = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
+        val time = cursor.getLong(cursor.getColumnIndex(DbName.COLUMN_NAME_TIME))
+        val dataSumma = cursor.getDouble(cursor.getColumnIndex(DbName.COLUMN_NAME_SUMMA_PURCHASES))
+        val sellername=cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_SELLER_NAME))
+        val sellerid=cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_SELLER_ID))
+
+        val purchase = Purchase()
+        purchase.title = dataTitle
+        purchase.content = dataContent
+        purchase.content_html= dataContentHtml
+        purchase.id = dataId
+        purchase.time = time
+        purchase.summa=dataSumma
+        purchase.idfns=dataIdFns
+        purchase.idseller=sellerid
+        purchase.sellername=sellername
+
+        return purchase
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    @SuppressLint("Range")
+    suspend fun readOnePurchase(id:Int): Purchase? = withContext(Dispatchers.IO) {
+
+        val selection ="${DbName.TABLE_NAME}"+"."+BaseColumns._ID + "=?"
+        val selectionArgs = arrayOf(id.toString())
+        val temp: String = DbName.PURCHASE_QUERY
+        val selectQuery: String = temp.replace(
+            DbName.WHERE_FOR_PURCHASE_QUERY,
+            "WHERE $selection "
+        )
+        val cursor = db?.rawQuery(selectQuery, selectionArgs)
+        var amount=0.0
+        var purchase :Purchase?= null
+        val purchaseList= ArrayList<Purchase>()
+        if(cursor!=null){
+            amount=setPurchaseListFromCursor(cursor!!,purchaseList)
+            purchase=if(purchaseList.size>0) purchaseList[0] else null
+            cursor!!.close()
+        }
+        return@withContext purchase
+    }
 
     @SuppressLint("Range")
     suspend fun readPurchaseFns(idFns:String): Int = withContext(Dispatchers.IO) {
@@ -498,8 +461,72 @@ fun insertSeller( seller: Seller) :Int?{
 
         cursor.close()
         return@withContext Id
-        //return dataList
     }
+
+    //filter query
+//    suspend fun queryPurchases(idSeller:Int,purchaseList: ArrayList<Purchase>):Double = withContext(Dispatchers.IO) {
+//
+//        val selection = "${DbName.COLUMN_NAME_SELLER_ID} = ?"
+//        val selectionArgs = arrayOf(idSeller.toString())
+//
+//        val temp: String = DbName.PURCHASE_QUERY
+//        val selectQuery: String = temp.replace(
+//            DbName.WHERE_FOR_PURCHASE_QUERY,
+//            "WHERE $selection "
+//        )
+//        val cursor = db?.rawQuery(selectQuery, selectionArgs)
+//        var amount=0.0
+//        if(cursor!=null){
+//            amount=setPurchaseListFromCursor(cursor!!,purchaseList)
+//            cursor!!.close()
+//        }
+//        //return@withContext purchaseList
+//        return@withContext amount
+//    }
+//
+//    suspend fun queryPurchases(searchText:String,purchaseList: ArrayList<Purchase>):Double = withContext(Dispatchers.IO) {
+//
+//        val selection = "${DbName.COLUMN_NAME_CONTENT} like ?"
+//        val selectionArgs = arrayOf("%"+searchText + "%")
+//
+//        val temp: String = DbName.PURCHASE_QUERY
+//        val selectQuery: String = temp.replace(
+//            DbName.WHERE_FOR_PURCHASE_QUERY,
+//            "WHERE $selection "
+//        )
+//        val cursor = db?.rawQuery(selectQuery, selectionArgs)
+//        var amount=0.0
+//        if(cursor!=null){
+//            amount=setPurchaseListFromCursor(cursor!!,purchaseList)
+//            cursor!!.close()
+//        }
+//        //return@withContext purchaseList
+//        return@withContext amount
+//    }
+//
+//    fun queryPurchases(dates_begin: ArrayList<String>, dates_end: ArrayList<String>,purchaseList: ArrayList<Purchase>):Double {
+//        //val db: SQLiteDatabase = MyDbHelper.getWritableDatabase()
+//        //var purchaseList  = ArrayList<Purchase>()
+//        var selection = ""
+//        for (i in dates_begin.indices) {
+//            selection += "${DbName.COLUMN_NAME_TIME} >= " + dates_begin[i] + " AND ${DbName.COLUMN_NAME_TIME}<=" + dates_end[i]
+//            if (i < dates_begin.size - 1) selection += " OR "
+//        }
+//        val temp: String = DbName.PURCHASE_QUERY
+//        val selectQuery: String = temp.replace(
+//            DbName.WHERE_FOR_PURCHASE_QUERY,
+//            "WHERE $selection "
+//        )
+//        val cursor = db?.rawQuery(selectQuery, null)
+//        var amount=0.0
+//        if(cursor!=null){
+//            amount=setPurchaseListFromCursor(cursor!!,purchaseList)
+//            cursor!!.close()
+//        }
+//        // return note list
+//        return amount//purchaseList
+//    }
+
 
     // PurchaseItem
 

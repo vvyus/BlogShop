@@ -55,6 +55,7 @@ class PurchaseRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
     override fun getItemCount(): Int {
         return purchaseArray.size
     }
+
     fun getPurchaseId():Int{
         if(purchaseArray.size!=0 && selected_position!=RecyclerView.NO_POSITION && selected_position<purchaseArray.size){
             return purchaseArray[selected_position].id
@@ -62,6 +63,15 @@ class PurchaseRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
             return 0
         }
     }
+
+    fun getPurchase():Purchase?{
+        if(purchaseArray.size!=0 && selected_position!=RecyclerView.NO_POSITION && selected_position<purchaseArray.size){
+            return purchaseArray[selected_position]
+        }else{
+            return null
+        }
+    }
+
     fun updateAdapter(newList:List<Purchase>){
         purchaseArray.clear()
         purchaseArray.addAll(newList)

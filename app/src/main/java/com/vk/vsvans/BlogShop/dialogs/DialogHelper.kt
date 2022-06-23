@@ -13,6 +13,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import com.vk.vsvans.BlogShop.MainActivity
 import com.vk.vsvans.BlogShop.activity.EditPurchaseActivity
 import com.vk.vsvans.BlogShop.activity.ProductActivity
 import com.vk.vsvans.BlogShop.activity.SellerActivity
@@ -20,6 +21,7 @@ import com.vk.vsvans.BlogShop.calendar.CalendarAlertDialog
 import com.vk.vsvans.BlogShop.calendar.CalendarDialogAdapter
 import com.vk.vsvans.BlogShop.helper.SpinnerHelper
 import com.vk.vsvans.BlogShop.interfaces.*
+import com.vk.vsvans.BlogShop.mainActivity
 import com.vk.vsvans.BlogShop.model.BaseList
 import com.vk.vsvans.BlogShop.model.Product
 import com.vk.vsvans.BlogShop.model.PurchaseItem
@@ -214,7 +216,7 @@ private fun createTreeArrayAdapter(
 }
 
     fun getCalendarDialog(activity: Activity, iFilter:IDialogDateFiterCallback, filter_fact:FilterForActivity, time:Long) {
-       // val mainActivity: MainActivity = activity as MainActivity
+        val mainActivity: MainActivity = activity as MainActivity
         val selected_date = HashMap<String, Date?>()
         val mCalendar = CalendarAlertDialog(
             activity,//mainActivity,
@@ -230,7 +232,7 @@ private fun createTreeArrayAdapter(
                     }
                     //Log.d("DATECLICK", date.toString())
                 }
-            }, 1,Date(time)
+            }, 1,Date(time), mainActivity.calendar_events
         )
         mCalendar.setOnClickOkListener(object : CalendarAlertDialog.onClickListener {
             @RequiresApi(Build.VERSION_CODES.N)

@@ -6,19 +6,14 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.AttributeSet
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
-import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.result.registerForActivityResult
 import androidx.annotation.RequiresApi
-import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -50,7 +45,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.util.*
-import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -63,6 +57,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     //private var isSetFilter=false
     lateinit var pLauncher:ActivityResultLauncher<String>
     private val filter_fact=FilterForActivity("main")
+    // for count purchases
+    val calendar_events=HashMap<String, Int>()
 
     val adapter= PurchaseRcAdapter(object:OnClickItemCallback{
         override fun onClickItem(id:Int) {
@@ -184,10 +180,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         job?.cancel()
         job = CoroutineScope(Dispatchers.Main).launch{
             val purchaseList = ArrayList<Purchase>()
-            //val amount = dbManager.queryPurchases(text,purchaseList)
-//            if(text.isEmpty()) filter_fact.content=null
-//            else filter_fact.content=text
-            val amount = dbManager.queryPurchases(filter_fact,purchaseList)
+            var amount=0.0
+            if(isSetFilter()) {
+                amount = dbManager.queryPurchases(filter_fact,purchaseList)
+            } else {
+                calendar_events.clear()
+                amount = dbManager.queryPurchases(filter_fact, purchaseList, calendar_events)
+            }
+
             adapter.updateAdapter(purchaseList)
 
             if(isSetFilter()) setFilterPanel(amount,purchaseList.size)
@@ -280,33 +280,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         mainContent.bNavView.setOnItemSelectedListener {
             when(it.itemId){
                 R.id.id_new_purchase->{
-                    val i= Intent(this@MainActivity, EditPurchaseActivity::class.java)
-                    i.putExtra(R.string.PURCHASE_ID.toString(),0)
-                    // сообщаем системе о запуске активити
-                    startActivity(i)
+                    addPurchase()
                     //Toast.makeText(this@MainActivity,"Pressed new purchase", Toast.LENGTH_LONG).show()
                 }
-
-//                R.id.id_refresh_purchase->{
-//                    //resetFilterPanel("")
-//                    isSetFilter=false
-//                    fillAdapter("")
-//                }
-//
                 R.id.id_delete_purchase->{
-                    val id=adapter.getPurchaseId()
-                    if(id>0) {
-                        //dbManager.removePurchaseItemFromDb(id)
-                        DialogHelper.showPurchaseDeleteItemDialog(this@MainActivity,id,object:
-                            IDeleteItem {
-                            @RequiresApi(Build.VERSION_CODES.N)
-                            override fun onDeleteItem(id: Int) {
-                                dbManager.removePurchase(id)
-                                fillAdapter()
-                            }
-
-                        })
-                    }
+                    deletePurchase()
                 }
                 R.id.id_product->{
                     val intent= Intent(this@MainActivity, ProductActivity::class.java)
@@ -332,6 +310,49 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
                 }//when
             true
+        }
+    }
+
+    private fun addPurchase(){
+        val i= Intent(this@MainActivity, EditPurchaseActivity::class.java)
+        i.putExtra(R.string.PURCHASE_ID.toString(),0)
+        // сообщаем системе о запуске активити
+        startActivity(i)
+    }
+
+    fun addPurchaseEvent(time:Long){
+        val event_key = UtilsHelper.getDate(time)
+        var event_int = calendar_events[event_key]
+        if (event_int == null) {
+            calendar_events[event_key] = 1
+        } else calendar_events[event_key] = ++event_int
+    }
+
+    private fun deletePurchase(){
+        val purchase=adapter.getPurchase()
+        //val id=adapter.getPurchaseId()
+        if(purchase!=null && purchase.id>0) {
+            //dbManager.removePurchaseItemFromDb(id)
+            DialogHelper.showPurchaseDeleteItemDialog(this@MainActivity,purchase.id,object:
+                IDeleteItem {
+                @RequiresApi(Build.VERSION_CODES.N)
+                override fun onDeleteItem(id: Int) {
+                    //1 remove purchase from events
+                    removePurchaseEvent(purchase.time)
+                    //2 remove purchase from database
+                    dbManager.removePurchase(id)
+                    fillAdapter()
+                }
+
+            })
+        }
+    }
+
+    fun removePurchaseEvent(time: Long){
+        val event_key = UtilsHelper.getDate(time)
+        var event_int = calendar_events[event_key]
+        if (event_int != null) {
+            calendar_events[event_key] = --event_int
         }
     }
 

@@ -199,6 +199,7 @@ class EditPurchaseActivity : AppCompatActivity() {
                        purchase!!.idseller=seller.id
                        purchase!!.sellername=seller.name
                    }
+                   val old_time=purchase!!.time
                    purchase!!.time= DateTimeUtils.parseDateTimeString(rootElement.edDatePart.text.toString()+" "+rootElement.edTimePart.text.toString())!!
                    if(idPurchase>0){
                        //dbManager.updatePurchase(idPurchase,edTitle.text.toString(),edDescription.text.toString())
@@ -207,6 +208,10 @@ class EditPurchaseActivity : AppCompatActivity() {
                        idPurchase= dbManager.insertPurchase(purchase!!)!!
                        purchase!!.id=idPurchase
                    }
+
+                   // callback to main activity temporary!!!
+                   if(old_time!=purchase!!.time) mainActivity!!.removePurchaseEvent(old_time)
+                   mainActivity!!.addPurchaseEvent(purchase!!.time)
 
                    for(pit:PurchaseItem in (vpPurchaseItems.adapter as CardItemPurchaseRcAdapter).mainArray){
                        if(pit.id==0){

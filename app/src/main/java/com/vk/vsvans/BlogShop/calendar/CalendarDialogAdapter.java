@@ -63,14 +63,14 @@ public class CalendarDialogAdapter extends BaseAdapter {
 
     private void initEvent() {
         //!
-        //calendar_events=MainActivity.getInstance().getCalendarEvents();
+        //calendar_events=mainActivity.getCalendarEvents();
     }
 
     private void initRemindersEvent() {
         //!calendar_events=RemindersActivity.getInstance().getCalendarEvents();
     }
 
-    public CalendarDialogAdapter(Context context, int type_event,Date startTime){
+    public CalendarDialogAdapter(Context context, int type_event,Date startTime, HashMap<String, Integer> calendar_events){
         mContext = context;
         //float dp = mContext.getResources().getDisplayMetrics().density;
         mLayoutInflater = LayoutInflater.from(mContext);
@@ -83,6 +83,7 @@ public class CalendarDialogAdapter extends BaseAdapter {
         initMonth();
         if(type_event==1) {
             initEvent();
+            this.calendar_events=calendar_events;
         }else if(type_event==2){
             initRemindersEvent();
         }
