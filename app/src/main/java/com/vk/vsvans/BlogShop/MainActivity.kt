@@ -38,6 +38,7 @@ import com.vk.vsvans.BlogShop.model.BaseList
 import com.vk.vsvans.BlogShop.model.DbManager
 import com.vk.vsvans.BlogShop.model.Purchase
 import com.vk.vsvans.BlogShop.utils.FilterForActivity
+import com.vk.vsvans.BlogShop.utils.UtilsString
 import com.vk.vsvans.BlogShop.utils.UtilsHelper
 import com.vk.vsvans.BlogShop.utils.isPermissinGrant
 import kotlinx.coroutines.CoroutineScope
@@ -249,7 +250,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun showFilterPanel(amount:Double,count: Int){
-        val str_amount=amount.toString().format(R.string.double_format)
+        var str_amount=amount.toString().format(R.string.double_format)
+
+        str_amount= UtilsString().format_string(str_amount)
+
         val str_count=count.toString().format(R.string.int_format)
         rootElement.mainContent.tvFilteredSumma.text=str_amount
         rootElement.mainContent.tvFilteredCount.text=str_count
