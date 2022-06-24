@@ -65,10 +65,10 @@
                         android:background="@drawable/edit_image_button"
                         android:onClick="onClickGetPurchaseItems"
                         android:padding="5dp"
-                        android:visibility="visible"
+                        android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/ic_edit_purchase" />
+                        app:srcCompat="@drawable/ic_add_purchase_item" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>

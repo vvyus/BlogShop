@@ -11,6 +11,7 @@ import android.widget.DatePicker
 import android.widget.TimePicker
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.size
 import com.vk.vsvans.BlogShop.MainActivity
 import com.vk.vsvans.BlogShop.R
 import com.vk.vsvans.BlogShop.adapters.CardItemPurchaseRcAdapter
@@ -117,6 +118,8 @@ class EditPurchaseActivity : AppCompatActivity() {
                 dialog.showSpinnerSellerDialog(this@EditPurchaseActivity, listSeller, rootElement.tvSellerSelect)
             }
         }
+        if(idPurchase==0) rootElement.purchaseItemButton.visibility=View.VISIBLE
+        else rootElement.purchaseItemButton.visibility=View.GONE
     }
 
     private fun initDateTime(){
