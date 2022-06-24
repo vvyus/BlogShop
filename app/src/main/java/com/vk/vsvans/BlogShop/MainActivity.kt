@@ -39,8 +39,8 @@ import com.vk.vsvans.BlogShop.model.BaseList
 import com.vk.vsvans.BlogShop.model.DbManager
 import com.vk.vsvans.BlogShop.model.Purchase
 import com.vk.vsvans.BlogShop.utils.FilterForActivity
-import com.vk.vsvans.BlogShop.utils.UtilsString
 import com.vk.vsvans.BlogShop.utils.UtilsHelper
+import com.vk.vsvans.BlogShop.utils.UtilsString
 import com.vk.vsvans.BlogShop.utils.isPermissinGrant
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -338,9 +338,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     val intent=result.data
                     val new_purchase_time=intent!!.getLongExtra(getString(R.string.new_purchase_time),0L)
                     val old_purchase_time=intent!!.getLongExtra(getString(R.string.old_purchase_time),0L)
+                    //
                     if(old_purchase_time!=new_purchase_time) removePurchaseEvent(old_purchase_time)
                     addPurchaseEvent(new_purchase_time)
-                    fillAdapter()
+                    val purchase=intent!!.getSerializableExtra(Purchase::class.java.getSimpleName()) as Purchase
+                    // если новая запись то old_purchase_time==0L
+                    if(old_purchase_time==0L) adapter.addPurchase(purchase)
+                    else adapter.setPurchase(purchase)
+                    //fillAdapter()
                 }
             }
         }

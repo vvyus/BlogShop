@@ -19,6 +19,8 @@ import com.vk.vsvans.BlogShop.mainActivity
 import com.vk.vsvans.BlogShop.model.Purchase
 import com.vk.vsvans.BlogShop.utils.UtilsHelper
 import com.vk.vsvans.BlogShop.utils.makeSpannableString
+import java.util.*
+import kotlin.collections.ArrayList
 
 class PurchaseRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerView.Adapter<PurchaseRcAdapter.PurchaseHolder>() {
 
@@ -70,6 +72,17 @@ class PurchaseRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
         }else{
             return null
         }
+    }
+
+    fun setPurchase(purchase: Purchase){
+        if(purchaseArray.size!=0 && selected_position!=RecyclerView.NO_POSITION && selected_position<purchaseArray.size){
+            purchaseArray[selected_position]=purchase
+        }
+    }
+
+    fun addPurchase(purchase:Purchase){
+        purchaseArray.add(purchase)
+        Collections.sort(purchaseArray)
     }
 
     fun updateAdapter(newList:List<Purchase>){

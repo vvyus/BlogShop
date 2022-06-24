@@ -2,8 +2,9 @@ package com.vk.vsvans.BlogShop.model
 
 import android.text.SpannableString
 import com.vk.vsvans.BlogShop.utils.makeSpannableString
+import java.io.Serializable
 
-class Purchase {
+class Purchase:Serializable,Comparable<Purchase> {
 
     var title = ""
     var content = ""
@@ -14,4 +15,7 @@ class Purchase {
     var idfns=""
     var idseller=0
     var sellername = ""
+    override fun compareTo(other: Purchase): Int {
+        return time.compareTo(other.time)
+    }
 }

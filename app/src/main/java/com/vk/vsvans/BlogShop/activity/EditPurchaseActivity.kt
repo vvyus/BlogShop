@@ -11,8 +11,6 @@ import android.widget.DatePicker
 import android.widget.TimePicker
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.size
-import com.vk.vsvans.BlogShop.MainActivity
 import com.vk.vsvans.BlogShop.R
 import com.vk.vsvans.BlogShop.adapters.CardItemPurchaseRcAdapter
 import com.vk.vsvans.BlogShop.databinding.ActivityEditPurchaseBinding
@@ -21,7 +19,6 @@ import com.vk.vsvans.BlogShop.fragments.PurchaseItemListFragment
 import com.vk.vsvans.BlogShop.interfaces.IFragmentCallBack
 import com.vk.vsvans.BlogShop.interfaces.IFragmentCloseInterface
 import com.vk.vsvans.BlogShop.interfaces.IUpdatePurchaseItemList
-import com.vk.vsvans.BlogShop.mainActivity
 import com.vk.vsvans.BlogShop.model.*
 import com.vk.vsvans.BlogShop.spinner.DialogSpinnerHelper
 import com.vk.vsvans.BlogShop.utils.*
@@ -196,7 +193,7 @@ class EditPurchaseActivity : AppCompatActivity() {
                        purchase!!.idseller=seller.id
                        purchase!!.sellername=seller.name
                    }
-                   val old_time=purchase!!.time
+                   var old_time=purchase!!.time
                    purchase!!.time= DateTimeUtils.parseDateTimeString(rootElement.edDatePart.text.toString()+" "+rootElement.edTimePart.text.toString())!!
                    if(idPurchase>0){
                        //dbManager.updatePurchase(idPurchase,edTitle.text.toString(),edDescription.text.toString())
@@ -209,8 +206,10 @@ class EditPurchaseActivity : AppCompatActivity() {
                    // callback to main activity temporary!!!
                    //setResult()
                    val data = Intent()
+                   if(idPurchase==0) old_time=0L
                    data.putExtra(getString(R.string.old_purchase_time), old_time)
                    data.putExtra(getString(R.string.new_purchase_time), purchase!!.time)
+                   data.putExtra(Purchase::class.java.getSimpleName(), purchase)
                    setResult(RESULT_OK, data)
                    //
 //                   if(old_time!=purchase!!.time) mainActivity!!.removePurchaseEvent(old_time)
