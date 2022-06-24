@@ -214,7 +214,7 @@ fun insertSeller( seller: Seller) :Int?{
 
     @SuppressLint("Range")
     // Используется при загрузке чеков поиск по вспом полю title для ручного ввода это пол пусто
-    suspend fun readSellersTitle(searchText:String): ArrayList<Seller> = withContext(Dispatchers.IO) {
+    suspend fun readSellersFns(searchText:String): ArrayList<Seller> = withContext(Dispatchers.IO) {
         val dataList = ArrayList<Seller>()
         val selection = "${DbName.COLUMN_NAME_ID_FNS_SELLERS} like ?"
         val cursor = db?.query(
@@ -249,16 +249,17 @@ fun insertSeller( seller: Seller) :Int?{
     //    PURCHASES
     @RequiresApi(Build.VERSION_CODES.N)
     suspend fun insertPurchase(purchase:Purchase) :Int?= withContext(Dispatchers.IO){
-        val values = ContentValues().apply {
-            put(DbName.COLUMN_NAME_TITLE, purchase.title)
-            put(DbName.COLUMN_NAME_CONTENT, purchase.content)
-            put(DbName.COLUMN_NAME_CONTENT_HTML, purchase.content_html)
-            put(DbName.COLUMN_NAME_SUMMA_PURCHASES, purchase.summa)
-            put(DbName.COLUMN_NAME_ID_FNS, purchase.idfns)
-            //val time= UtilsHelper.getCurrentDate()
-            put(DbName.COLUMN_NAME_TIME, purchase.time)
-
-        }
+//        val values = ContentValues().apply {
+//            put(DbName.COLUMN_NAME_TITLE, purchase.title)
+//            put(DbName.COLUMN_NAME_CONTENT, purchase.content)
+//            put(DbName.COLUMN_NAME_CONTENT_HTML, purchase.content_html)
+//            put(DbName.COLUMN_NAME_SUMMA_PURCHASES, purchase.summa)
+//            put(DbName.COLUMN_NAME_ID_FNS, purchase.idfns)
+//            put(DbName.COLUMN_NAME_TIME, purchase.time)
+//            put(DbName.COLUMN_NAME_SELLER_ID, purchase.idseller)
+//
+//        }
+        val values=getPurchaseContentValues(purchase)
         val id=db?.insert(DbName.TABLE_NAME,null, values)
         return@withContext id?.toInt()
     }
@@ -268,8 +269,21 @@ fun insertSeller( seller: Seller) :Int?{
     fun updatePurchase(purchase:Purchase) {
         val id=purchase.id
         val selection = BaseColumns._ID + "=$id"
-        val values = ContentValues().apply {
+//        val values = ContentValues().apply {
+//            put(DbName.COLUMN_NAME_TITLE, purchase.title)
+//            put(DbName.COLUMN_NAME_CONTENT, purchase.content)
+//            put(DbName.COLUMN_NAME_SUMMA_PURCHASES, purchase.summa)
+//            put(DbName.COLUMN_NAME_CONTENT_HTML,purchase.content_html)
+//            put(DbName.COLUMN_NAME_ID_FNS, purchase.idfns)
+//            put(DbName.COLUMN_NAME_TIME, purchase.time)
+//            put(DbName.COLUMN_NAME_SELLER_ID, purchase.idseller)
+//        }
+        val values=getPurchaseContentValues(purchase)
+        db?.update(DbName.TABLE_NAME, values, selection, null)
+    }
 
+    fun getPurchaseContentValues(purchase:Purchase):ContentValues {
+        val values = ContentValues().apply {
             put(DbName.COLUMN_NAME_TITLE, purchase.title)
             put(DbName.COLUMN_NAME_CONTENT, purchase.content)
             put(DbName.COLUMN_NAME_SUMMA_PURCHASES, purchase.summa)
@@ -278,7 +292,7 @@ fun insertSeller( seller: Seller) :Int?{
             put(DbName.COLUMN_NAME_TIME, purchase.time)
             put(DbName.COLUMN_NAME_SELLER_ID, purchase.idseller)
         }
-        db?.update(DbName.TABLE_NAME, values, selection, null)
+        return values
     }
 
     fun removePurchase(id: Int){
@@ -416,7 +430,7 @@ fun insertSeller( seller: Seller) :Int?{
         purchase.summa=dataSumma
         purchase.idfns=dataIdFns
         purchase.idseller=sellerid
-        purchase.sellername=sellername
+        if(sellername!=null)purchase.sellername=sellername
 
         return purchase
     }

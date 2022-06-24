@@ -1,6 +1,5 @@
 package com.vk.vsvans.BlogShop.fns
 
-import android.app.Activity
 import android.content.Context
 import android.os.Build
 import android.os.Environment
@@ -87,7 +86,7 @@ object import_checks {
 
                                         //!
                                         var seller: Seller?=null
-                                        val list=db.readSellersTitle(user)
+                                        val list=db.readSellersFns(user)
                                         var idseller=0
                                         if(list.size==0){
                                             seller=Seller()

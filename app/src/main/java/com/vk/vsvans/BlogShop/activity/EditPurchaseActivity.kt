@@ -2,6 +2,7 @@ package com.vk.vsvans.BlogShop.activity
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
@@ -10,17 +11,18 @@ import android.widget.DatePicker
 import android.widget.TimePicker
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import com.vk.vsvans.BlogShop.MainActivity
 import com.vk.vsvans.BlogShop.R
 import com.vk.vsvans.BlogShop.adapters.CardItemPurchaseRcAdapter
 import com.vk.vsvans.BlogShop.databinding.ActivityEditPurchaseBinding
 import com.vk.vsvans.BlogShop.dialogs.DialogHelper
-import com.vk.vsvans.BlogShop.spinner.DialogSpinnerHelper
 import com.vk.vsvans.BlogShop.fragments.PurchaseItemListFragment
 import com.vk.vsvans.BlogShop.interfaces.IFragmentCallBack
 import com.vk.vsvans.BlogShop.interfaces.IFragmentCloseInterface
 import com.vk.vsvans.BlogShop.interfaces.IUpdatePurchaseItemList
 import com.vk.vsvans.BlogShop.mainActivity
 import com.vk.vsvans.BlogShop.model.*
+import com.vk.vsvans.BlogShop.spinner.DialogSpinnerHelper
 import com.vk.vsvans.BlogShop.utils.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -183,13 +185,6 @@ class EditPurchaseActivity : AppCompatActivity() {
             job?.cancel()
             job = CoroutineScope(Dispatchers.Main).launch{
                if(dbManager!=null) {
-//                   var content=""
-//                   var summa=0.0
-//                   for(pit:PurchaseItem in (vpPurchaseItems.adapter as CardItemPurchaseRcAdapter).mainArray){
-//                       content+=pit.getContent()+"\n\n"
-//                       summa+=pit.summa
-//                   }
-                   //if(purchase==null) purchase=Purchase()
                    //здесь то что редактируется а не пришло из фрагмента
                    purchase!!.summa= edSummaPurchase.value.toDouble();//.text.toString().toDouble()
                    //purchase!!.title=edTitle.text.toString()
@@ -209,8 +204,14 @@ class EditPurchaseActivity : AppCompatActivity() {
                    }
 
                    // callback to main activity temporary!!!
-                   if(old_time!=purchase!!.time) mainActivity!!.removePurchaseEvent(old_time)
-                   mainActivity!!.addPurchaseEvent(purchase!!.time)
+                   //setResult()
+                   val data = Intent()
+                   data.putExtra(getString(R.string.old_purchase_time), old_time)
+                   data.putExtra(getString(R.string.new_purchase_time), purchase!!.time)
+                   setResult(RESULT_OK, data)
+                   //
+//                   if(old_time!=purchase!!.time) mainActivity!!.removePurchaseEvent(old_time)
+//                   mainActivity!!.addPurchaseEvent(purchase!!.time)
 
                    for(pit:PurchaseItem in (vpPurchaseItems.adapter as CardItemPurchaseRcAdapter).mainArray){
                        if(pit.id==0){
@@ -227,7 +228,7 @@ class EditPurchaseActivity : AppCompatActivity() {
                    listDeletedPurchaseItems=ArrayList<PurchaseItem>()
                }//dbManager
 
-            }
+            }//job
             onBackPressed()
         }
 
@@ -244,7 +245,7 @@ class EditPurchaseActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onBackPressed() {
         //listDeletedPurchaseItems=ArrayList<PurchaseItem>()
-        if(mainActivity!=null)mainActivity!!.fillAdapter()
+        //if(mainActivity!=null)mainActivity!!.fillAdapter()
         super.onBackPressed()
     }
 

@@ -11,6 +11,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -55,19 +56,22 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var job: Job? = null
     private lateinit var toolbar: Toolbar
     private lateinit var searchView:SearchView
-    //private var isSetFilter=false
-    lateinit var pLauncher:ActivityResultLauncher<String>
+
     private val filter_fact=FilterForActivity("main")
     // for count purchases
     val calendar_events=HashMap<String, Int>()
 
+    //val launcher=getLauncher()
+    lateinit var launcherGetPermission:ActivityResultLauncher<String>
+    lateinit var launcherEPA:ActivityResultLauncher<Intent>
+
     val adapter= PurchaseRcAdapter(object:OnClickItemCallback{
         override fun onClickItem(id:Int) {
             if(id>0) {
-                val intent = Intent(this@MainActivity, EditPurchaseActivity::class.java)
-                intent.putExtra(R.string.PURCHASE_ID.toString(), id)
-                // сообщаем системе о запуске активити
-                startActivity(intent)
+//                val intent= Intent(this@MainActivity, EditPurchaseActivity::class.java)
+//                intent.putExtra(R.string.PURCHASE_ID.toString(),id)
+//                launcher?.launch(intent)
+                launchEditPurchaseActivity(id)
             }
         }
 
@@ -211,7 +215,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             resetFilter_For_Activity()
             fillAdapter()
         }
-
+        launcherEPA=getLauncher()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -284,8 +288,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         mainContent.bNavView.setOnItemSelectedListener {
             when(it.itemId){
                 R.id.id_new_purchase->{
-                    addPurchase()
-                    //Toast.makeText(this@MainActivity,"Pressed new purchase", Toast.LENGTH_LONG).show()
+                    //addPurchase()
+                    launchEditPurchaseActivity(0)
                 }
                 R.id.id_delete_purchase->{
                     deletePurchase()
@@ -314,6 +318,31 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
                 }//when
             true
+        }
+    }
+
+    // instead addPurchase activity result api
+    fun launchEditPurchaseActivity(id:Int){
+        val intent= Intent(this@MainActivity, EditPurchaseActivity::class.java)
+        intent.putExtra(R.string.PURCHASE_ID.toString(),id)
+        launcherEPA?.launch(intent) //getLauncher().launch(intent)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun getLauncher():ActivityResultLauncher<Intent>{
+        return registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+            result:ActivityResult->
+            if(result.resultCode==AppCompatActivity.RESULT_OK){
+                if(result.data!=null){
+                    //result.data is intent
+                    val intent=result.data
+                    val new_purchase_time=intent!!.getLongExtra(getString(R.string.new_purchase_time),0L)
+                    val old_purchase_time=intent!!.getLongExtra(getString(R.string.old_purchase_time),0L)
+                    if(old_purchase_time!=new_purchase_time) removePurchaseEvent(old_purchase_time)
+                    addPurchaseEvent(new_purchase_time)
+                    fillAdapter()
+                }
+            }
         }
     }
 
@@ -361,14 +390,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun permissionListener(){
-        pLauncher=registerForActivityResult( ActivityResultContracts.RequestPermission() ) {
+        launcherGetPermission=registerForActivityResult( ActivityResultContracts.RequestPermission() ) {
         }
     }
 
     private fun checkPermission(){
         permissionListener()
         if(!isPermissinGrant(Manifest.permission.READ_EXTERNAL_STORAGE))
-            pLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+            launcherGetPermission.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
     }
 
     private fun setUpToolbar() {
