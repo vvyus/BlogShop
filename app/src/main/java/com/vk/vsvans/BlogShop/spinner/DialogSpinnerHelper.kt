@@ -3,6 +3,7 @@ package com.vk.vsvans.BlogShop.spinner
 import android.app.AlertDialog
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.WindowManager
 import android.widget.SearchView
 import android.widget.TextView
 
@@ -28,32 +29,39 @@ class DialogSpinnerHelper {
         dialog.setView(rootView)
         adapter.updateAdapter(list)
         setSearchViewBaseList(adapter,list,sv)
-
+        //adapter.notifyDataSetChanged()
         dialog.show()
+        dialog.getWindow()?.setLayout(
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.MATCH_PARENT)
+
     }
 
     private fun setSearchViewBaseList(adapter: DialogSpinnerBaselistAdapter, list: ArrayList<BaseList>, sv: SearchView) {
         if (sv != null) {
             sv.setOnQueryTextListener(object:SearchView.OnQueryTextListener{
                 override fun onQueryTextSubmit(query: String?): Boolean {
-                    return false
+                    //adapter.updateAdapter(list)
+                    return false//true
                 }
 
                 override fun onQueryTextChange(newText: String?): Boolean {
                     val tempList= filterListDataBaseList(list,newText)
                     adapter.updateAdapter(tempList)
+
                     return true
                 }
             })
         }
+
     }
 
     fun filterListDataBaseList(list:ArrayList<BaseList>, searchText:String?):ArrayList<BaseList>{
         val tempList=ArrayList<BaseList>()
         tempList.clear()
-        if(searchText==null){
+        if(searchText==null || searchText.isEmpty()){
             //tempList.add("No Result")
-            return tempList
+            return list //tempList
         }
         for(selection:BaseList in list){
             if(selection.name.lowercase().startsWith(searchText.lowercase())){

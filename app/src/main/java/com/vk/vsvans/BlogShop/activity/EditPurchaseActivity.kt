@@ -112,6 +112,7 @@ class EditPurchaseActivity : AppCompatActivity() {
             DialogHelper.job?.cancel()
             DialogHelper.job = CoroutineScope(Dispatchers.Main).launch {
                 val listSeller = dialog.getAllSeller(this@EditPurchaseActivity)
+                //rootElement.tvSellerSelect.setTag(dbManager.readSellers())
                 dialog.showSpinnerDialog(this@EditPurchaseActivity, listSeller, rootElement.tvSellerSelect)
             }
         }

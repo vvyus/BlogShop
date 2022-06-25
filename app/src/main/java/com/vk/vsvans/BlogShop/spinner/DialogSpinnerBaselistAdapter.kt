@@ -28,6 +28,7 @@ class DialogSpinnerBaselistAdapter(var tvSelection: TextView, var dialog: AlertD
         val leftMargin: Int = offset16 * itemList.level
         val parentid=itemList.idparent
         if(parentid==itemList.id || parentid>0){
+            holder.itemView.visibility= View.VISIBLE
             holder.itemView.layoutParams =
                 RecyclerView.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
@@ -37,7 +38,11 @@ class DialogSpinnerBaselistAdapter(var tvSelection: TextView, var dialog: AlertD
             var p: ViewGroup.MarginLayoutParams=lp as ViewGroup.MarginLayoutParams//
             p.setMargins(leftMargin, 0, 0, 0)
 
+        } else {
+            holder.itemView.visibility= View.GONE
+            holder.itemView.setLayoutParams(RecyclerView.LayoutParams(0, 0))
         }
+        holder.itemView.requestLayout()
     }
 
     override fun getItemCount(): Int {
