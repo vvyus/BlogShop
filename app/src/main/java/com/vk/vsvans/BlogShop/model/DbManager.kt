@@ -24,6 +24,20 @@ class DbManager(context: Context) {
     // PRODUCT
     // suspend fun insertProduct( product:Product) = withContext(Dispatchers.IO){
     fun insertProduct( product:Product):Int?{
+        val values =getProductContentValues(product)
+        val id=db?.insert(DbName.TABLE_NAME_PRODUCTS,null, values)
+        return id?.toInt()
+    }
+
+    //suspend fun updateProduct(product:Product) = withContext(Dispatchers.IO){
+    fun updateProduct(product:Product){
+        val id=product.id
+        val selection = BaseColumns._ID + "=$id"
+        val values =getProductContentValues(product)
+        db?.update(DbName.TABLE_NAME_PRODUCTS, values, selection, null)
+    }
+
+    fun getProductContentValues(product: Product):ContentValues {
         val values = ContentValues().apply {
             put(DbName.COLUMN_NAME_NAME_PRODUCTS, product.name)
             put(DbName.COLUMN_NAME_ID_FNS_PRODUCTS, product.id_fns)
@@ -32,10 +46,13 @@ class DbManager(context: Context) {
             put(DbName.COLUMN_NAME_FULLPATH_PRODUCTS, product.fullpath)
             put(DbName.COLUMN_NAME_COUNT_PRODUCTS, product.count)
         }
-        val id=db?.insert(DbName.TABLE_NAME_PRODUCTS,null, values)
-        return id?.toInt()
+        return values
     }
 
+    fun removeProduct(id: Int){
+        val selection = BaseColumns._ID + "=$id"
+        db?.delete(DbName.TABLE_NAME_PRODUCTS,selection, null)
+    }
 
     @SuppressLint("Range")
     suspend fun readProducts(searchText:String): ArrayList<Product> = withContext(Dispatchers.IO) {
@@ -47,21 +64,7 @@ class DbManager(context: Context) {
         )
 
         while (cursor?.moveToNext()!!) {
-            val dataId = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
-            val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_ID_FNS_PRODUCTS))
-            val dataName = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_NAME_PRODUCTS))
-            val idparent = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_IDPARENT_PRODUCTS))
-            val level = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_LEVEL_PRODUCTS))
-            val fullpath = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_FULLPATH_PRODUCTS))
-            val count = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_COUNT_PRODUCTS))
-            val product = Product()
-            product.id = dataId
-            product.name = dataName
-            product.id_fns=dataTitle
-            product.level = level?:0
-            product.idparent = idparent?:0
-            product.fullpath = fullpath?:""
-            product.count = count?:0
+            val product=getProductFromCursor(cursor)
             dataList.add(product)
         }
         cursor.close()
@@ -79,45 +82,31 @@ class DbManager(context: Context) {
         )
 
         while (cursor?.moveToNext()!!) {
-            val dataId = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
-            val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_ID_FNS_PRODUCTS))
-            val dataName = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_NAME_PRODUCTS))
-            val idparent = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_IDPARENT_PRODUCTS))
-            val level = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_LEVEL_PRODUCTS))
-            val fullpath = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_FULLPATH_PRODUCTS))
-            val count = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_COUNT_PRODUCTS))
-            val product = Product()
-            product.id = dataId
-            product.name = dataName
-            product.id_fns=dataTitle
-            product.level = level?:0
-            product.idparent = idparent?:0
-            product.fullpath = fullpath?:""
-            product.count = count?:0
+            val product=getProductFromCursor(cursor)
             dataList.add(product)
         }
         cursor.close()
         return@withContext dataList
     }
 
-    //suspend fun updateProduct(product:Product) = withContext(Dispatchers.IO){
-    fun updateProduct(product:Product){
-    val id=product.id
-        val selection = BaseColumns._ID + "=$id"
-        val values = ContentValues().apply {
-            put(DbName.COLUMN_NAME_NAME_PRODUCTS, product.name)
-            put(DbName.COLUMN_NAME_ID_FNS_PRODUCTS, product.id_fns)
-            put(DbName.COLUMN_NAME_IDPARENT_PRODUCTS, product.idparent)
-            put(DbName.COLUMN_NAME_LEVEL_PRODUCTS, product.level)
-            put(DbName.COLUMN_NAME_FULLPATH_PRODUCTS, product.fullpath)
-            put(DbName.COLUMN_NAME_COUNT_PRODUCTS, product.count)
-        }
-        db?.update(DbName.TABLE_NAME_PRODUCTS, values, selection, null)
-    }
-
-    fun removeProduct(id: Int){
-        val selection = BaseColumns._ID + "=$id"
-        db?.delete(DbName.TABLE_NAME_PRODUCTS,selection, null)
+    @SuppressLint("Range")
+    private fun getProductFromCursor(cursor: Cursor):Product {
+        val dataId = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
+        val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_ID_FNS_PRODUCTS))
+        val dataName = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_NAME_PRODUCTS))
+        val idparent = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_IDPARENT_PRODUCTS))
+        val level = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_LEVEL_PRODUCTS))
+        val fullpath = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_FULLPATH_PRODUCTS))
+        val count = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_COUNT_PRODUCTS))
+        val product = Product()
+        product.id = dataId
+        product.name = dataName
+        product.id_fns=dataTitle
+        product.level = level?:0
+        product.idparent = idparent?:0
+        product.fullpath = fullpath?:""
+        product.count = count?:0
+        return product
     }
 
     //    SELLERS
@@ -127,29 +116,12 @@ class DbManager(context: Context) {
         val id=seller.id
         val selection = BaseColumns._ID + "=$id"
         val values = getSellerContentValues(seller)
-//        val values = ContentValues().apply {
-//            put(DbName.COLUMN_NAME_NAME_SELLERS, seller.name)
-//            put(DbName.COLUMN_NAME_ID_FNS_SELLERS, seller.id_fns)
-//            put(DbName.COLUMN_NAME_IDPARENT_SELLERS, seller.idparent)
-//            put(DbName.COLUMN_NAME_LEVEL_SELLERS, seller.level)
-//            put(DbName.COLUMN_NAME_FULLPATH_SELLERS, seller.fullpath)
-//            put(DbName.COLUMN_NAME_COUNT_SELLERS, seller.count)
-//        }
         db?.update(DbName.TABLE_NAME_SELLERS, values, selection, null)
     }
 
 //    suspend fun insertSeller( seller: Seller) :Int?= withContext(Dispatchers.IO){
     fun insertSeller( seller: Seller) :Int?{
         val values = getSellerContentValues(seller)
-//            ContentValues().apply {
-//            put(DbName.COLUMN_NAME_NAME_SELLERS, seller.name)
-//            put(DbName.COLUMN_NAME_ID_FNS_SELLERS, seller.id_fns)
-//            put(DbName.COLUMN_NAME_DESCRIPTION_SELLERS, seller.description)
-//            put(DbName.COLUMN_NAME_IDPARENT_SELLERS, seller.idparent)
-//            put(DbName.COLUMN_NAME_LEVEL_SELLERS, seller.level)
-//            put(DbName.COLUMN_NAME_FULLPATH_SELLERS, seller.fullpath)
-//            put(DbName.COLUMN_NAME_COUNT_SELLERS, seller.count)
-//        }
         val id=db?.insert(DbName.TABLE_NAME_SELLERS,null, values)
         return id?.toInt()
     }
@@ -439,71 +411,6 @@ class DbManager(context: Context) {
         return@withContext Id
     }
 
-    //filter query
-//    suspend fun queryPurchases(idSeller:Int,purchaseList: ArrayList<Purchase>):Double = withContext(Dispatchers.IO) {
-//
-//        val selection = "${DbName.COLUMN_NAME_SELLER_ID} = ?"
-//        val selectionArgs = arrayOf(idSeller.toString())
-//
-//        val temp: String = DbName.PURCHASE_QUERY
-//        val selectQuery: String = temp.replace(
-//            DbName.WHERE_FOR_PURCHASE_QUERY,
-//            "WHERE $selection "
-//        )
-//        val cursor = db?.rawQuery(selectQuery, selectionArgs)
-//        var amount=0.0
-//        if(cursor!=null){
-//            amount=setPurchaseListFromCursor(cursor!!,purchaseList)
-//            cursor!!.close()
-//        }
-//        //return@withContext purchaseList
-//        return@withContext amount
-//    }
-//
-//    suspend fun queryPurchases(searchText:String,purchaseList: ArrayList<Purchase>):Double = withContext(Dispatchers.IO) {
-//
-//        val selection = "${DbName.COLUMN_NAME_CONTENT} like ?"
-//        val selectionArgs = arrayOf("%"+searchText + "%")
-//
-//        val temp: String = DbName.PURCHASE_QUERY
-//        val selectQuery: String = temp.replace(
-//            DbName.WHERE_FOR_PURCHASE_QUERY,
-//            "WHERE $selection "
-//        )
-//        val cursor = db?.rawQuery(selectQuery, selectionArgs)
-//        var amount=0.0
-//        if(cursor!=null){
-//            amount=setPurchaseListFromCursor(cursor!!,purchaseList)
-//            cursor!!.close()
-//        }
-//        //return@withContext purchaseList
-//        return@withContext amount
-//    }
-//
-//    fun queryPurchases(dates_begin: ArrayList<String>, dates_end: ArrayList<String>,purchaseList: ArrayList<Purchase>):Double {
-//        //val db: SQLiteDatabase = MyDbHelper.getWritableDatabase()
-//        //var purchaseList  = ArrayList<Purchase>()
-//        var selection = ""
-//        for (i in dates_begin.indices) {
-//            selection += "${DbName.COLUMN_NAME_TIME} >= " + dates_begin[i] + " AND ${DbName.COLUMN_NAME_TIME}<=" + dates_end[i]
-//            if (i < dates_begin.size - 1) selection += " OR "
-//        }
-//        val temp: String = DbName.PURCHASE_QUERY
-//        val selectQuery: String = temp.replace(
-//            DbName.WHERE_FOR_PURCHASE_QUERY,
-//            "WHERE $selection "
-//        )
-//        val cursor = db?.rawQuery(selectQuery, null)
-//        var amount=0.0
-//        if(cursor!=null){
-//            amount=setPurchaseListFromCursor(cursor!!,purchaseList)
-//            cursor!!.close()
-//        }
-//        // return note list
-//        return amount//purchaseList
-//    }
-
-
     // PurchaseItem
 
     @SuppressLint("Range")
@@ -554,21 +461,19 @@ class DbManager(context: Context) {
     fun updatePurchaseItem(purchaseItem:PurchaseItem){
         val id:Int=purchaseItem.id
         val selection = BaseColumns._ID + "=$id"
-        val values = ContentValues().apply {
-            put(DbName.COLUMN_NAME_PRODUCT_NAME, purchaseItem.productName)
-            put(DbName.COLUMN_NAME_PRODUCT_ID, purchaseItem.idProduct)
-            put(DbName.COLUMN_NAME_PRICE, purchaseItem.price)
-            put(DbName.COLUMN_NAME_QUANTITY, purchaseItem.quantity)
-            put(DbName.COLUMN_NAME_SUMMA, purchaseItem.summa)
-            put(DbName.COLUMN_NAME_PURCHASE_ID, purchaseItem.idPurchase)
-            //put(DbName.COLUMN_NAME_TIME, time)
-        }
+        val values = getPurchaseItemContentValues(purchaseItem)
         db?.update(DbName.TABLE_NAME_PURCHASE_ITEMS, values, selection, null)
     }
 
     @SuppressLint("Range")
     suspend fun insertPurchaseItem(purchaseItem:PurchaseItem):Int? = withContext(Dispatchers.IO){
     //fun insertPurchaseItem(purchaseItem:PurchaseItem):Int?{
+        val values = getPurchaseItemContentValues(purchaseItem)
+        val id=db?.insert(DbName.TABLE_NAME_PURCHASE_ITEMS,null, values)
+        return@withContext id?.toInt()
+    }
+
+    fun getPurchaseItemContentValues(purchaseItem:PurchaseItem):ContentValues {
         val values = ContentValues().apply {
             put(DbName.COLUMN_NAME_PRODUCT_NAME, purchaseItem.productName)
             put(DbName.COLUMN_NAME_PRODUCT_ID, purchaseItem.idProduct)
@@ -578,8 +483,7 @@ class DbManager(context: Context) {
             put(DbName.COLUMN_NAME_PURCHASE_ID, purchaseItem.idPurchase)
 
         }
-        val id=db?.insert(DbName.TABLE_NAME_PURCHASE_ITEMS,null, values)
-        return@withContext id?.toInt()
+        return values
     }
 
     suspend fun removePurchaseItem(id: Int) = withContext(Dispatchers.IO){
