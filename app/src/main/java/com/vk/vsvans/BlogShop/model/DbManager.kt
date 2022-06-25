@@ -121,50 +121,12 @@ class DbManager(context: Context) {
     }
 
     //    SELLERS
-    suspend fun insertSellerToDb( title: String, description: String) = withContext(Dispatchers.IO){
-        val values = ContentValues().apply {
-
-            put(DbName.COLUMN_NAME_ID_FNS_SELLERS, title)
-            put(DbName.COLUMN_NAME_DESCRIPTION_SELLERS, description)
-
-        }
-        db?.insert(DbName.TABLE_NAME_SELLERS,null, values)
-    }
 
 //    suspend fun updateSeller(seller: Seller) = withContext(Dispatchers.IO){
     fun updateSeller(seller: Seller){
         val id=seller.id
         val selection = BaseColumns._ID + "=$id"
-        val values = ContentValues().apply {
-            put(DbName.COLUMN_NAME_NAME_SELLERS, seller.name)
-            put(DbName.COLUMN_NAME_ID_FNS_SELLERS, seller.id_fns)
-            put(DbName.COLUMN_NAME_IDPARENT_SELLERS, seller.idparent)
-            put(DbName.COLUMN_NAME_LEVEL_SELLERS, seller.level)
-            put(DbName.COLUMN_NAME_FULLPATH_SELLERS, seller.fullpath)
-            put(DbName.COLUMN_NAME_COUNT_SELLERS, seller.count)
-        }
-        db?.update(DbName.TABLE_NAME_SELLERS, values, selection, null)
-    }
-
-//    suspend fun insertSeller( seller: Seller) :Int?= withContext(Dispatchers.IO){
-fun insertSeller( seller: Seller) :Int?{
-    val values = ContentValues().apply {
-        put(DbName.COLUMN_NAME_NAME_SELLERS, seller.name)
-        put(DbName.COLUMN_NAME_ID_FNS_SELLERS, seller.id_fns)
-        put(DbName.COLUMN_NAME_DESCRIPTION_SELLERS, seller.description)
-        put(DbName.COLUMN_NAME_IDPARENT_SELLERS, seller.idparent)
-        put(DbName.COLUMN_NAME_LEVEL_SELLERS, seller.level)
-        put(DbName.COLUMN_NAME_FULLPATH_SELLERS, seller.fullpath)
-        put(DbName.COLUMN_NAME_COUNT_SELLERS, seller.count)
-    }
-    val id=db?.insert(DbName.TABLE_NAME_SELLERS,null, values)
-    return id?.toInt()
-}
-
-    //suspend fun updateProduct(product:Product) = withContext(Dispatchers.IO){
-//    suspend fun updateSeller(seller: Seller) = withContext(Dispatchers.IO){
-//        val id=seller.id
-//        val selection = BaseColumns._ID + "=$id"
+        val values = getSellerContentValues(seller)
 //        val values = ContentValues().apply {
 //            put(DbName.COLUMN_NAME_NAME_SELLERS, seller.name)
 //            put(DbName.COLUMN_NAME_ID_FNS_SELLERS, seller.id_fns)
@@ -173,8 +135,37 @@ fun insertSeller( seller: Seller) :Int?{
 //            put(DbName.COLUMN_NAME_FULLPATH_SELLERS, seller.fullpath)
 //            put(DbName.COLUMN_NAME_COUNT_SELLERS, seller.count)
 //        }
-//        db?.update(DbName.TABLE_NAME_SELLERS, values, selection, null)
-//    }
+        db?.update(DbName.TABLE_NAME_SELLERS, values, selection, null)
+    }
+
+//    suspend fun insertSeller( seller: Seller) :Int?= withContext(Dispatchers.IO){
+    fun insertSeller( seller: Seller) :Int?{
+        val values = getSellerContentValues(seller)
+//            ContentValues().apply {
+//            put(DbName.COLUMN_NAME_NAME_SELLERS, seller.name)
+//            put(DbName.COLUMN_NAME_ID_FNS_SELLERS, seller.id_fns)
+//            put(DbName.COLUMN_NAME_DESCRIPTION_SELLERS, seller.description)
+//            put(DbName.COLUMN_NAME_IDPARENT_SELLERS, seller.idparent)
+//            put(DbName.COLUMN_NAME_LEVEL_SELLERS, seller.level)
+//            put(DbName.COLUMN_NAME_FULLPATH_SELLERS, seller.fullpath)
+//            put(DbName.COLUMN_NAME_COUNT_SELLERS, seller.count)
+//        }
+        val id=db?.insert(DbName.TABLE_NAME_SELLERS,null, values)
+        return id?.toInt()
+    }
+
+    fun getSellerContentValues(seller: Seller):ContentValues {
+        val values = ContentValues().apply {
+            put(DbName.COLUMN_NAME_NAME_SELLERS, seller.name)
+            put(DbName.COLUMN_NAME_ID_FNS_SELLERS, seller.id_fns)
+            put(DbName.COLUMN_NAME_DESCRIPTION_SELLERS, seller.description)
+            put(DbName.COLUMN_NAME_IDPARENT_SELLERS, seller.idparent)
+            put(DbName.COLUMN_NAME_LEVEL_SELLERS, seller.level)
+            put(DbName.COLUMN_NAME_FULLPATH_SELLERS, seller.fullpath)
+            put(DbName.COLUMN_NAME_COUNT_SELLERS, seller.count)
+        }
+        return values
+    }
 
     fun removeSeller(id: Int){
         val selection = BaseColumns._ID + "=$id"
@@ -190,21 +181,7 @@ fun insertSeller( seller: Seller) :Int?{
             null, null, "fullpath ASC"
         )
         while (cursor?.moveToNext()!!) {
-            val dataId = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
-            val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_ID_FNS_PRODUCTS))
-            val dataName = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_NAME_PRODUCTS))
-            val idparent = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_IDPARENT_PRODUCTS))
-            val level = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_LEVEL_PRODUCTS))
-            val fullpath = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_FULLPATH_PRODUCTS))
-            val count = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_COUNT_PRODUCTS))
-            val seller = Seller()
-            seller.id = dataId
-            seller.name = dataName
-            seller.id_fns=dataTitle
-            seller.level = level?:0
-            seller.idparent = idparent?:0
-            seller.fullpath = fullpath?:""
-            seller.count = count?:0
+            val seller=getSellerFromCursor(cursor)
             dataList.add(seller)
         }
         cursor.close()
@@ -223,42 +200,36 @@ fun insertSeller( seller: Seller) :Int?{
         )
 
         while (cursor?.moveToNext()!!) {
-            val dataId = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
-            val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_ID_FNS_SELLERS))
-            val dataName = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_NAME_SELLERS))
-            val idparent = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_IDPARENT_SELLERS))
-            val level = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_LEVEL_SELLERS))
-            val fullpath = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_FULLPATH_SELLERS))
-            val count = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_COUNT_SELLERS))
-            val seller = Seller()
-            seller.id = dataId
-            seller.name = dataName
-            seller.id_fns=dataTitle
-            seller.level = level?:0
-            seller.idparent = idparent?:0
-            seller.fullpath = fullpath?:""
-            seller.count = count?:0
+            val seller=getSellerFromCursor(cursor)
             dataList.add(seller)
         }
         cursor.close()
         return@withContext dataList
     }
 
-
+    @SuppressLint("Range")
+    private fun getSellerFromCursor(cursor: Cursor):Seller {
+        val dataId = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
+        val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_ID_FNS_SELLERS))
+        val dataName = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_NAME_SELLERS))
+        val idparent = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_IDPARENT_SELLERS))
+        val level = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_LEVEL_SELLERS))
+        val fullpath = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_FULLPATH_SELLERS))
+        val count = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_COUNT_SELLERS))
+        val seller = Seller()
+        seller.id = dataId
+        seller.name = dataName
+        seller.id_fns=dataTitle
+        seller.level = level?:0
+        seller.idparent = idparent?:0
+        seller.fullpath = fullpath?:""
+        seller.count = count?:0
+        return seller
+    }
 
     //    PURCHASES
     @RequiresApi(Build.VERSION_CODES.N)
     suspend fun insertPurchase(purchase:Purchase) :Int?= withContext(Dispatchers.IO){
-//        val values = ContentValues().apply {
-//            put(DbName.COLUMN_NAME_TITLE, purchase.title)
-//            put(DbName.COLUMN_NAME_CONTENT, purchase.content)
-//            put(DbName.COLUMN_NAME_CONTENT_HTML, purchase.content_html)
-//            put(DbName.COLUMN_NAME_SUMMA_PURCHASES, purchase.summa)
-//            put(DbName.COLUMN_NAME_ID_FNS, purchase.idfns)
-//            put(DbName.COLUMN_NAME_TIME, purchase.time)
-//            put(DbName.COLUMN_NAME_SELLER_ID, purchase.idseller)
-//
-//        }
         val values=getPurchaseContentValues(purchase)
         val id=db?.insert(DbName.TABLE_NAME,null, values)
         return@withContext id?.toInt()
@@ -269,15 +240,6 @@ fun insertSeller( seller: Seller) :Int?{
     fun updatePurchase(purchase:Purchase) {
         val id=purchase.id
         val selection = BaseColumns._ID + "=$id"
-//        val values = ContentValues().apply {
-//            put(DbName.COLUMN_NAME_TITLE, purchase.title)
-//            put(DbName.COLUMN_NAME_CONTENT, purchase.content)
-//            put(DbName.COLUMN_NAME_SUMMA_PURCHASES, purchase.summa)
-//            put(DbName.COLUMN_NAME_CONTENT_HTML,purchase.content_html)
-//            put(DbName.COLUMN_NAME_ID_FNS, purchase.idfns)
-//            put(DbName.COLUMN_NAME_TIME, purchase.time)
-//            put(DbName.COLUMN_NAME_SELLER_ID, purchase.idseller)
-//        }
         val values=getPurchaseContentValues(purchase)
         db?.update(DbName.TABLE_NAME, values, selection, null)
     }

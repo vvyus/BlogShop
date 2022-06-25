@@ -1,11 +1,11 @@
 package com.vk.vsvans.BlogShop.model
 
+import android.os.Parcelable
 import android.text.SpannableString
 import com.vk.vsvans.BlogShop.utils.makeSpannableString
 import java.io.Serializable
 
-class Purchase:Serializable,Comparable<Purchase> {
-
+class Purchase: Serializable,Comparable<Purchase> {
     var title = ""
     var content = ""
     var summa:Double= 0.0

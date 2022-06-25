@@ -50,11 +50,7 @@ object DialogHelper {
             setPositiveButton(R1.string.yes_dialog) { _, _ ->
                 //db.removePurchase(id)
                 if(ideleteItem!=null)ideleteItem.onDeleteItem(id)
-                //if(mainActivity!=null) mainActivity!!.fillAdapter("")
             }
-//            setNeutralButton("Neutral") { _, _ ->
-//                toast("clicked neutral button")
-//            }
         }.create()//.show()
         val negative=alertDialog.show().getButton(AlertDialog.BUTTON_NEGATIVE)
         negative.apply {
@@ -63,7 +59,31 @@ object DialogHelper {
             requestFocus()
         }
 
-            //alertDialog.show().getButton(DialogInterface.BUTTON_NEGATIVE).requestFocus()
+    }
+
+    fun showLoadChecksDialog(context: Context,idialog_import:IDialogImportChecks) {
+        val alertDialog = AlertDialog.Builder(context)
+
+        alertDialog.apply {
+            setIcon(R1.drawable.ic_import)
+            setTitle(R1.string.import_fns)
+            setMessage(R1.string.import_checks)
+
+            setNegativeButton(R1.string.no_dialog) { _, _ ->
+            }
+
+            setPositiveButton(R1.string.yes_dialog) { _, _ ->
+                idialog_import.import_checks()
+             }
+        }.create()//.show()
+        // select negative button
+        val negative=alertDialog.show().getButton(AlertDialog.BUTTON_NEGATIVE)
+        negative.apply {
+            setFocusable(true)
+            setFocusableInTouchMode(true)
+            requestFocus()
+        }
+
     }
 
     fun showPurchaseItemInputDialog(context: Context, pit:PurchaseItem,iupdatePurchaseItemList: IUpdatePurchaseItemList) {
@@ -90,7 +110,7 @@ object DialogHelper {
             job?.cancel()
             job = CoroutineScope(Dispatchers.Main).launch {
                 val listProduct = dialog.getAllProduct(context)
-                dialog.showSpinnerProductDialog(context, listProduct, tvProduct)
+                dialog.showSpinnerDialog(context, listProduct, tvProduct)
             }
         }
 

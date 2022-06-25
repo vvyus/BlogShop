@@ -13,26 +13,7 @@ import com.vk.vsvans.BlogShop.activity.EditPurchaseActivity
 import com.vk.vsvans.BlogShop.model.BaseList
 
 class DialogSpinnerHelper {
-    fun showSpinnerSellerDialog(context: Context, list: ArrayList<BaseList>, tvSelection: TextView){
-        val builder=AlertDialog.Builder(context)
-        val dialog=builder.create()
-        //надуваем в диалоге нет инфлайтора поэтому берем его из контекста .from
-        val rootView=LayoutInflater.from(context).inflate(R.layout.spinner_layout,null)
-        val adapter= DialogSpinnerBaselistAdapter(tvSelection,dialog)
-        val rcView=rootView.findViewById<RecyclerView>(R.id.rcSellerView)
-        val sv=rootView.findViewById<SearchView>(R.id.svSeller)
-        // разметека в spinner_layout выбрана ->LinearLayout
-        rcView.layoutManager=LinearLayoutManager(context)
-        rcView.adapter=adapter
-        // builder нужен уже готовый view
-        dialog.setView(rootView)
-        adapter.updateAdapter(list)
-        setSearchViewBaseList(adapter,list,sv)
-
-        dialog.show()
-    }
-
-    fun showSpinnerProductDialog(context: Context, list: ArrayList<BaseList>, tvSelection: TextView){
+    fun showSpinnerDialog(context: Context, list: ArrayList<BaseList>, tvSelection: TextView){
         val builder=AlertDialog.Builder(context)
         val dialog=builder.create()
         //надуваем в диалоге нет инфлайтора поэтому берем его из контекста .from

@@ -112,7 +112,7 @@ class EditPurchaseActivity : AppCompatActivity() {
             DialogHelper.job?.cancel()
             DialogHelper.job = CoroutineScope(Dispatchers.Main).launch {
                 val listSeller = dialog.getAllSeller(this@EditPurchaseActivity)
-                dialog.showSpinnerSellerDialog(this@EditPurchaseActivity, listSeller, rootElement.tvSellerSelect)
+                dialog.showSpinnerDialog(this@EditPurchaseActivity, listSeller, rootElement.tvSellerSelect)
             }
         }
         if(idPurchase==0) rootElement.purchaseItemButton.visibility=View.VISIBLE
@@ -206,9 +206,10 @@ class EditPurchaseActivity : AppCompatActivity() {
                    // callback to main activity temporary!!!
                    //setResult()
                    val data = Intent()
-                   if(idPurchase==0) old_time=0L
+                   //if(idPurchase==0) old_time=0L
                    data.putExtra(getString(R.string.old_purchase_time), old_time)
                    data.putExtra(getString(R.string.new_purchase_time), purchase!!.time)
+                   data.putExtra(getString(R.string.PURCHASE_ID), idPurchase)
                    data.putExtra(Purchase::class.java.getSimpleName(), purchase)
                    setResult(RESULT_OK, data)
                    //
