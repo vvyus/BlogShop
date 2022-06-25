@@ -8,13 +8,15 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.vk.vsvans.BlogShop.R
 import com.vk.vsvans.BlogShop.model.BaseList
+import com.vk.vsvans.BlogShop.utils.UtilsString
 
 class DialogSpinnerBaselistAdapter(var tvSelection: TextView, var dialog: AlertDialog) : RecyclerView.Adapter<DialogSpinnerBaselistAdapter.SpViewHolder>() {
 
     private val mainList=ArrayList<BaseList>()
     //private val context=context
-
+    var offset16=0
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SpViewHolder {
+        offset16 = UtilsString.dpToPx(16, parent.context)
         val view=
             LayoutInflater.from(parent.context).inflate(R.layout.spinner_list_item,parent,false)
         return SpViewHolder(view,tvSelection,dialog)
@@ -22,6 +24,20 @@ class DialogSpinnerBaselistAdapter(var tvSelection: TextView, var dialog: AlertD
 
     override fun onBindViewHolder(holder: SpViewHolder, position: Int) {
         holder.setData(mainList[position])
+        val itemList=mainList[position]
+        val leftMargin: Int = offset16 * itemList.level
+        val parentid=itemList.idparent
+        if(parentid==itemList.id || parentid>0){
+            holder.itemView.layoutParams =
+                RecyclerView.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
+            val lp=holder.itemView.getLayoutParams()
+            var p: ViewGroup.MarginLayoutParams=lp as ViewGroup.MarginLayoutParams//
+            p.setMargins(leftMargin, 0, 0, 0)
+
+        }
     }
 
     override fun getItemCount(): Int {

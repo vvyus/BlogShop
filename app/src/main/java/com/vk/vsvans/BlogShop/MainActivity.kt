@@ -253,7 +253,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun showFilterPanel(amount:Double,count: Int){
         var str_amount=amount.toString().format(R.string.double_format)
 
-        str_amount= UtilsString().format_string(str_amount)
+        str_amount= UtilsString.format_string(str_amount)
 
         val str_count=count.toString().format(R.string.int_format)
         rootElement.mainContent.tvFilteredSumma.text=str_amount

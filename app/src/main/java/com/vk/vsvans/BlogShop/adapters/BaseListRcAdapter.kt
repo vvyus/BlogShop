@@ -14,6 +14,7 @@ import com.vk.vsvans.BlogShop.R
 import com.vk.vsvans.BlogShop.databinding.ItemBaseListListBinding
 import com.vk.vsvans.BlogShop.interfaces.OnClickItemCallback
 import com.vk.vsvans.BlogShop.model.BaseList
+import com.vk.vsvans.BlogShop.utils.UtilsString
 
 class BaseListRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerView.Adapter<BaseListRcAdapter.BaseListHolder>() {
     var BaseListArray=ArrayList<BaseList>()
@@ -27,7 +28,7 @@ class BaseListRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
     lateinit var binding: ItemBaseListListBinding
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseListHolder {
         selected_color=parent.context.resources.getColor(R.color.color_red)
-        offset16 = dpToPx(16, parent.context);
+        offset16 = UtilsString.dpToPx(16, parent.context)
         binding= ItemBaseListListBinding.inflate(LayoutInflater.from(parent.context),parent,false)
         return BaseListRcAdapter.BaseListHolder(binding,clickItemCallback)
     }
@@ -249,10 +250,10 @@ class BaseListRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
         }
     }
 
-    fun dpToPx(dp: Int, context: Context): Int {
-        val displayMetrics: DisplayMetrics = context.getResources().getDisplayMetrics()
-        return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT))
-    }
+//    fun dpToPx(dp: Int, context: Context): Int {
+//        val displayMetrics: DisplayMetrics = context.getResources().getDisplayMetrics()
+//        return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT))
+//    }
 
     @SuppressLint("NotifyDataSetChanged")
     fun refreshItem() {

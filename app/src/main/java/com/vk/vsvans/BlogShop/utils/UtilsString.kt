@@ -1,8 +1,10 @@
 package com.vk.vsvans.BlogShop.utils
 
+import android.content.Context
+import android.util.DisplayMetrics
 import org.apache.commons.lang3.StringUtils
 
-class UtilsString {
+object UtilsString {
 
     private val DECIMAL_SEPARATOR = '.'
     private val mNumberFilterRegex = "[^\\d\\-$DECIMAL_SEPARATOR]"
@@ -42,5 +44,9 @@ class UtilsString {
             }
         }
         return number
+    }
+    fun dpToPx(dp: Int, context: Context): Int {
+        val displayMetrics: DisplayMetrics = context.getResources().getDisplayMetrics()
+        return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT))
     }
 }
