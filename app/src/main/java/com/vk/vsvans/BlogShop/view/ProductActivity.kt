@@ -1,4 +1,4 @@
-package com.vk.vsvans.BlogShop.activity
+package com.vk.vsvans.BlogShop.view
 
 import android.app.SearchManager
 import android.content.Context
@@ -14,38 +14,38 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.MenuItemCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vk.vsvans.BlogShop.R
-import com.vk.vsvans.BlogShop.adapters.BaseListRcAdapter
-import com.vk.vsvans.BlogShop.databinding.ActivitySellerBinding
+import com.vk.vsvans.BlogShop.view.adapter.BaseListRcAdapter
+import com.vk.vsvans.BlogShop.databinding.ActivityProductBinding
 import com.vk.vsvans.BlogShop.dialogs.DialogHelper
 import com.vk.vsvans.BlogShop.interfaces.IDeleteItem
 import com.vk.vsvans.BlogShop.interfaces.IDialogListener
 import com.vk.vsvans.BlogShop.interfaces.IUpdateBaseListItemList
 import com.vk.vsvans.BlogShop.interfaces.OnClickItemCallback
-import com.vk.vsvans.BlogShop.model.BaseList
-import com.vk.vsvans.BlogShop.model.DbManager
-import com.vk.vsvans.BlogShop.model.Product
-import com.vk.vsvans.BlogShop.model.Seller
+import com.vk.vsvans.BlogShop.model.data.BaseList
+import com.vk.vsvans.BlogShop.model.repository.DbManager
+import com.vk.vsvans.BlogShop.model.data.Product
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-class SellerActivity : AppCompatActivity() {
-    private lateinit var rootElement: ActivitySellerBinding
+class ProductActivity : AppCompatActivity() {
+
+    private lateinit var rootElement: ActivityProductBinding
     lateinit var adapter: BaseListRcAdapter
     private lateinit var tb: Toolbar
     val dbManager= DbManager(this)
     private var job: Job? = null
     private var selectedId=0
-    private lateinit var searchView: SearchView
+    private lateinit var searchView:SearchView
     val TAG="MyLog"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        rootElement= ActivitySellerBinding.inflate(layoutInflater)
+        rootElement= ActivityProductBinding.inflate(layoutInflater)
         val view=rootElement.root
         setContentView(view)
-        //setContentView(R.layout.activity_seller)
+        //setContentView(R.layout.activity_product)
         //устанавливаем тоолбар
         tb=rootElement.tb
         setUpToolbar()
@@ -59,14 +59,14 @@ class SellerActivity : AppCompatActivity() {
             }
 
             override fun onEditItem() {
-                val seller= adapter.getBaseList()
-                if (seller != null) {
-                    DialogHelper.showBaseListInputDialog(this@SellerActivity,seller,
+                val product= adapter.getBaseList()
+                if (product != null) {
+                    DialogHelper.showBaseListInputDialog(this@ProductActivity,product,
                         object: IUpdateBaseListItemList {
-                            override fun onUpdateBaseListItemList(seller: BaseList) {
-                                // add single seller
-                                adapter.updateAdapterEdit(seller)
-                                dbManager.updateSeller(seller as Seller)
+                            override fun onUpdateBaseListItemList(product: BaseList) {
+                                // add single product
+                                adapter.updateAdapterEdit(product)
+                                dbManager.updateProduct(product as Product)
                             }
 
                         }
@@ -76,45 +76,45 @@ class SellerActivity : AppCompatActivity() {
 
             override fun onDeleteItem() {
                 if(selectedId>0){
-                    DialogHelper.showPurchaseDeleteItemDialog(this@SellerActivity,selectedId,
+                    DialogHelper.showPurchaseDeleteItemDialog(this@ProductActivity,selectedId,
                         object: IDeleteItem {
                             override fun onDeleteItem(id:Int) {
                                 adapter.deleteBaseListItem()
                                 val parent=adapter.getParent()
-                                if(parent!=null) dbManager.updateSeller(parent as Seller)
+                                if(parent!=null) dbManager.updateProduct(parent as Product)
                                 //reset selectedId
                                 //selectedId=0
-                                dbManager.removeSeller(id)
+                                dbManager.removeProduct(id)
                             }
 
                         })
                 }else {
-                    Toast.makeText(this@SellerActivity,R.string.no_selected_item, Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@ProductActivity,R.string.no_selected_item, Toast.LENGTH_LONG).show()
                 }
             }
 
             override fun onNewItem(parent: BaseList) {
-                //adapter.addsellerItem(seller)
-                // add single seller with parent
-                val seller= Seller()
+                //adapter.addProductItem(product)
+                // add single product with parent
+                val product= Product()
                 //новая запись
-                seller.id=0
-                seller.idparent=parent.id
-                seller.level=parent.level+1
+                product.id=0
+                product.idparent=parent.id
+                product.level=parent.level+1
                 parent.count=parent.count+1
-                DialogHelper.showBaseListInputDialog(this@SellerActivity,seller,
+                DialogHelper.showBaseListInputDialog(this@ProductActivity,product,
                     object: IUpdateBaseListItemList {
-                        override fun onUpdateBaseListItemList(seller: BaseList) {
-                            val id=dbManager.insertSeller(seller as Seller)
+                        override fun onUpdateBaseListItemList(product: BaseList) {
+                            val id=dbManager.insertProduct(product as Product)
                             if (id != null) {
-                                seller.id=id
-                                seller.fullpath=parent.fullpath+id.toString()
-                                // update seller array in adapter
-                                adapter.updateAdapterInsert(seller)
+                                product.id=id
+                                product.fullpath=parent.fullpath+id.toString()
+                                // update product array in adapter
+                                adapter.updateAdapterInsert(product)
                                 // update count for parent
-                                dbManager.updateSeller(parent as Seller)
-                                // update fullpath for seller
-                                dbManager.updateSeller(seller as Seller)
+                                dbManager.updateProduct(parent as Product)
+                                // update fullpath for product
+                                dbManager.updateProduct(product)
                             }
                         }
 
@@ -127,60 +127,59 @@ class SellerActivity : AppCompatActivity() {
             }
 
             override fun onParentItem() {
-                DialogHelper.showSelectParentBaseListDialog("Выберите родителя",this@SellerActivity,
-                    object: IDialogListener {
-                        //override fun onOkClick(v: View?) {}
-                        override fun onOkClick(idParent: Int?) {
+              DialogHelper.showSelectParentBaseListDialog("Выберите родителя",this@ProductActivity,
+                  object: IDialogListener {
+                      //override fun onOkClick(v: View?) {}
+                      override fun onOkClick(idParent: Int?) {
 
-                            var parent=if(idParent==null) null else adapter.nodeList.get(idParent)
+                          var parent=if(idParent==null) null else adapter.nodeList.get(idParent)
 
-                            val seller= adapter.getBaseList()
+                          val product= adapter.getBaseList()
 
-                            val oldparent=adapter.getParent()
-                            if (seller != null ) {
-                                // select root
-                                if(parent==null){
-                                    seller.idparent=seller.id
-                                    seller.fullpath=seller.id.toString()
-                                    seller.level=0
-                                }else {
-                                    //select normal node get from parent
-                                    seller.idparent = parent.id
-                                    seller.fullpath = parent.fullpath + seller.id
-                                    seller.level = parent.level + 1
-                                    // set count for new parent
-                                    parent.count=parent.count+1
-                                    dbManager.updateSeller(parent as Seller)
-                                }
-                                // replace all children where idparent==seller.idparent
-                                if(seller.count>0){
-                                    adapter.childArray.clear()
-                                    adapter.setChildren(seller.id,seller.fullpath,seller.level)
-                                    for(i in 0 until adapter.childArray.size)
-                                        dbManager.updateSeller(adapter.childArray[i] as Seller)
-                                    adapter.childArray.clear()
-                                }
-                                if(oldparent!=null){
-                                    oldparent.count=oldparent.count-1
-                                    dbManager.updateSeller(oldparent as Seller)
-                                }
-                                // update count for parent
-                                adapter.updateAdapterParent(oldparent,parent,seller)
-                                dbManager.updateSeller(seller as Seller)
-                                //fillAdapter("")
-                                //adapter.notifyDataSetChanged()
-                            }
-                        }
-                    })
+                          val oldparent=adapter.getParent()
+                          if (product != null ) {
+                              // select root
+                              if(parent==null){
+                                  product.idparent=product.id
+                                  product.fullpath=product.id.toString()
+                                  product.level=0
+                              }else {
+                                  //select normal node get from parent
+                                  product.idparent = parent.id
+                                  product.fullpath = parent.fullpath + product.id
+                                  product.level = parent.level + 1
+                                  // set count for new parent
+                                  parent.count=parent.count+1
+                                  dbManager.updateProduct(parent as Product)
+                              }
+                              // replace all children where idparent==product.idparent
+                              if(product.count>0){
+                                  adapter.childArray.clear()
+                                  adapter.setChildren(product.id,product.fullpath,product.level)
+                                  for(i in 0 until adapter.childArray.size)
+                                      dbManager.updateProduct(adapter.childArray[i] as Product)
+                                  adapter.childArray.clear()
+                              }
+                              if(oldparent!=null){
+                                  oldparent.count=oldparent.count-1
+                                  dbManager.updateProduct(oldparent as Product)
+                              }
+                              // update count for parent
+                              adapter.updateAdapterParent(oldparent,parent,product)
+                              dbManager.updateProduct(product as Product)
+                              //fillAdapter("")
+                              //adapter.notifyDataSetChanged()
+                          }
+                      }
+                  })
             }
 
             //override fun onTimeClick() {}
 
         })
-        val rcView=rootElement.rcViewSellerList
+        val rcView=rootElement.rcViewProductList
         rcView.layoutManager = LinearLayoutManager(this)
         rcView.adapter = adapter
-
     }
 
     override fun onResume() {
@@ -208,34 +207,34 @@ class SellerActivity : AppCompatActivity() {
 
         job?.cancel()
         job = CoroutineScope(Dispatchers.Main).launch{
-            val list = dbManager.readSellers(text)
+            val list = dbManager.readProducts(text)
             adapter.updateAdapter(list)
         }
 
     }
-
-    // add root element
-    fun onClickAddSeller(view: View){
-        val seller= Seller()
+// add root element
+    fun onClickAddProduct(view: View){
+        val product= Product()
         //новая запись
-        seller.id=0
-        DialogHelper.showBaseListInputDialog(this@SellerActivity,seller,
+        product.id=0
+        DialogHelper.showBaseListInputDialog(this@ProductActivity,product,
             object: IUpdateBaseListItemList {
-                override fun onUpdateBaseListItemList(seller: BaseList) {
+                override fun onUpdateBaseListItemList(product: BaseList) {
                     // add single product
-                    val id=dbManager.insertSeller(seller as Seller)
+                    val id=dbManager.insertProduct(product as Product)
                     if (id != null) {
-                        seller.id=id
-                        seller.idparent=id
-                        seller.fullpath=id.toString()
-                        dbManager.updateSeller(seller as Seller)
-                        adapter.updateAdapterInsert(seller)
+                        product.id=id
+                        product.idparent=id
+                        product.fullpath=id.toString()
+                        dbManager.updateProduct(product as Product)
+                        adapter.updateAdapterInsert(product)
                     }
                 }
 
             }
         )
     }
+
     private fun setUpToolbar() {
         rootElement.apply {
 
@@ -256,7 +255,7 @@ class SellerActivity : AppCompatActivity() {
                     searchView.findViewById(androidx.appcompat.R.id.search_plate)
                 searchPlateView.setBackgroundColor(
                     ContextCompat.getColor(
-                        this@SellerActivity,
+                        this@ProductActivity,
                         android.R.color.transparent
                     )
                 )

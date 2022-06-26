@@ -1,7 +1,7 @@
 package com.vk.vsvans.BlogShop.interfaces
 
-import com.vk.vsvans.BlogShop.model.PurchaseItem
+import com.vk.vsvans.BlogShop.model.data.PurchaseItem
 
 interface IFragmentCallBack {
-    fun onFragmentCallBack(pit:PurchaseItem)
+    fun onFragmentCallBack(pit: PurchaseItem)
 }

@@ -1,4 +1,4 @@
-package com.vk.vsvans.BlogShop.adapters
+package com.vk.vsvans.BlogShop.view.adapter
 
 import android.annotation.SuppressLint
 import android.graphics.Color
@@ -6,9 +6,7 @@ import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
 import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -16,7 +14,7 @@ import com.vk.vsvans.BlogShop.R
 import com.vk.vsvans.BlogShop.databinding.ItemPurchaseListFragBinding
 import com.vk.vsvans.BlogShop.interfaces.ItemTouchMoveCallBack
 import com.vk.vsvans.BlogShop.interfaces.OnClickItemCallback
-import com.vk.vsvans.BlogShop.model.PurchaseItem
+import com.vk.vsvans.BlogShop.model.data.PurchaseItem
 
 class PurchaseItemRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerView.Adapter<PurchaseItemRcAdapter.PurchaseItemHolder>() ,
     ItemTouchMoveCallBack.ItemTouchAdapter{
@@ -58,7 +56,7 @@ var title_color=0
         return mainArray.size
     }
 
-    fun getPurchaseItem():PurchaseItem?{
+    fun getPurchaseItem(): PurchaseItem?{
         if(mainArray.size!=0 && selected_position!=RecyclerView.NO_POSITION && selected_position<mainArray.size){
             return mainArray[selected_position]
         }else{
@@ -116,7 +114,7 @@ var title_color=0
 
 
         @RequiresApi(Build.VERSION_CODES.Q)
-        fun setData(purchaseItem:PurchaseItem){
+        fun setData(purchaseItem: PurchaseItem){
             viewBinding.apply {
                 //val tvContent = view.findViewById<TextView>(R.id.tvContentPurchaseItem)
                 tvContentPurchaseItem.text = purchaseItem.getContent(title_color)

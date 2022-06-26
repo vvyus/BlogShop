@@ -1,4 +1,4 @@
-package com.vk.vsvans.BlogShop.model
+package com.vk.vsvans.BlogShop.model.repository
 
 import android.annotation.SuppressLint
 import android.content.ContentValues
@@ -8,6 +8,11 @@ import android.database.sqlite.SQLiteDatabase
 import android.os.Build
 import android.provider.BaseColumns
 import androidx.annotation.RequiresApi
+import com.vk.vsvans.BlogShop.model.*
+import com.vk.vsvans.BlogShop.model.data.Product
+import com.vk.vsvans.BlogShop.model.data.Purchase
+import com.vk.vsvans.BlogShop.model.data.PurchaseItem
+import com.vk.vsvans.BlogShop.model.data.Seller
 import com.vk.vsvans.BlogShop.utils.FilterForActivity
 import com.vk.vsvans.BlogShop.utils.UtilsHelper
 import kotlinx.coroutines.Dispatchers
@@ -23,14 +28,14 @@ class DbManager(context: Context) {
     }
     // PRODUCT
     // suspend fun insertProduct( product:Product) = withContext(Dispatchers.IO){
-    fun insertProduct( product:Product):Int?{
+    fun insertProduct( product: Product):Int?{
         val values =getProductContentValues(product)
         val id=db?.insert(DbName.TABLE_NAME_PRODUCTS,null, values)
         return id?.toInt()
     }
 
     //suspend fun updateProduct(product:Product) = withContext(Dispatchers.IO){
-    fun updateProduct(product:Product){
+    fun updateProduct(product: Product){
         val id=product.id
         val selection = BaseColumns._ID + "=$id"
         val values =getProductContentValues(product)
@@ -90,7 +95,7 @@ class DbManager(context: Context) {
     }
 
     @SuppressLint("Range")
-    private fun getProductFromCursor(cursor: Cursor):Product {
+    private fun getProductFromCursor(cursor: Cursor): Product {
         val dataId = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
         val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_ID_FNS_PRODUCTS))
         val dataName = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_NAME_PRODUCTS))
@@ -180,7 +185,7 @@ class DbManager(context: Context) {
     }
 
     @SuppressLint("Range")
-    private fun getSellerFromCursor(cursor: Cursor):Seller {
+    private fun getSellerFromCursor(cursor: Cursor): Seller {
         val dataId = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
         val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_ID_FNS_SELLERS))
         val dataName = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_NAME_SELLERS))
@@ -201,7 +206,7 @@ class DbManager(context: Context) {
 
     //    PURCHASES
     @RequiresApi(Build.VERSION_CODES.N)
-    suspend fun insertPurchase(purchase:Purchase) :Int?= withContext(Dispatchers.IO){
+    suspend fun insertPurchase(purchase: Purchase) :Int?= withContext(Dispatchers.IO){
         val values=getPurchaseContentValues(purchase)
         val id=db?.insert(DbName.TABLE_NAME,null, values)
         return@withContext id?.toInt()
@@ -209,14 +214,14 @@ class DbManager(context: Context) {
 
     @RequiresApi(Build.VERSION_CODES.N)
  //   suspend fun updatePurchase(purchase:Purchase) = withContext(Dispatchers.IO){
-    fun updatePurchase(purchase:Purchase) {
+    fun updatePurchase(purchase: Purchase) {
         val id=purchase.id
         val selection = BaseColumns._ID + "=$id"
         val values=getPurchaseContentValues(purchase)
         db?.update(DbName.TABLE_NAME, values, selection, null)
     }
 
-    fun getPurchaseContentValues(purchase:Purchase):ContentValues {
+    fun getPurchaseContentValues(purchase: Purchase):ContentValues {
         val values = ContentValues().apply {
             put(DbName.COLUMN_NAME_TITLE, purchase.title)
             put(DbName.COLUMN_NAME_CONTENT, purchase.content)
@@ -235,7 +240,7 @@ class DbManager(context: Context) {
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
-    suspend fun queryPurchases(filter:FilterForActivity,purchaseList: ArrayList<Purchase>,calendar_events:HashMap<String, Int>):Double = withContext(Dispatchers.IO) {
+    suspend fun queryPurchases(filter:FilterForActivity, purchaseList: ArrayList<Purchase>, calendar_events:HashMap<String, Int>):Double = withContext(Dispatchers.IO) {
         var selection =""
         var args = ArrayList<String>()
         if(filter.idSeller!=null){
@@ -322,7 +327,7 @@ class DbManager(context: Context) {
     }
 
     @SuppressLint("Range")
-    private fun setPurchaseListFromCursor(cursor: Cursor, purchaseList: ArrayList<Purchase>,calendar_events:HashMap<String, Int>):Double{
+    private fun setPurchaseListFromCursor(cursor: Cursor, purchaseList: ArrayList<Purchase>, calendar_events:HashMap<String, Int>):Double{
         var amount=0.0
         while (cursor?.moveToNext()!!) {
 
@@ -342,7 +347,7 @@ class DbManager(context: Context) {
     }
 
     @SuppressLint("Range")
-    private fun getPurchaseFromCursor(cursor: Cursor):Purchase {
+    private fun getPurchaseFromCursor(cursor: Cursor): Purchase {
         val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_TITLE))
         val dataContent = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_CONTENT))
         val dataContentHtml = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_CONTENT_HTML))
@@ -382,7 +387,7 @@ class DbManager(context: Context) {
         )
         val cursor = db?.rawQuery(selectQuery, selectionArgs)
         var amount=0.0
-        var purchase :Purchase?= null
+        var purchase : Purchase?= null
         val purchaseList= ArrayList<Purchase>()
         if(cursor!=null){
             amount=setPurchaseListFromCursor(cursor!!,purchaseList)
@@ -458,7 +463,7 @@ class DbManager(context: Context) {
 
     @SuppressLint("Range")
     //suspend fun updatePurchaseItem(purchaseItem:PurchaseItem) = withContext(Dispatchers.IO){
-    fun updatePurchaseItem(purchaseItem:PurchaseItem){
+    fun updatePurchaseItem(purchaseItem: PurchaseItem){
         val id:Int=purchaseItem.id
         val selection = BaseColumns._ID + "=$id"
         val values = getPurchaseItemContentValues(purchaseItem)
@@ -466,14 +471,14 @@ class DbManager(context: Context) {
     }
 
     @SuppressLint("Range")
-    suspend fun insertPurchaseItem(purchaseItem:PurchaseItem):Int? = withContext(Dispatchers.IO){
+    suspend fun insertPurchaseItem(purchaseItem: PurchaseItem):Int? = withContext(Dispatchers.IO){
     //fun insertPurchaseItem(purchaseItem:PurchaseItem):Int?{
         val values = getPurchaseItemContentValues(purchaseItem)
         val id=db?.insert(DbName.TABLE_NAME_PURCHASE_ITEMS,null, values)
         return@withContext id?.toInt()
     }
 
-    fun getPurchaseItemContentValues(purchaseItem:PurchaseItem):ContentValues {
+    fun getPurchaseItemContentValues(purchaseItem: PurchaseItem):ContentValues {
         val values = ContentValues().apply {
             put(DbName.COLUMN_NAME_PRODUCT_NAME, purchaseItem.productName)
             put(DbName.COLUMN_NAME_PRODUCT_ID, purchaseItem.idProduct)

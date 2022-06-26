@@ -1,4 +1,4 @@
-package com.vk.vsvans.BlogShop.fragments
+package com.vk.vsvans.BlogShop.view.fragment
 
 import android.os.Build
 import android.os.Bundle
@@ -10,17 +10,16 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.vk.vsvans.BlogShop.activity.EditPurchaseActivity
+import com.vk.vsvans.BlogShop.view.EditPurchaseActivity
 
 import com.vk.vsvans.BlogShop.R
-import com.vk.vsvans.BlogShop.adapters.PurchaseItemRcAdapter
+import com.vk.vsvans.BlogShop.view.adapter.PurchaseItemRcAdapter
 import com.vk.vsvans.BlogShop.databinding.ListPurchaseItemFragBinding
 import com.vk.vsvans.BlogShop.dialogs.DialogHelper
 import com.vk.vsvans.BlogShop.interfaces.*
-import com.vk.vsvans.BlogShop.model.BaseList
-import com.vk.vsvans.BlogShop.model.Product
+import com.vk.vsvans.BlogShop.model.data.BaseList
 
-import com.vk.vsvans.BlogShop.model.PurchaseItem
+import com.vk.vsvans.BlogShop.model.data.PurchaseItem
 
 import kotlinx.coroutines.Job
 

@@ -1,7 +1,7 @@
 package com.vk.vsvans.BlogShop.interfaces
 
-import com.vk.vsvans.BlogShop.model.PurchaseItem
+import com.vk.vsvans.BlogShop.model.data.PurchaseItem
 
 interface AdapterCallback {
-    fun onItemDelete(pit:PurchaseItem)
+    fun onItemDelete(pit: PurchaseItem)
 }

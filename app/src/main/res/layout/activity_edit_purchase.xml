@@ -8,7 +8,7 @@
     android:background="@color/gray_dark"
     android:gravity="center_vertical"
     android:orientation="vertical"
-    tools:context=".activity.EditPurchaseActivity">
+    tools:context=".view.EditPurchaseActivity">
 
 
     <ScrollView

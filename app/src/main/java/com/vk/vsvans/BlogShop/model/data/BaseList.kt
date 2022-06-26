@@ -1,4 +1,4 @@
-package com.vk.vsvans.BlogShop.model
+package com.vk.vsvans.BlogShop.model.data
 
 open class BaseList : Comparable<BaseList> {
     var id=0

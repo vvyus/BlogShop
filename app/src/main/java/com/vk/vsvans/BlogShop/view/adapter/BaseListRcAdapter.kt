@@ -1,9 +1,7 @@
-package com.vk.vsvans.BlogShop.adapters
+package com.vk.vsvans.BlogShop.view.adapter
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.graphics.Color
-import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.vk.vsvans.BlogShop.R
 import com.vk.vsvans.BlogShop.databinding.ItemBaseListListBinding
 import com.vk.vsvans.BlogShop.interfaces.OnClickItemCallback
-import com.vk.vsvans.BlogShop.model.BaseList
+import com.vk.vsvans.BlogShop.model.data.BaseList
 import com.vk.vsvans.BlogShop.utils.UtilsString
 
 class BaseListRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerView.Adapter<BaseListRcAdapter.BaseListHolder>() {
@@ -30,7 +28,7 @@ class BaseListRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
         selected_color=parent.context.resources.getColor(R.color.color_red)
         offset16 = UtilsString.dpToPx(16, parent.context)
         binding= ItemBaseListListBinding.inflate(LayoutInflater.from(parent.context),parent,false)
-        return BaseListRcAdapter.BaseListHolder(binding,clickItemCallback)
+        return BaseListHolder(binding,clickItemCallback)
     }
 
     @SuppressLint("NotifyDataSetChanged")

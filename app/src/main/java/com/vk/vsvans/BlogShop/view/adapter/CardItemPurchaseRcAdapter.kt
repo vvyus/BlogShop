@@ -1,4 +1,4 @@
-package com.vk.vsvans.BlogShop.adapters
+package com.vk.vsvans.BlogShop.view.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -10,8 +10,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.vk.vsvans.BlogShop.R
-import com.vk.vsvans.BlogShop.activity.EditPurchaseActivity
-import com.vk.vsvans.BlogShop.model.PurchaseItem
+import com.vk.vsvans.BlogShop.model.data.PurchaseItem
 
 class CardItemPurchaseRcAdapter: RecyclerView.Adapter<CardItemPurchaseRcAdapter.ImageHolder>() {
     val mainArray= ArrayList<PurchaseItem>()

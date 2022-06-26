@@ -1,4 +1,4 @@
-package com.vk.vsvans.BlogShop.activity
+package com.vk.vsvans.BlogShop.view
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
@@ -12,15 +12,18 @@ import android.widget.TimePicker
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.vk.vsvans.BlogShop.R
-import com.vk.vsvans.BlogShop.adapters.CardItemPurchaseRcAdapter
+import com.vk.vsvans.BlogShop.view.adapter.CardItemPurchaseRcAdapter
 import com.vk.vsvans.BlogShop.databinding.ActivityEditPurchaseBinding
 import com.vk.vsvans.BlogShop.dialogs.DialogHelper
-import com.vk.vsvans.BlogShop.fragments.PurchaseItemListFragment
+import com.vk.vsvans.BlogShop.view.fragment.PurchaseItemListFragment
 import com.vk.vsvans.BlogShop.interfaces.IFragmentCallBack
 import com.vk.vsvans.BlogShop.interfaces.IFragmentCloseInterface
 import com.vk.vsvans.BlogShop.interfaces.IUpdatePurchaseItemList
-import com.vk.vsvans.BlogShop.model.*
-import com.vk.vsvans.BlogShop.spinner.DialogSpinnerHelper
+import com.vk.vsvans.BlogShop.model.data.Purchase
+import com.vk.vsvans.BlogShop.model.data.PurchaseItem
+import com.vk.vsvans.BlogShop.model.data.Seller
+import com.vk.vsvans.BlogShop.model.repository.DbManager
+import com.vk.vsvans.BlogShop.dialogs.DialogSpinnerHelper
 import com.vk.vsvans.BlogShop.utils.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -37,9 +40,9 @@ class EditPurchaseActivity : AppCompatActivity() {
     val listResultArray=ArrayList<String>()
     val TAG="MyLog"
 
-    private lateinit var cardItemPurchaseAdapter:CardItemPurchaseRcAdapter
+    private lateinit var cardItemPurchaseAdapter: CardItemPurchaseRcAdapter
 //    var options = Options()
-    private var purchaseItemFragment:PurchaseItemListFragment?=null
+    private var purchaseItemFragment: PurchaseItemListFragment?=null
 
     private var job: Job?=null
     // для работы с firebase
@@ -47,7 +50,7 @@ class EditPurchaseActivity : AppCompatActivity() {
     val dbManager= DbManager(this)
 
     var idPurchase =0
-    private var purchase:Purchase? = null
+    private var purchase: Purchase? = null
     private var listDeletedPurchaseItems=ArrayList<PurchaseItem>()
 
     //var content_temp:SpannableString="".makeSpannableString()
@@ -217,7 +220,7 @@ class EditPurchaseActivity : AppCompatActivity() {
 //                   if(old_time!=purchase!!.time) mainActivity!!.removePurchaseEvent(old_time)
 //                   mainActivity!!.addPurchaseEvent(purchase!!.time)
 
-                   for(pit:PurchaseItem in (vpPurchaseItems.adapter as CardItemPurchaseRcAdapter).mainArray){
+                   for(pit: PurchaseItem in (vpPurchaseItems.adapter as CardItemPurchaseRcAdapter).mainArray){
                        if(pit.id==0){
                            //set idPurchase when new Purchase
                            pit.idPurchase=idPurchase
@@ -226,7 +229,7 @@ class EditPurchaseActivity : AppCompatActivity() {
                            dbManager.updatePurchaseItem(pit)
                        }
                    }
-                   for(pit:PurchaseItem in listDeletedPurchaseItems){
+                   for(pit: PurchaseItem in listDeletedPurchaseItems){
                        dbManager.removePurchaseItem(pit.id)
                    }
                    listDeletedPurchaseItems=ArrayList<PurchaseItem>()
@@ -266,7 +269,7 @@ class EditPurchaseActivity : AppCompatActivity() {
                 var summa=0.0
                 val title_color=getColor(R.color.green_main)
                 var content_temp="".makeSpannableString()
-                for(pit:PurchaseItem in list){
+                for(pit: PurchaseItem in list){
                     content_temp+=pit.getContentShort(title_color)+"\n\n"
                     summa+=pit.summa
                 }
@@ -300,7 +303,7 @@ class EditPurchaseActivity : AppCompatActivity() {
 // добавить новую позицию покупки
     fun onClickAddPurchaseItem(view: View){
         if(purchaseItemFragment!=null){
-            val pit=PurchaseItem()
+            val pit= PurchaseItem()
             //новая запись
             pit.id=0
             pit.idPurchase=idPurchase

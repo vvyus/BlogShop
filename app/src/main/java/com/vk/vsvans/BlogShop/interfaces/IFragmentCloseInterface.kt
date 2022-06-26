@@ -1,7 +1,6 @@
 package com.vk.vsvans.BlogShop.interfaces
 
-import android.graphics.Bitmap
-import com.vk.vsvans.BlogShop.model.PurchaseItem
+import com.vk.vsvans.BlogShop.model.data.PurchaseItem
 
 interface IFragmentCloseInterface {
     fun onFragClose(list:ArrayList<PurchaseItem>)

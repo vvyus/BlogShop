@@ -1,8 +1,6 @@
 package com.vk.vsvans.BlogShop.interfaces
 
-import com.vk.vsvans.BlogShop.model.BaseList
-import com.vk.vsvans.BlogShop.model.Product
-import com.vk.vsvans.BlogShop.model.Purchase
+import com.vk.vsvans.BlogShop.model.data.BaseList
 
 interface OnClickItemCallback {
     fun onClickItem(id:Int)

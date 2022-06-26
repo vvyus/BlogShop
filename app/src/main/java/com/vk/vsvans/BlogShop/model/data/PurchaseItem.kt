@@ -1,4 +1,4 @@
-package com.vk.vsvans.BlogShop.model
+package com.vk.vsvans.BlogShop.model.data
 
 import android.content.res.Resources
 import android.graphics.Color

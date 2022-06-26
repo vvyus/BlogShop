@@ -13,17 +13,16 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.annotation.RequiresApi
-import com.vk.vsvans.BlogShop.MainActivity
-import com.vk.vsvans.BlogShop.activity.EditPurchaseActivity
-import com.vk.vsvans.BlogShop.activity.ProductActivity
-import com.vk.vsvans.BlogShop.activity.SellerActivity
+import com.vk.vsvans.BlogShop.view.MainActivity
+import com.vk.vsvans.BlogShop.view.EditPurchaseActivity
+import com.vk.vsvans.BlogShop.view.ProductActivity
+import com.vk.vsvans.BlogShop.view.SellerActivity
 import com.vk.vsvans.BlogShop.calendar.CalendarAlertDialog
 import com.vk.vsvans.BlogShop.calendar.CalendarDialogAdapter
-import com.vk.vsvans.BlogShop.spinner.DialogSpinnerHelper
 import com.vk.vsvans.BlogShop.interfaces.*
-import com.vk.vsvans.BlogShop.model.BaseList
-import com.vk.vsvans.BlogShop.model.Product
-import com.vk.vsvans.BlogShop.model.PurchaseItem
+import com.vk.vsvans.BlogShop.model.data.BaseList
+import com.vk.vsvans.BlogShop.model.data.Product
+import com.vk.vsvans.BlogShop.model.data.PurchaseItem
 import com.vk.vsvans.BlogShop.utils.FilterForActivity
 import com.vk.vsvans.BlogShop.utils.UtilsHelper
 import kotlinx.coroutines.CoroutineScope
@@ -86,7 +85,7 @@ object DialogHelper {
 
     }
 
-    fun showPurchaseItemInputDialog(context: Context, pit:PurchaseItem,iupdatePurchaseItemList: IUpdatePurchaseItemList) {
+    fun showPurchaseItemInputDialog(context: Context, pit: PurchaseItem, iupdatePurchaseItemList: IUpdatePurchaseItemList) {
         val customDialog = AlertDialog.Builder(context, 0).create()
         val inflater: LayoutInflater =(context as EditPurchaseActivity).layoutInflater
 

@@ -1,4 +1,4 @@
-package com.vk.vsvans.BlogShop.spinner
+package com.vk.vsvans.BlogShop.dialogs
 
 import android.app.AlertDialog
 import android.content.Context
@@ -10,8 +10,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.vk.vsvans.BlogShop.R
-import com.vk.vsvans.BlogShop.activity.EditPurchaseActivity
-import com.vk.vsvans.BlogShop.model.BaseList
+import com.vk.vsvans.BlogShop.view.EditPurchaseActivity
+import com.vk.vsvans.BlogShop.model.data.BaseList
 
 class DialogSpinnerHelper {
     fun showSpinnerDialog(context: Context, list: ArrayList<BaseList>, tvSelection: TextView){
@@ -63,7 +63,7 @@ class DialogSpinnerHelper {
             //tempList.add("No Result")
             return list //tempList
         }
-        for(selection:BaseList in list){
+        for(selection: BaseList in list){
             if(selection.name.lowercase().startsWith(searchText.lowercase())){
                 tempList.add(selection)
             }

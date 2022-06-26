@@ -1,4 +1,4 @@
-package com.vk.vsvans.BlogShop.spinner
+package com.vk.vsvans.BlogShop.dialogs
 
 import android.app.AlertDialog
 import android.view.LayoutInflater
@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.vk.vsvans.BlogShop.R
-import com.vk.vsvans.BlogShop.model.BaseList
+import com.vk.vsvans.BlogShop.model.data.BaseList
 import com.vk.vsvans.BlogShop.utils.UtilsString
 
 class DialogSpinnerBaselistAdapter(var tvSelection: TextView, var dialog: AlertDialog) : RecyclerView.Adapter<DialogSpinnerBaselistAdapter.SpViewHolder>() {

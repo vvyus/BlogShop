@@ -1,24 +1,19 @@
-package com.vk.vsvans.BlogShop.adapters
+package com.vk.vsvans.BlogShop.view.adapter
 
 import android.graphics.Color
 import android.os.Build
 import android.text.Html
-import android.text.method.LinkMovementMethod
-import android.text.util.Linkify
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.vk.vsvans.BlogShop.R
 import com.vk.vsvans.BlogShop.databinding.ItemPurchaseListBinding
 import com.vk.vsvans.BlogShop.interfaces.IFilterCallBack
 import com.vk.vsvans.BlogShop.interfaces.OnClickItemCallback
-import com.vk.vsvans.BlogShop.mainActivity
-import com.vk.vsvans.BlogShop.model.Purchase
+import com.vk.vsvans.BlogShop.model.data.Purchase
 import com.vk.vsvans.BlogShop.utils.UtilsHelper
-import com.vk.vsvans.BlogShop.utils.makeSpannableString
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -66,7 +61,7 @@ class PurchaseRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
         }
     }
 
-    fun getPurchase():Purchase?{
+    fun getPurchase(): Purchase?{
         if(purchaseArray.size!=0 && selected_position!=RecyclerView.NO_POSITION && selected_position<purchaseArray.size){
             return purchaseArray[selected_position]
         }else{
@@ -80,7 +75,7 @@ class PurchaseRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
         }
     }
 
-    fun addPurchase(purchase:Purchase){
+    fun addPurchase(purchase: Purchase){
         purchaseArray.add(purchase)
         Collections.sort(purchaseArray)
     }
@@ -98,7 +93,7 @@ class PurchaseRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
     class PurchaseHolder(val binding:ItemPurchaseListBinding,val clickItemCallback: OnClickItemCallback?,val filterCallback: IFilterCallBack?): RecyclerView.ViewHolder(binding.root) {
 
         @RequiresApi(Build.VERSION_CODES.N)
-        fun setData(purchase:Purchase){
+        fun setData(purchase: Purchase){
             binding.apply {
                 tvDescription.text= Html.fromHtml(purchase.content_html,0)
 //                tvDescription.setMovementMethod(LinkMovementMethod.getInstance())

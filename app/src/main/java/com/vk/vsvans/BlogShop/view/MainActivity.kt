@@ -1,4 +1,4 @@
-package com.vk.vsvans.BlogShop
+package com.vk.vsvans.BlogShop.view
 
 import android.Manifest
 import android.app.SearchManager
@@ -24,17 +24,15 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.MenuItemCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.navigation.NavigationView
-import com.vk.vsvans.BlogShop.activity.EditPurchaseActivity
-import com.vk.vsvans.BlogShop.activity.ProductActivity
-import com.vk.vsvans.BlogShop.activity.SellerActivity
-import com.vk.vsvans.BlogShop.adapters.PurchaseRcAdapter
+import com.vk.vsvans.BlogShop.R
+import com.vk.vsvans.BlogShop.view.adapter.PurchaseRcAdapter
 import com.vk.vsvans.BlogShop.databinding.ActivityMainBinding
 import com.vk.vsvans.BlogShop.dialogs.DialogHelper
-import com.vk.vsvans.BlogShop.fns.import_checks
+import com.vk.vsvans.BlogShop.model.fns.import_checks
 import com.vk.vsvans.BlogShop.interfaces.*
-import com.vk.vsvans.BlogShop.model.BaseList
-import com.vk.vsvans.BlogShop.model.DbManager
-import com.vk.vsvans.BlogShop.model.Purchase
+import com.vk.vsvans.BlogShop.model.data.BaseList
+import com.vk.vsvans.BlogShop.model.repository.DbManager
+import com.vk.vsvans.BlogShop.model.data.Purchase
 import com.vk.vsvans.BlogShop.utils.FilterForActivity
 import com.vk.vsvans.BlogShop.utils.UtilsHelper
 import com.vk.vsvans.BlogShop.utils.UtilsString
@@ -205,7 +203,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toolbar.title=""
         setSupportActionBar(toolbar)
 
-        val toggle= ActionBarDrawerToggle(this,rootElement.drawerLayout,toolbar,R.string.open,R.string.close)
+        val toggle= ActionBarDrawerToggle(this,rootElement.drawerLayout,toolbar, R.string.open,R.string.close)
         rootElement.drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
         rootElement.mainContent.imCloseFilter.setOnClickListener{

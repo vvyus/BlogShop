@@ -3,6 +3,7 @@ package com.vk.vsvans.BlogShop.model
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import com.vk.vsvans.BlogShop.model.repository.DbName
 
 class MyDbHelper(context: Context) : SQLiteOpenHelper(context, DbName.DATABASE_NAME,
     null, DbName.DATABASE_VERSION) {

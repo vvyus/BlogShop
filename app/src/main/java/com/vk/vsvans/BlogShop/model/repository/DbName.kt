@@ -1,4 +1,4 @@
-package com.vk.vsvans.BlogShop.model
+package com.vk.vsvans.BlogShop.model.repository
 import android.provider.BaseColumns
 
 object DbName {
@@ -93,14 +93,14 @@ object DbName {
     const val SQL_DELETE_TABLE_PRODUCTS = "DROP TABLE IF EXISTS $TABLE_NAME_PRODUCTS"
 
     const val WHERE_FOR_PURCHASE_QUERY = "'%WHERETRUE%'"
-    val PURCHASE_QUERY = "SELECT ${TABLE_NAME}.${BaseColumns._ID} as ${BaseColumns._ID}," +
-            "${TABLE_NAME}.${COLUMN_NAME_TITLE} as ${COLUMN_NAME_TITLE}," +
-            "${COLUMN_NAME_CONTENT},${COLUMN_NAME_CONTENT_HTML}," +
-            "${TABLE_NAME}.${COLUMN_NAME_ID_FNS},${COLUMN_NAME_TIME},${COLUMN_NAME_SUMMA_PURCHASES}," +
-            "${TABLE_NAME_SELLERS}.${COLUMN_NAME_NAME_SELLERS} AS ${COLUMN_NAME_SELLER_NAME}," +
-            "${TABLE_NAME_SELLERS}.${BaseColumns._ID} AS ${COLUMN_NAME_SELLER_ID}" +
-            " FROM ${TABLE_NAME} " + "LEFT JOIN ${TABLE_NAME_SELLERS} "+
-            "ON ${TABLE_NAME}.${COLUMN_NAME_SELLER_ID}=${TABLE_NAME_SELLERS}.${BaseColumns._ID} " +
+    val PURCHASE_QUERY = "SELECT $TABLE_NAME.${BaseColumns._ID} as ${BaseColumns._ID}," +
+            "$TABLE_NAME.$COLUMN_NAME_TITLE as $COLUMN_NAME_TITLE," +
+            "$COLUMN_NAME_CONTENT,$COLUMN_NAME_CONTENT_HTML," +
+            "$TABLE_NAME.$COLUMN_NAME_ID_FNS,$COLUMN_NAME_TIME,$COLUMN_NAME_SUMMA_PURCHASES," +
+            "$TABLE_NAME_SELLERS.$COLUMN_NAME_NAME_SELLERS AS $COLUMN_NAME_SELLER_NAME," +
+            "$TABLE_NAME_SELLERS.${BaseColumns._ID} AS $COLUMN_NAME_SELLER_ID" +
+            " FROM $TABLE_NAME " + "LEFT JOIN $TABLE_NAME_SELLERS "+
+            "ON $TABLE_NAME.$COLUMN_NAME_SELLER_ID=$TABLE_NAME_SELLERS.${BaseColumns._ID} " +
              WHERE_FOR_PURCHASE_QUERY +
             "ORDER BY $COLUMN_NAME_TIME DESC"
 }

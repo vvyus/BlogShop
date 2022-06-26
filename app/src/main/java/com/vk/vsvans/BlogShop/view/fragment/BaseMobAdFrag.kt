@@ -1,4 +1,4 @@
-package com.vk.vsvans.BlogShop.fragments
+package com.vk.vsvans.BlogShop.view.fragment
 
 import android.app.Activity
 import android.os.Bundle

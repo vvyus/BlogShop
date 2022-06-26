@@ -18,16 +18,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
         <activity
-            android:name=".activity.SellerActivity"
+            android:name=".view.SellerActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.ProductActivity"
+            android:name=".view.ProductActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.EditPurchaseActivity"
+            android:name=".view.EditPurchaseActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".view.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

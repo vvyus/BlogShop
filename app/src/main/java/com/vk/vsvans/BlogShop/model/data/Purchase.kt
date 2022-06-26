@@ -1,8 +1,5 @@
-package com.vk.vsvans.BlogShop.model
+package com.vk.vsvans.BlogShop.model.data
 
-import android.os.Parcelable
-import android.text.SpannableString
-import com.vk.vsvans.BlogShop.utils.makeSpannableString
 import java.io.Serializable
 
 class Purchase: Serializable,Comparable<Purchase> {
