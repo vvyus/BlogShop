@@ -23,6 +23,7 @@ import com.vk.vsvans.BlogShop.view.`interface`.*
 import com.vk.vsvans.BlogShop.model.data.BaseList
 import com.vk.vsvans.BlogShop.model.data.Product
 import com.vk.vsvans.BlogShop.model.data.PurchaseItem
+import com.vk.vsvans.BlogShop.model.data.Seller
 import com.vk.vsvans.BlogShop.util.FilterForActivity
 import com.vk.vsvans.BlogShop.util.UtilsHelper
 import kotlinx.coroutines.CoroutineScope
@@ -109,7 +110,10 @@ object DialogHelper {
             job?.cancel()
             job = CoroutineScope(Dispatchers.Main).launch {
                 val listProduct = dialog.getAllProduct(context)
-                tvProduct.setTag(pit!!.idProduct)
+                var idProduct=0
+                if(tvProduct.tag==null || (tvProduct.tag as Product)==null) idProduct=pit!!.idProduct
+                else idProduct=(tvProduct.tag as Product).id
+                tvProduct.setTag(idProduct)
                 dialog.showSpinnerDialog(context, listProduct, tvProduct)
             }
         }

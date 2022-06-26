@@ -70,8 +70,10 @@ class DialogSpinnerBaselistAdapter(var tvSelection: TextView, var dialog: AlertD
 //            selected_position=position
 //            set_selected_id=true
 //        }
+
         holder.itemView.setBackgroundColor(if (selected_position == position) selected_color else Color.TRANSPARENT)
     }
+
     fun selectItem(position:Int){
         selected_position=position
         //if(clickItemCallback!=null) clickItemCallback!!.onClickItem(getBaseListId())
@@ -88,17 +90,17 @@ class DialogSpinnerBaselistAdapter(var tvSelection: TextView, var dialog: AlertD
         //if(clickItemCallback!=null) clickItemCallback!!.onClickItem(getBaseListId())
     }
 
-    fun setSelectionPosById(id:Int){
+    fun setSelectionPosById(id:Int):Int{
         if(id>0){
             for(i in 0 until mainList.size){
                 if(mainList[i].id==id){
-                    //notifyItemChanged(selected_position)
                     selected_position=i
-                    //notifyItemChanged(selected_position)
-                    break
+                    //break
+                    return i
                 }
             }
         }
+        return -1
     }
 
     fun getBaseList(): BaseList?{

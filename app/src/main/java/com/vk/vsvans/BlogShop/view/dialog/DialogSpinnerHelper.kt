@@ -31,8 +31,9 @@ class DialogSpinnerHelper {
         // builder нужен уже готовый view
         dialog.setView(rootView)
         adapter.updateAdapter(list)
-        adapter.setSelectionPosById(id_baselist)
-
+        val pos=adapter.setSelectionPosById(id_baselist)
+        // if id found set position on id
+        if(pos>0) (rcView.layoutManager as LinearLayoutManager).scrollToPosition(pos)
         setSearchViewBaseList(adapter,list,sv)
 
         dialog.show()
