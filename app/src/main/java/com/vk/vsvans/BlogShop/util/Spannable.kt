@@ -1,10 +1,9 @@
-package com.vk.vsvans.BlogShop.utils
+package com.vk.vsvans.BlogShop.util
 
 import android.graphics.Typeface.BOLD
 import android.graphics.Typeface.ITALIC
 import android.text.*
 import android.text.style.*
-import android.util.Log
 
 private const val EMPTY_STRING = ""
 private const val FIRST_SYMBOL = 0

@@ -13,8 +13,8 @@ import com.vk.vsvans.BlogShop.model.data.Product
 import com.vk.vsvans.BlogShop.model.data.Purchase
 import com.vk.vsvans.BlogShop.model.data.PurchaseItem
 import com.vk.vsvans.BlogShop.model.data.Seller
-import com.vk.vsvans.BlogShop.utils.FilterForActivity
-import com.vk.vsvans.BlogShop.utils.UtilsHelper
+import com.vk.vsvans.BlogShop.util.FilterForActivity
+import com.vk.vsvans.BlogShop.util.UtilsHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

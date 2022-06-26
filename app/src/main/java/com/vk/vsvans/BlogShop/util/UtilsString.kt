@@ -1,8 +1,7 @@
-package com.vk.vsvans.BlogShop.utils
+package com.vk.vsvans.BlogShop.util
 
 import android.content.Context
 import android.util.DisplayMetrics
-import org.apache.commons.lang3.StringUtils
 
 object UtilsString {
 

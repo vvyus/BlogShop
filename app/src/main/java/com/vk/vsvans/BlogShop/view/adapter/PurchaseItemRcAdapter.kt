@@ -12,8 +12,8 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.vk.vsvans.BlogShop.R
 import com.vk.vsvans.BlogShop.databinding.ItemPurchaseListFragBinding
-import com.vk.vsvans.BlogShop.interfaces.ItemTouchMoveCallBack
-import com.vk.vsvans.BlogShop.interfaces.OnClickItemCallback
+import com.vk.vsvans.BlogShop.view.`interface`.ItemTouchMoveCallBack
+import com.vk.vsvans.BlogShop.view.`interface`.OnClickItemCallback
 import com.vk.vsvans.BlogShop.model.data.PurchaseItem
 
 class PurchaseItemRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerView.Adapter<PurchaseItemRcAdapter.PurchaseItemHolder>() ,

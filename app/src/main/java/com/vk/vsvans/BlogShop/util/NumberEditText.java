@@ -1,4 +1,4 @@
-package com.vk.vsvans.BlogShop.utils;
+package com.vk.vsvans.BlogShop.util;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -14,7 +14,6 @@ import androidx.appcompat.widget.AppCompatEditText;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import com.vk.vsvans.BlogShop.R;
-import com.vk.vsvans.BlogShop.utils.NumberInputFilter;
 
 public class NumberEditText extends AppCompatEditText {
 

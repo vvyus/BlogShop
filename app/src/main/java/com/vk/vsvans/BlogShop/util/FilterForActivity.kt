@@ -1,4 +1,4 @@
-package com.vk.vsvans.BlogShop.utils
+package com.vk.vsvans.BlogShop.util
 
 data class FilterForActivity(val activity:String){
     var idSeller:Int?=null

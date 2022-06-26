@@ -1,4 +1,4 @@
-package com.vk.vsvans.BlogShop.interfaces
+package com.vk.vsvans.BlogShop.view.`interface`
 
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView

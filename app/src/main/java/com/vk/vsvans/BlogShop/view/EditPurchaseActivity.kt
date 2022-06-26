@@ -14,17 +14,17 @@ import androidx.appcompat.app.AppCompatActivity
 import com.vk.vsvans.BlogShop.R
 import com.vk.vsvans.BlogShop.view.adapter.CardItemPurchaseRcAdapter
 import com.vk.vsvans.BlogShop.databinding.ActivityEditPurchaseBinding
-import com.vk.vsvans.BlogShop.dialogs.DialogHelper
+import com.vk.vsvans.BlogShop.view.dialog.DialogHelper
 import com.vk.vsvans.BlogShop.view.fragment.PurchaseItemListFragment
-import com.vk.vsvans.BlogShop.interfaces.IFragmentCallBack
-import com.vk.vsvans.BlogShop.interfaces.IFragmentCloseInterface
-import com.vk.vsvans.BlogShop.interfaces.IUpdatePurchaseItemList
+import com.vk.vsvans.BlogShop.view.`interface`.IFragmentCallBack
+import com.vk.vsvans.BlogShop.view.`interface`.IFragmentCloseInterface
+import com.vk.vsvans.BlogShop.view.`interface`.IUpdatePurchaseItemList
 import com.vk.vsvans.BlogShop.model.data.Purchase
 import com.vk.vsvans.BlogShop.model.data.PurchaseItem
 import com.vk.vsvans.BlogShop.model.data.Seller
 import com.vk.vsvans.BlogShop.model.repository.DbManager
-import com.vk.vsvans.BlogShop.dialogs.DialogSpinnerHelper
-import com.vk.vsvans.BlogShop.utils.*
+import com.vk.vsvans.BlogShop.view.dialog.DialogSpinnerHelper
+import com.vk.vsvans.BlogShop.util.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -115,7 +115,7 @@ class EditPurchaseActivity : AppCompatActivity() {
             DialogHelper.job?.cancel()
             DialogHelper.job = CoroutineScope(Dispatchers.Main).launch {
                 val listSeller = dialog.getAllSeller(this@EditPurchaseActivity)
-                //rootElement.tvSellerSelect.setTag(dbManager.readSellers())
+                rootElement.tvSellerSelect.setTag(purchase!!.idseller)
                 dialog.showSpinnerDialog(this@EditPurchaseActivity, listSeller, rootElement.tvSellerSelect)
             }
         }

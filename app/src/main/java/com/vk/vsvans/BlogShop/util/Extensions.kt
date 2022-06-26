@@ -1,9 +1,8 @@
-package com.vk.vsvans.BlogShop.utils
+package com.vk.vsvans.BlogShop.util
 
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.content.PackageManagerCompat
 
 fun AppCompatActivity.isPermissinGrant(p:String):Boolean {
     return ContextCompat.checkSelfPermission(

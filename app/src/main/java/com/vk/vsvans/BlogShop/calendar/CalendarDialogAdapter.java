@@ -10,7 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.vk.vsvans.BlogShop.R;
-import com.vk.vsvans.BlogShop.utils.UtilsHelper;
+import com.vk.vsvans.BlogShop.util.UtilsHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

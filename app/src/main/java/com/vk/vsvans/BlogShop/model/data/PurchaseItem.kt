@@ -3,7 +3,7 @@ package com.vk.vsvans.BlogShop.model.data
 import android.content.res.Resources
 import android.graphics.Color
 import android.text.SpannableString
-import com.vk.vsvans.BlogShop.utils.*
+import com.vk.vsvans.BlogShop.util.*
 
 
 class PurchaseItem {

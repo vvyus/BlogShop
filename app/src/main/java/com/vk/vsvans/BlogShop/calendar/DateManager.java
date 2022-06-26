@@ -1,7 +1,7 @@
 package com.vk.vsvans.BlogShop.calendar;
 import android.util.Log;
 
-import com.vk.vsvans.BlogShop.utils.UtilsHelper;
+import com.vk.vsvans.BlogShop.util.UtilsHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

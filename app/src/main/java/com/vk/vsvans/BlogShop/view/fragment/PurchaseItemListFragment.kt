@@ -15,8 +15,8 @@ import com.vk.vsvans.BlogShop.view.EditPurchaseActivity
 import com.vk.vsvans.BlogShop.R
 import com.vk.vsvans.BlogShop.view.adapter.PurchaseItemRcAdapter
 import com.vk.vsvans.BlogShop.databinding.ListPurchaseItemFragBinding
-import com.vk.vsvans.BlogShop.dialogs.DialogHelper
-import com.vk.vsvans.BlogShop.interfaces.*
+import com.vk.vsvans.BlogShop.view.dialog.DialogHelper
+import com.vk.vsvans.BlogShop.view.`interface`.*
 import com.vk.vsvans.BlogShop.model.data.BaseList
 
 import com.vk.vsvans.BlogShop.model.data.PurchaseItem

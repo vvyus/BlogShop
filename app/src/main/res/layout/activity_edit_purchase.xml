@@ -234,7 +234,7 @@
                             android:textStyle="bold" />
 
 
-                        <com.vk.vsvans.BlogShop.utils.NumberEditText
+                        <com.vk.vsvans.BlogShop.util.NumberEditText
                             android:id="@+id/edSummaPurchase"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

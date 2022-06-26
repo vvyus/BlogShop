@@ -10,10 +10,10 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.vk.vsvans.BlogShop.R
 import com.vk.vsvans.BlogShop.databinding.ItemPurchaseListBinding
-import com.vk.vsvans.BlogShop.interfaces.IFilterCallBack
-import com.vk.vsvans.BlogShop.interfaces.OnClickItemCallback
+import com.vk.vsvans.BlogShop.view.`interface`.IFilterCallBack
+import com.vk.vsvans.BlogShop.view.`interface`.OnClickItemCallback
 import com.vk.vsvans.BlogShop.model.data.Purchase
-import com.vk.vsvans.BlogShop.utils.UtilsHelper
+import com.vk.vsvans.BlogShop.util.UtilsHelper
 import java.util.*
 import kotlin.collections.ArrayList
 

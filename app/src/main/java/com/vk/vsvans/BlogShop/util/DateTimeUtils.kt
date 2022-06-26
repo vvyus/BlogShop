@@ -1,4 +1,4 @@
-package com.vk.vsvans.BlogShop.utils
+package com.vk.vsvans.BlogShop.util
 
 import java.text.ParseException
 import java.text.SimpleDateFormat

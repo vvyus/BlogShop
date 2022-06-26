@@ -1,4 +1,4 @@
-package com.vk.vsvans.BlogShop.dialogs
+package com.vk.vsvans.BlogShop.view.dialog
 
 import android.app.Activity
 import android.app.AlertDialog

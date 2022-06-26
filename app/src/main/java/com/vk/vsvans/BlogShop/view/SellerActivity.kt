@@ -16,11 +16,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.vk.vsvans.BlogShop.R
 import com.vk.vsvans.BlogShop.view.adapter.BaseListRcAdapter
 import com.vk.vsvans.BlogShop.databinding.ActivitySellerBinding
-import com.vk.vsvans.BlogShop.dialogs.DialogHelper
-import com.vk.vsvans.BlogShop.interfaces.IDeleteItem
-import com.vk.vsvans.BlogShop.interfaces.IDialogListener
-import com.vk.vsvans.BlogShop.interfaces.IUpdateBaseListItemList
-import com.vk.vsvans.BlogShop.interfaces.OnClickItemCallback
+import com.vk.vsvans.BlogShop.view.dialog.DialogHelper
+import com.vk.vsvans.BlogShop.view.`interface`.IDeleteItem
+import com.vk.vsvans.BlogShop.view.`interface`.IDialogListener
+import com.vk.vsvans.BlogShop.view.`interface`.IUpdateBaseListItemList
+import com.vk.vsvans.BlogShop.view.`interface`.OnClickItemCallback
 import com.vk.vsvans.BlogShop.model.data.BaseList
 import com.vk.vsvans.BlogShop.model.repository.DbManager
 import com.vk.vsvans.BlogShop.model.data.Seller

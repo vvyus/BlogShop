@@ -1,4 +1,4 @@
-package com.vk.vsvans.BlogShop.dialogs
+package com.vk.vsvans.BlogShop.view.dialog
 
 import android.R
 import android.app.Activity
@@ -19,12 +19,12 @@ import com.vk.vsvans.BlogShop.view.ProductActivity
 import com.vk.vsvans.BlogShop.view.SellerActivity
 import com.vk.vsvans.BlogShop.calendar.CalendarAlertDialog
 import com.vk.vsvans.BlogShop.calendar.CalendarDialogAdapter
-import com.vk.vsvans.BlogShop.interfaces.*
+import com.vk.vsvans.BlogShop.view.`interface`.*
 import com.vk.vsvans.BlogShop.model.data.BaseList
 import com.vk.vsvans.BlogShop.model.data.Product
 import com.vk.vsvans.BlogShop.model.data.PurchaseItem
-import com.vk.vsvans.BlogShop.utils.FilterForActivity
-import com.vk.vsvans.BlogShop.utils.UtilsHelper
+import com.vk.vsvans.BlogShop.util.FilterForActivity
+import com.vk.vsvans.BlogShop.util.UtilsHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -109,6 +109,7 @@ object DialogHelper {
             job?.cancel()
             job = CoroutineScope(Dispatchers.Main).launch {
                 val listProduct = dialog.getAllProduct(context)
+                tvProduct.setTag(pit!!.idProduct)
                 dialog.showSpinnerDialog(context, listProduct, tvProduct)
             }
         }

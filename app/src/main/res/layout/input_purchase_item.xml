@@ -120,7 +120,7 @@
                     android:textColor="@color/green_main"
                     android:textStyle="bold" />
 
-                <com.vk.vsvans.BlogShop.utils.NumberEditText
+                <com.vk.vsvans.BlogShop.util.NumberEditText
                     android:id="@+id/edPriceItem"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -158,7 +158,7 @@
                     android:textColor="@color/green_main"
                     android:textStyle="bold" />
 
-                <com.vk.vsvans.BlogShop.utils.NumberEditText
+                <com.vk.vsvans.BlogShop.util.NumberEditText
                     android:id="@+id/edQuantityItem"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -196,7 +196,7 @@
                     android:textColor="@color/green_main"
                     android:textStyle="bold" />
 
-                <com.vk.vsvans.BlogShop.utils.NumberEditText
+                <com.vk.vsvans.BlogShop.util.NumberEditText
                     android:id="@+id/edSummaItem"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

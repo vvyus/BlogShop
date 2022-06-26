@@ -1,4 +1,4 @@
-package com.vk.vsvans.BlogShop.dialogs
+package com.vk.vsvans.BlogShop.view.dialog
 
 import android.app.AlertDialog
 import android.content.Context
@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.vk.vsvans.BlogShop.R
 import com.vk.vsvans.BlogShop.view.EditPurchaseActivity
 import com.vk.vsvans.BlogShop.model.data.BaseList
+import com.vk.vsvans.BlogShop.view.adapter.DialogSpinnerBaselistAdapter
 
 class DialogSpinnerHelper {
     fun showSpinnerDialog(context: Context, list: ArrayList<BaseList>, tvSelection: TextView){
@@ -19,6 +20,8 @@ class DialogSpinnerHelper {
         val dialog=builder.create()
         //надуваем в диалоге нет инфлайтора поэтому берем его из контекста .from
         val rootView=LayoutInflater.from(context).inflate(R.layout.spinner_layout,null)
+        var id_baselist=tvSelection.tag as Int
+        if(id_baselist==null) id_baselist=0
         val adapter= DialogSpinnerBaselistAdapter(tvSelection,dialog)
         val rcView=rootView.findViewById<RecyclerView>(R.id.rcSellerView)
         val sv=rootView.findViewById<SearchView>(R.id.svSeller)
@@ -28,8 +31,10 @@ class DialogSpinnerHelper {
         // builder нужен уже готовый view
         dialog.setView(rootView)
         adapter.updateAdapter(list)
+        adapter.setSelectionPosById(id_baselist)
+
         setSearchViewBaseList(adapter,list,sv)
-        //adapter.notifyDataSetChanged()
+
         dialog.show()
         dialog.getWindow()?.setLayout(
             WindowManager.LayoutParams.MATCH_PARENT,

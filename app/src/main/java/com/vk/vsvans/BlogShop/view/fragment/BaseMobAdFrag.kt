@@ -3,15 +3,12 @@ package com.vk.vsvans.BlogShop.view.fragment
 import android.app.Activity
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
-import com.vk.vsvans.BlogShop.interfaces.InterAdmobClose
+import com.vk.vsvans.BlogShop.view.`interface`.InterAdmobClose
 import com.vk.vsvans.BlogShop.R
 open class BaseMobAdFrag:Fragment(), InterAdmobClose {
     lateinit var adView:AdView

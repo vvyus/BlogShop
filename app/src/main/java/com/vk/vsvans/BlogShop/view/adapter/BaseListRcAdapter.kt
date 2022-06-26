@@ -10,16 +10,16 @@ import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.vk.vsvans.BlogShop.R
 import com.vk.vsvans.BlogShop.databinding.ItemBaseListListBinding
-import com.vk.vsvans.BlogShop.interfaces.OnClickItemCallback
+import com.vk.vsvans.BlogShop.view.`interface`.OnClickItemCallback
 import com.vk.vsvans.BlogShop.model.data.BaseList
-import com.vk.vsvans.BlogShop.utils.UtilsString
+import com.vk.vsvans.BlogShop.util.UtilsString
 
 class BaseListRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerView.Adapter<BaseListRcAdapter.BaseListHolder>() {
     var BaseListArray=ArrayList<BaseList>()
     var childArray=ArrayList<BaseList>()
     // indexed BaseList
     val nodeList=HashMap<Int, BaseList>()
-    var selected_position = RecyclerView.NO_POSITION;
+    var selected_position = RecyclerView.NO_POSITION
     var selected_color =0
     var offset16=0
     var ic_expanded_less=0
