@@ -47,7 +47,7 @@ import java.util.*
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var rootElement: ActivityMainBinding
-    val dbManager= DbManager(this)
+    //val dbManager= DbManager(this)
     val viewModel=MainActivityViewModel(this)
 
     private val purchaseArray=ArrayList<Purchase>()

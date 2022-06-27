@@ -25,7 +25,7 @@ object import_checks {
    @RequiresApi(Build.VERSION_CODES.N)
    suspend fun doImport(context: Context){
        val separator=(context as MainActivity).resources.getString(R.string.SEPARATOR)
-       val db=(context as MainActivity).dbManager
+       val viewModel=(context as MainActivity).viewModel
        val title_color=(context as MainActivity).getColor(R.color.green_main)
        var fn=""
        var fd=""
@@ -70,9 +70,9 @@ object import_checks {
                                         println("Result is ${user} ${dateTime} ${totalSum} fd=${fd} fn=${fn} fp=${fp}")
                                         idFns=fn+separator+fd+separator+fp+separator+dateTime
                                         purchase= Purchase()
-                                        idPurchase=db.getPurchaseFns(idFns)
+                                        idPurchase=viewModel.getPurchaseFns(idFns)
                                         if(idPurchase==0){
-                                           idPurchase= db.insertPurchase(purchase!!)!!
+                                           idPurchase= viewModel.insertPurchase(purchase!!)!!
                                         }
                                         purchase!!.id=idPurchase
                                         purchase!!.idfns=idFns
@@ -86,13 +86,13 @@ object import_checks {
 
                                         //!
                                         var seller: Seller?=null
-                                        val list=db.getSellersFns(user)
+                                        val list=viewModel.getSellersFns(user)
                                         var idseller=0
                                         if(list.size==0){
                                             seller= Seller()
                                             seller.name=sellername
                                             seller.id_fns=sellername
-                                            idseller= db.insertSeller(seller)!!
+                                            idseller= viewModel.insertSeller(seller)!!
                                             seller.id=idseller
                                             seller.idparent=idseller
                                             seller.fullpath=idseller.toString()
@@ -103,13 +103,13 @@ object import_checks {
                                             sellername=seller.name
                                         }
 
-                                        db.updateSeller(seller)
+                                        viewModel.updateSeller(seller)
                                         purchase!!.sellername=sellername
                                         purchase!!.idseller=idseller
                                         //!
                                         // print chek items
                                         var content_temp="".makeSpannableString()
-                                        db.removePurchaseItems(idPurchase)
+                                        viewModel.removePurchaseItems(idPurchase)
                                         val items = receipt.getJSONArray("items")
                                         if(items!=null){
                                             for (j in 0 until items.length()) {
@@ -124,13 +124,13 @@ object import_checks {
                                                     content_temp+= pit!!.getContentShort(title_color)+"\n\n"
                                                     println("${pit!!.productName}  ${pit!!.quantity}  ${pit!!.summa}")
                                                     var product: Product?=null
-                                                    val list=db.getProductsFns(pit!!.productName)
+                                                    val list=viewModel.getProductsFns(pit!!.productName)
                                                     var idproduct=0
                                                     if(list.size==0){
                                                         product= Product()
                                                         product.name=pit!!.productName
                                                         product.id_fns=pit!!.productName
-                                                        idproduct= db.insertProduct(product)!!
+                                                        idproduct= viewModel.insertProduct(product)!!
                                                         product.id=idproduct
                                                         product.idparent=idproduct
                                                         product.fullpath=idproduct.toString()
@@ -139,15 +139,15 @@ object import_checks {
                                                         product= list[0] as Product
                                                         idproduct=product.id
                                                     }
-                                                    db.updateProduct(product)
+                                                    viewModel.updateProduct(product)
                                                     pit!!.idProduct=idproduct
-                                                    db.insertPurchaseItem(pit!!)
+                                                    viewModel.insertPurchaseItem(pit!!)
                                                 }
                                             }
                                         }
                                         purchase!!.content= content_temp.toString()
                                         purchase!!.content_html= Html.toHtml(content_temp,0)
-                                        db.updatePurchase(purchase!!)
+                                        viewModel.updatePurchase(purchase!!)
 
                                     }// if receipt
                                 } // if ticket
