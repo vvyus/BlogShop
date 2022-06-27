@@ -1,6 +1,11 @@
 package com.vk.vsvans.BlogShop.viewmodel
 
+import android.annotation.SuppressLint
+import android.app.Application
 import android.content.Context
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.vk.vsvans.BlogShop.model.data.Product
 import com.vk.vsvans.BlogShop.model.data.Purchase
 import com.vk.vsvans.BlogShop.model.data.PurchaseItem
@@ -11,8 +16,21 @@ import com.vk.vsvans.BlogShop.util.FilterForActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class ActivityViewModel(context: Context) {
+class ActivityViewModel(context: Context): ViewModel() {
     private val mDbRepositoryImpl:IDbRepository=DbRepositoryImpl(context)
+
+    //add
+//    val livePurchaseData= MutableLiveData<ArrayList<Purchase>>()
+//    fun loadAllPurchases(filter: FilterForActivity){
+//        mDbRepositoryImpl.getAllPurchases(filter,object:IDbRepository.ReadDataCallback{
+//            override fun readData(list: ArrayList<Purchase>) {
+//                livePurchaseData.value=list
+//            }
+//
+//        })
+//    }
+    //add
+
     fun openDb(){
         mDbRepositoryImpl.openDb()
     }

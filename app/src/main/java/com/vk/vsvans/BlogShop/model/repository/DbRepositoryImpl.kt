@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.provider.BaseColumns
+import android.util.Log
 import com.vk.vsvans.BlogShop.model.MyDbHelper
 import com.vk.vsvans.BlogShop.model.data.Product
 import com.vk.vsvans.BlogShop.model.data.Purchase
@@ -467,4 +468,13 @@ class DbRepositoryImpl(context: Context):IDbRepository {
         val selection = DbName.COLUMN_NAME_PURCHASE_ID + "=${idpurchase}"
         db?.delete(DbName.TABLE_NAME_PURCHASE_ITEMS,selection, null)
     }
+
+    // ADD
+    override fun getAllPurchases(filter: FilterForActivity,readDataCallback: IDbRepository.ReadDataCallback?){
+        val purchaseArray=ArrayList<Purchase>()
+        getPurchases(filter,purchaseArray)
+        if(readDataCallback!=null)readDataCallback.readData(purchaseArray)
+    }
+
+
 }

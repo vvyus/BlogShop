@@ -1,6 +1,7 @@
 package com.vk.vsvans.BlogShop.view
 
 import android.Manifest
+import android.app.Application
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
@@ -14,6 +15,7 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -48,6 +50,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private lateinit var rootElement: ActivityMainBinding
     //val dbManager= DbManager(this)
+    //val viewModel:ActivityViewModel by viewModels()
+
     val viewModel= ActivityViewModel(this)
 
     private val purchaseArray=ArrayList<Purchase>()
@@ -137,7 +141,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 this@MainActivity.onSellerClick(purchase)
             }
         })//adapter set call back
-    }
+
+        //initViewModel()
+
+    }//on create
+
+//    private fun initViewModel(){
+//        //{} это слушатель
+//        //если наше activity доступно не разрушено или ждет когда можно обновить слушателт сработает
+//        viewModel.livePurchaseData.observe(this,{
+//            adapter.updateAdapter(it)
+//        })
+//    }
 
      @RequiresApi(Build.VERSION_CODES.N)
     fun onSellerClick(purchase: Purchase) {

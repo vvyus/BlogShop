@@ -35,4 +35,9 @@ interface IDbRepository {
     fun insertPurchaseItem(purchaseItem: PurchaseItem):Int?
     fun removePurchaseItem(id: Int)
     fun removePurchaseItems(idpurchase: Int)
+    //ADD
+    fun getAllPurchases(filter: FilterForActivity,readDataCallback: ReadDataCallback?)
+    interface ReadDataCallback {
+        fun readData(list: ArrayList<Purchase>)
+    }
 }
