@@ -37,6 +37,7 @@ import com.vk.vsvans.BlogShop.util.FilterForActivity
 import com.vk.vsvans.BlogShop.util.UtilsHelper
 import com.vk.vsvans.BlogShop.util.UtilsString
 import com.vk.vsvans.BlogShop.util.isPermissinGrant
+import com.vk.vsvans.BlogShop.viewmodel.MainActivityViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -47,6 +48,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private lateinit var rootElement: ActivityMainBinding
     val dbManager= DbManager(this)
+    val viewModel=MainActivityViewModel(this)
+
     private val purchaseArray=ArrayList<Purchase>()
     private var job: Job? = null
     private lateinit var toolbar: Toolbar
@@ -153,7 +156,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 //                setFilterPanel(amount,purchaseList.size)
             }
             val purchaseList = ArrayList<Purchase>()
-            val amount = dbManager.getPurchases(filter_fact,purchaseList)
+            val amount = viewModel.getPurchases(filter_fact,purchaseList)//dbManager.getPurchases(filter_fact,purchaseList)
             adapter.updateAdapter(purchaseList)
             if(isSetFilter()) setFilterPanel(amount,purchaseList.size)
             else resetFilterPanel()
@@ -166,13 +169,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onResume() {
         super.onResume()
-        dbManager.openDb()
+        //dbManager.openDb()
+        viewModel.openDb()
         fillAdapter()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        dbManager.closeDb()
+        //dbManager.closeDb()
+        viewModel.closeDb()
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -182,10 +187,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             val purchaseList = ArrayList<Purchase>()
             var amount=0.0
             if(isSetFilter()) {
-                amount = dbManager.getPurchases(filter_fact,purchaseList)
+                amount =viewModel.getPurchases(filter_fact,purchaseList) //dbManager.getPurchases(filter_fact,purchaseList)
             } else {
                 calendar_events.clear()
-                amount = dbManager.getPurchases(filter_fact, purchaseList, calendar_events)
+                amount = viewModel.getPurchases(filter_fact, purchaseList, calendar_events)//dbManager.getPurchases(filter_fact, purchaseList, calendar_events)
             }
 
             adapter.updateAdapter(purchaseList)
@@ -389,7 +394,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     //1 remove purchase from events
                     removePurchaseEvent(purchase.time)
                     //2 remove purchase from database
-                    dbManager.removePurchase(id)
+                    //dbManager.removePurchase(id)
+                    viewModel.removePurchase(id)
                     fillAdapter()
                 }
 
