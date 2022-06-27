@@ -11,8 +11,8 @@ import com.vk.vsvans.BlogShop.util.FilterForActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class MainActivityViewModel(context: Context) {
-    val mDbRepositoryImpl:IDbRepository=DbRepositoryImpl(context)
+class ActivityViewModel(context: Context) {
+    private val mDbRepositoryImpl:IDbRepository=DbRepositoryImpl(context)
     fun openDb(){
         mDbRepositoryImpl.openDb()
     }

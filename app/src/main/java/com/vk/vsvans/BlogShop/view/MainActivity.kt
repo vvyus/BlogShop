@@ -37,7 +37,7 @@ import com.vk.vsvans.BlogShop.util.FilterForActivity
 import com.vk.vsvans.BlogShop.util.UtilsHelper
 import com.vk.vsvans.BlogShop.util.UtilsString
 import com.vk.vsvans.BlogShop.util.isPermissinGrant
-import com.vk.vsvans.BlogShop.viewmodel.MainActivityViewModel
+import com.vk.vsvans.BlogShop.viewmodel.ActivityViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private lateinit var rootElement: ActivityMainBinding
     //val dbManager= DbManager(this)
-    val viewModel=MainActivityViewModel(this)
+    val viewModel= ActivityViewModel(this)
 
     private val purchaseArray=ArrayList<Purchase>()
     private var job: Job? = null
