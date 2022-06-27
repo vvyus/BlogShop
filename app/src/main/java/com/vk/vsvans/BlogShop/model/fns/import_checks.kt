@@ -70,7 +70,7 @@ object import_checks {
                                         println("Result is ${user} ${dateTime} ${totalSum} fd=${fd} fn=${fn} fp=${fp}")
                                         idFns=fn+separator+fd+separator+fp+separator+dateTime
                                         purchase= Purchase()
-                                        idPurchase=db.readPurchaseFns(idFns)
+                                        idPurchase=db.getPurchaseFns(idFns)
                                         if(idPurchase==0){
                                            idPurchase= db.insertPurchase(purchase!!)!!
                                         }
@@ -86,7 +86,7 @@ object import_checks {
 
                                         //!
                                         var seller: Seller?=null
-                                        val list=db.readSellersFns(user)
+                                        val list=db.getSellersFns(user)
                                         var idseller=0
                                         if(list.size==0){
                                             seller= Seller()
@@ -124,7 +124,7 @@ object import_checks {
                                                     content_temp+= pit!!.getContentShort(title_color)+"\n\n"
                                                     println("${pit!!.productName}  ${pit!!.quantity}  ${pit!!.summa}")
                                                     var product: Product?=null
-                                                    val list=db.readProductsTitle(pit!!.productName)
+                                                    val list=db.getProductsFns(pit!!.productName)
                                                     var idproduct=0
                                                     if(list.size==0){
                                                         product= Product()

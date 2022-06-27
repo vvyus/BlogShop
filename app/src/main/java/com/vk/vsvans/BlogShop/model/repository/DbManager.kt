@@ -60,7 +60,7 @@ class DbManager(context: Context) {
     }
 
     @SuppressLint("Range")
-    suspend fun readProducts(searchText:String): ArrayList<Product> = withContext(Dispatchers.IO) {
+    suspend fun getProducts(searchText:String): ArrayList<Product> = withContext(Dispatchers.IO) {
         val dataList = ArrayList<Product>()
         val selection = "${DbName.COLUMN_NAME_NAME_PRODUCTS} like ?"
         val cursor = db?.query(
@@ -78,7 +78,7 @@ class DbManager(context: Context) {
 
     @SuppressLint("Range")
     // Используется при загрузке чеков поиск по вспом полю title для ручного ввода это пол пусто
-    suspend fun readProductsTitle(searchText:String): ArrayList<Product> = withContext(Dispatchers.IO) {
+    suspend fun getProductsFns(searchText:String): ArrayList<Product> = withContext(Dispatchers.IO) {
         val dataList = ArrayList<Product>()
         val selection = "${DbName.COLUMN_NAME_ID_FNS_PRODUCTS} like ?"
         val cursor = db?.query(
@@ -150,7 +150,7 @@ class DbManager(context: Context) {
     }
 
     @SuppressLint("Range")
-    suspend fun readSellers(searchText: String): ArrayList<Seller> = withContext(Dispatchers.IO) {
+    suspend fun getSellers(searchText: String): ArrayList<Seller> = withContext(Dispatchers.IO) {
         val dataList = ArrayList<Seller>()
         val selection = "${DbName.COLUMN_NAME_NAME_SELLERS} like ?"
         val cursor = db?.query(
@@ -168,7 +168,7 @@ class DbManager(context: Context) {
 
     @SuppressLint("Range")
     // Используется при загрузке чеков поиск по вспом полю title для ручного ввода это пол пусто
-    suspend fun readSellersFns(searchText:String): ArrayList<Seller> = withContext(Dispatchers.IO) {
+    suspend fun getSellersFns(searchText:String): ArrayList<Seller> = withContext(Dispatchers.IO) {
         val dataList = ArrayList<Seller>()
         val selection = "${DbName.COLUMN_NAME_ID_FNS_SELLERS} like ?"
         val cursor = db?.query(
@@ -240,7 +240,7 @@ class DbManager(context: Context) {
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
-    suspend fun queryPurchases(filter:FilterForActivity, purchaseList: ArrayList<Purchase>, calendar_events:HashMap<String, Int>):Double = withContext(Dispatchers.IO) {
+    suspend fun getPurchases(filter:FilterForActivity, purchaseList: ArrayList<Purchase>, calendar_events:HashMap<String, Int>):Double = withContext(Dispatchers.IO) {
         var selection =""
         var args = ArrayList<String>()
         if(filter.idSeller!=null){
@@ -278,7 +278,7 @@ class DbManager(context: Context) {
 
     @SuppressLint("Range")
     //, calendar_events:HashMap<String, Integer>
-    suspend fun queryPurchases(filter:FilterForActivity,purchaseList: ArrayList<Purchase>):Double = withContext(Dispatchers.IO) {
+    suspend fun getPurchases(filter:FilterForActivity, purchaseList: ArrayList<Purchase>):Double = withContext(Dispatchers.IO) {
         var selection =""
         var args = ArrayList<String>()
         if(filter.idSeller!=null){
@@ -376,7 +376,7 @@ class DbManager(context: Context) {
 
     @RequiresApi(Build.VERSION_CODES.N)
     @SuppressLint("Range")
-    suspend fun readOnePurchase(id:Int): Purchase? = withContext(Dispatchers.IO) {
+    suspend fun getPurchase(id:Int): Purchase? = withContext(Dispatchers.IO) {
 
         val selection ="${DbName.TABLE_NAME}"+"."+BaseColumns._ID + "=?"
         val selectionArgs = arrayOf(id.toString())
@@ -398,7 +398,7 @@ class DbManager(context: Context) {
     }
 
     @SuppressLint("Range")
-    suspend fun readPurchaseFns(idFns:String): Int = withContext(Dispatchers.IO) {
+    suspend fun getPurchaseFns(idFns:String): Int = withContext(Dispatchers.IO) {
         val selection = "${DbName.COLUMN_NAME_ID_FNS} like ?"
         val cursor = db?.query(
             DbName.TABLE_NAME,
@@ -419,7 +419,7 @@ class DbManager(context: Context) {
     // PurchaseItem
 
     @SuppressLint("Range")
-    suspend fun readPurchaseItems(id:Int): ArrayList<PurchaseItem> = withContext(Dispatchers.IO) {
+    suspend fun getPurchaseItems(id:Int): ArrayList<PurchaseItem> = withContext(Dispatchers.IO) {
         //  fun readPurchasesItemFromDb(id:Int): ArrayList<Purchase>  {
         val dataList = ArrayList<PurchaseItem>()
 

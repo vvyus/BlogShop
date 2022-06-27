@@ -207,7 +207,7 @@ class ProductActivity : AppCompatActivity() {
 
         job?.cancel()
         job = CoroutineScope(Dispatchers.Main).launch{
-            val list = dbManager.readProducts(text)
+            val list = dbManager.getProducts(text)
             adapter.updateAdapter(list)
         }
 

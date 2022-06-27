@@ -207,7 +207,7 @@ class SellerActivity : AppCompatActivity() {
 
         job?.cancel()
         job = CoroutineScope(Dispatchers.Main).launch{
-            val list = dbManager.readSellers(text)
+            val list = dbManager.getSellers(text)
             adapter.updateAdapter(list)
         }
 

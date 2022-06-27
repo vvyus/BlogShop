@@ -77,14 +77,14 @@ class DialogSpinnerHelper {
         return tempList
     }
     suspend fun getAllSeller(context: Context):ArrayList<BaseList> {
-        val sellerArray=(context as EditPurchaseActivity).dbManager.readSellers("")
+        val sellerArray=(context as EditPurchaseActivity).dbManager.getSellers("")
         val baselistArray=ArrayList<BaseList>()
         baselistArray.addAll(sellerArray)
         return baselistArray
     }
 
     suspend fun getAllProduct(context: Context): ArrayList<BaseList> {
-        val productArray=(context as EditPurchaseActivity).dbManager.readProducts("")
+        val productArray=(context as EditPurchaseActivity).dbManager.getProducts("")
         val baselistArray=ArrayList<BaseList>()
         baselistArray.addAll(productArray)
         return baselistArray

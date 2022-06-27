@@ -153,7 +153,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 //                setFilterPanel(amount,purchaseList.size)
             }
             val purchaseList = ArrayList<Purchase>()
-            val amount = dbManager.queryPurchases(filter_fact,purchaseList)
+            val amount = dbManager.getPurchases(filter_fact,purchaseList)
             adapter.updateAdapter(purchaseList)
             if(isSetFilter()) setFilterPanel(amount,purchaseList.size)
             else resetFilterPanel()
@@ -182,10 +182,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             val purchaseList = ArrayList<Purchase>()
             var amount=0.0
             if(isSetFilter()) {
-                amount = dbManager.queryPurchases(filter_fact,purchaseList)
+                amount = dbManager.getPurchases(filter_fact,purchaseList)
             } else {
                 calendar_events.clear()
-                amount = dbManager.queryPurchases(filter_fact, purchaseList, calendar_events)
+                amount = dbManager.getPurchases(filter_fact, purchaseList, calendar_events)
             }
 
             adapter.updateAdapter(purchaseList)

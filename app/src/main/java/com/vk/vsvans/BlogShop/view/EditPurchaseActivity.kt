@@ -84,7 +84,7 @@ class EditPurchaseActivity : AppCompatActivity() {
             dbManager.openDb()
             job?.cancel()
             job = CoroutineScope(Dispatchers.Main).launch{
-                purchase=dbManager.readOnePurchase(idPurchase)
+                purchase=dbManager.getPurchase(idPurchase)
                 if(purchase!=null){
                     rootElement.apply {
                         //content_temp=Html.fromHtml(purchase!!.content_html,0).makeSpannableString()
@@ -93,7 +93,7 @@ class EditPurchaseActivity : AppCompatActivity() {
                         edSummaPurchase.setText(purchase!!.summa.toString())
                         initDateTime()
                     }
-                    val purchaseItems=dbManager.readPurchaseItems(idPurchase)
+                    val purchaseItems=dbManager.getPurchaseItems(idPurchase)
                     (rootElement.vpPurchaseItems.adapter as CardItemPurchaseRcAdapter).update(purchaseItems)
                 }
             }
