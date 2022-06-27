@@ -16,9 +16,10 @@ import com.vk.vsvans.BlogShop.util.FilterForActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class ActivityViewModel(context: Context): ViewModel() {
-    private val mDbRepositoryImpl:IDbRepository=DbRepositoryImpl(context)
-
+//class ActivityViewModel(context: Context): ViewModel() {
+class ActivityViewModel(application: Application): AndroidViewModel(application) {
+    //private val mDbRepositoryImpl:IDbRepository=DbRepositoryImpl(context)
+    private val mDbRepositoryImpl:IDbRepository=DbRepositoryImpl(application.applicationContext)
     //add
 //    val livePurchaseData= MutableLiveData<ArrayList<Purchase>>()
 //    fun loadAllPurchases(filter: FilterForActivity){
