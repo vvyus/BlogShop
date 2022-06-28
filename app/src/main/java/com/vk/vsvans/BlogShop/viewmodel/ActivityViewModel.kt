@@ -1,11 +1,8 @@
 package com.vk.vsvans.BlogShop.viewmodel
 
-import android.annotation.SuppressLint
 import android.app.Application
-import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.vk.vsvans.BlogShop.model.data.Product
 import com.vk.vsvans.BlogShop.model.data.Purchase
 import com.vk.vsvans.BlogShop.model.data.PurchaseItem
@@ -21,15 +18,19 @@ class ActivityViewModel(application: Application): AndroidViewModel(application)
     //private val mDbRepositoryImpl:IDbRepository=DbRepositoryImpl(context)
     private val mDbRepositoryImpl:IDbRepository=DbRepositoryImpl(application.applicationContext)
     //add
-//    val livePurchaseData= MutableLiveData<ArrayList<Purchase>>()
-//    fun loadAllPurchases(filter: FilterForActivity){
-//        mDbRepositoryImpl.getAllPurchases(filter,object:IDbRepository.ReadDataCallback{
-//            override fun readData(list: ArrayList<Purchase>) {
-//                livePurchaseData.value=list
-//            }
-//
-//        })
-//    }
+    val livePurchaseList= MutableLiveData<ArrayList<Purchase>>()
+    var liveCalendarEvents= MutableLiveData<HashMap<String, Int>>()
+    var liveAmount=MutableLiveData<Double>(0.0)
+    fun loadAllPurchases(filter: FilterForActivity){
+        mDbRepositoryImpl.getAllPurchases(filter,object:IDbRepository.ReadDataCallback{
+            override fun readData(list: ArrayList<Purchase>,hm:HashMap<String, Int>,amount:Double) {
+                livePurchaseList.value=list
+                liveCalendarEvents.value=hm
+                liveAmount.value=amount//MutableLiveData<Double>(amount)
+            }
+
+        })
+    }
     //add
 
     fun openDb(){

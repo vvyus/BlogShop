@@ -67,6 +67,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     lateinit var launcherGetPermission:ActivityResultLauncher<String>
     lateinit var launcherEPA:ActivityResultLauncher<Intent>
 
+    var livePurchaseList_size=0
+    var liveAmount=0.0
+    var liveCalendarEvents=HashMap<String, Int>()
+
     val adapter= PurchaseRcAdapter(object:OnClickItemCallback{
         override fun onClickItem(id:Int) {
             if(id>0) {
@@ -144,40 +148,41 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         })//adapter set call back
 
-        //initViewModel()
+        initViewModel()
 
     }//on create
 
-//    private fun initViewModel(){
-//        //{} это слушатель
-//        //если наше activity доступно не разрушено или ждет когда можно обновить слушателт сработает
-//        viewModel.livePurchaseData.observe(this,{
-//            adapter.updateAdapter(it)
-//        })
-//    }
+    private fun initViewModel(){
+        //{} это слушатель
+        //если наше activity доступно не разрушено или ждет когда можно обновить слушателт сработает
+        viewModel?.livePurchaseList?.observe(this,{
+            adapter.updateAdapter(it)
+            livePurchaseList_size=it.size
+
+        })
+
+        viewModel?.liveAmount?.observe(this,{
+            liveAmount=it
+        })
+
+        viewModel?.liveCalendarEvents?.observe(this, {
+            if(!isSetFilter()) {
+                calendar_events.clear()
+                calendar_events.putAll(it)
+            }
+        })
+
+    }
 
      @RequiresApi(Build.VERSION_CODES.N)
     fun onSellerClick(purchase: Purchase) {
-        var str=""
-        job?.cancel()
-        job = CoroutineScope(Dispatchers.Main).launch{
-            if( filter_fact.idSeller!=null ) {
-                filter_fact.idSeller=null
-//                fillAdapter(str)
-//                resetFilterPanel()
-            }else{
-                filter_fact.idSeller=purchase.idseller
-//                val purchaseList = ArrayList<Purchase>()
-//                val amount = dbManager.queryPurchases(purchase.idseller,purchaseList)
-//                adapter.updateAdapter(purchaseList)
-//                setFilterPanel(amount,purchaseList.size)
-            }
-            val purchaseList = ArrayList<Purchase>()
-            val amount = viewModel!!.getPurchases(filter_fact,purchaseList)//dbManager.getPurchases(filter_fact,purchaseList)
-            adapter.updateAdapter(purchaseList)
-            if(isSetFilter()) setFilterPanel(amount,purchaseList.size)
-            else resetFilterPanel()
-        }
+
+         if( filter_fact.idSeller!=null ) {
+             filter_fact.idSeller=null
+         }else{
+             filter_fact.idSeller=purchase.idseller
+         }
+         fillAdapter()
     }
 
     fun isSetFilter():Boolean{
@@ -201,18 +206,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     fun fillAdapter() {
         job?.cancel()
         job = CoroutineScope(Dispatchers.Main).launch{
-            val purchaseList = ArrayList<Purchase>()
-            var amount=0.0
+            viewModel!!.loadAllPurchases(filter_fact)
+
             if(isSetFilter()) {
-                amount =viewModel!!.getPurchases(filter_fact,purchaseList) //dbManager.getPurchases(filter_fact,purchaseList)
-            } else {
-                calendar_events.clear()
-                amount = viewModel!!.getPurchases(filter_fact, purchaseList, calendar_events)//dbManager.getPurchases(filter_fact, purchaseList, calendar_events)
+                setFilterPanel(liveAmount,livePurchaseList_size)
             }
-
-            adapter.updateAdapter(purchaseList)
-
-            if(isSetFilter()) setFilterPanel(amount,purchaseList.size)
             else resetFilterPanel()
         }
     }

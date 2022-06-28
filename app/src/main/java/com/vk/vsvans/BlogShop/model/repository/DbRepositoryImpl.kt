@@ -6,6 +6,7 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.provider.BaseColumns
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import com.vk.vsvans.BlogShop.model.MyDbHelper
 import com.vk.vsvans.BlogShop.model.data.Product
 import com.vk.vsvans.BlogShop.model.data.Purchase
@@ -472,8 +473,12 @@ class DbRepositoryImpl(context: Context):IDbRepository {
     // ADD
     override fun getAllPurchases(filter: FilterForActivity,readDataCallback: IDbRepository.ReadDataCallback?){
         val purchaseArray=ArrayList<Purchase>()
-        getPurchases(filter,purchaseArray)
-        if(readDataCallback!=null)readDataCallback.readData(purchaseArray)
+        val purchaseCalendarEvents= HashMap<String, Int>()
+        var amount=0.0
+        amount=getPurchases(filter,purchaseArray,purchaseCalendarEvents)
+        if(readDataCallback!=null)readDataCallback.readData(purchaseArray,purchaseCalendarEvents,
+            amount
+        )
     }
 
 
