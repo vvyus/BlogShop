@@ -1,6 +1,8 @@
 package com.vk.vsvans.BlogShop.viewmodel
 
+import android.annotation.SuppressLint
 import android.app.Application
+import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.vk.vsvans.BlogShop.model.data.Product
@@ -16,11 +18,13 @@ import kotlinx.coroutines.withContext
 //class ActivityViewModel(context: Context): ViewModel() {
 class ActivityViewModel(application: Application): AndroidViewModel(application) {
     //private val mDbRepositoryImpl:IDbRepository=DbRepositoryImpl(context)
-    private val mDbRepositoryImpl:IDbRepository=DbRepositoryImpl(application.applicationContext)
+    @SuppressLint("StaticFieldLeak")
+    val context:Context=application.applicationContext
+    private val mDbRepositoryImpl:IDbRepository=DbRepositoryImpl(context)
     //add
     val livePurchaseList= MutableLiveData<ArrayList<Purchase>>()
-    var liveCalendarEvents= MutableLiveData<HashMap<String, Int>>()
-    var liveAmount=MutableLiveData<Double>(0.0)
+    val liveCalendarEvents= MutableLiveData<HashMap<String, Int>>()
+    val liveAmount=MutableLiveData<Double>(0.0)
     fun loadAllPurchases(filter: FilterForActivity){
         mDbRepositoryImpl.getAllPurchases(filter,object:IDbRepository.ReadDataCallback{
             override fun readData(list: ArrayList<Purchase>,hm:HashMap<String, Int>,amount:Double) {

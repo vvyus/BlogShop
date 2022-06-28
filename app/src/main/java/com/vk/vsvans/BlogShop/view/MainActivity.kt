@@ -39,6 +39,7 @@ import com.vk.vsvans.BlogShop.util.FilterForActivity
 import com.vk.vsvans.BlogShop.util.UtilsHelper
 import com.vk.vsvans.BlogShop.util.UtilsString
 import com.vk.vsvans.BlogShop.util.isPermissinGrant
+import com.vk.vsvans.BlogShop.view.dialog.ProgressDialog
 import com.vk.vsvans.BlogShop.viewmodel.ActivityViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -138,7 +139,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     override fun cancelFilter() {
                         filter_fact.dates_begin=null
                         filter_fact.dates_end=null
-                        resetFilterPanel()
+                        //resetFilterPanel()
                         fillAdapter()
                     }
                 },filter_fact,time)
@@ -386,10 +387,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         DialogHelper.showLoadChecksDialog(this@MainActivity,object: IDialogImportChecks{
             @RequiresApi(Build.VERSION_CODES.N)
             override fun import_checks() {
+
                 job?.cancel()
                 job = CoroutineScope(Dispatchers.Main).launch{
-                    import_checks.doImport(this@MainActivity)
-                    fillAdapter()
+                    if(viewModel!=null) {
+                        val dialog = ProgressDialog.createProgressDialog(this@MainActivity )
+                        import_checks.doImport(viewModel!!)
+                        fillAdapter()
+                        dialog.dismiss()
+                    }
                 }
 
             }

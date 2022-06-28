@@ -1,5 +1,6 @@
 package com.vk.vsvans.BlogShop.model.fns
 
+import android.app.Activity
 import android.content.Context
 import android.os.Build
 import android.os.Environment
@@ -15,6 +16,7 @@ import com.vk.vsvans.BlogShop.model.data.Seller
 import com.vk.vsvans.BlogShop.util.DateTimeUtils
 import com.vk.vsvans.BlogShop.util.makeSpannableString
 import com.vk.vsvans.BlogShop.util.plus
+import com.vk.vsvans.BlogShop.viewmodel.ActivityViewModel
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.BufferedReader
@@ -23,10 +25,9 @@ import java.io.IOException
 
 object import_checks {
    @RequiresApi(Build.VERSION_CODES.N)
-   suspend fun doImport(context: Context){
-       val separator=(context as MainActivity).resources.getString(R.string.SEPARATOR)
-       val viewModel=(context as MainActivity).viewModel
-       val title_color=(context as MainActivity).getColor(R.color.green_main)
+   suspend fun doImport(viewModel:ActivityViewModel){
+       val separator=(viewModel.context).resources.getString(R.string.SEPARATOR)
+       val title_color=(viewModel.context).getColor(R.color.green_main)
        var fn=""
        var fd=""
        var fp=""
@@ -40,7 +41,7 @@ object import_checks {
        var dateTimeLong:Long?=0
         val path= Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath
         val files= File(path).listFiles()
-       val dialog = ProgressDialog.createProgressDialog(context)
+
         files?.forEach{ itf ->
             println(itf.name)
 
@@ -159,6 +160,6 @@ object import_checks {
             }
 
         }//files
-       dialog.dismiss()
+
     }//func
 }
