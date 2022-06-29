@@ -14,23 +14,22 @@ import androidx.appcompat.app.AppCompatActivity
 import com.vk.vsvans.BlogShop.R
 import com.vk.vsvans.BlogShop.view.adapter.CardItemPurchaseRcAdapter
 import com.vk.vsvans.BlogShop.databinding.ActivityEditPurchaseBinding
+import com.vk.vsvans.BlogShop.model.data.*
 import com.vk.vsvans.BlogShop.view.dialog.DialogHelper
 import com.vk.vsvans.BlogShop.view.fragment.PurchaseItemListFragment
 import com.vk.vsvans.BlogShop.view.`interface`.IFragmentCallBack
 import com.vk.vsvans.BlogShop.view.`interface`.IFragmentCloseInterface
 import com.vk.vsvans.BlogShop.view.`interface`.IUpdatePurchaseItemList
-import com.vk.vsvans.BlogShop.model.data.Purchase
-import com.vk.vsvans.BlogShop.model.data.PurchaseItem
-import com.vk.vsvans.BlogShop.model.data.Seller
-import com.vk.vsvans.BlogShop.model.repository.DbManager
 import com.vk.vsvans.BlogShop.view.dialog.DialogSpinnerHelper
 import com.vk.vsvans.BlogShop.util.*
+import com.vk.vsvans.BlogShop.viewmodel.ActivityViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.text.*
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class EditPurchaseActivity : AppCompatActivity() {
@@ -46,45 +45,61 @@ class EditPurchaseActivity : AppCompatActivity() {
 
     private var job: Job?=null
     // для работы с firebase
-    //private lateinit var dbManager:DbManager
-    val dbManager= DbManager(this)
+    //val dbManager= DbManager(this)
+    var viewModel: ActivityViewModel?=null
 
     var idPurchase =0
     private var purchase: Purchase? = null
     private var listDeletedPurchaseItems=ArrayList<PurchaseItem>()
-
+    var listProducts=ArrayList<Product>()
+    private var listSellers=ArrayList<Seller>()
     //var content_temp:SpannableString="".makeSpannableString()
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel= ActivityViewModel(application)
         rootElement= ActivityEditPurchaseBinding.inflate(layoutInflater)
         setContentView(rootElement.root)
         val intent=getIntent()
         idPurchase=intent.getIntExtra(R.string.PURCHASE_ID.toString(), 0)
         initPurchase()
         init()
+        initViewModel()
         //initToolbar()
+    }
+
+    private fun initViewModel(){
+        //{} это слушатель
+        //если наше activity доступно не разрушено или ждет когда можно обновить слушателт сработает
+        viewModel?.liveSellerList?.observe(this,{
+            listSellers.clear()
+            listSellers.addAll(it)
+        })
+        viewModel?.liveProductList?.observe(this,{
+            listProducts.clear()
+            listProducts.addAll(it)
+        })
     }
 
     override fun onResume() {
         super.onResume()
-        dbManager.openDb()
+        viewModel!!.openDb()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        dbManager.closeDb()
+        viewModel!!.closeDb()
         job?.cancel()
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
     private fun initPurchase(){
         if(idPurchase>0) {
-            dbManager.openDb()
+            //dbManager.openDb()
             job?.cancel()
             job = CoroutineScope(Dispatchers.Main).launch{
-                purchase=dbManager.getPurchase(idPurchase)
+                purchase=viewModel!!.getPurchase(idPurchase)
                 if(purchase!=null){
                     rootElement.apply {
                         //content_temp=Html.fromHtml(purchase!!.content_html,0).makeSpannableString()
@@ -93,7 +108,7 @@ class EditPurchaseActivity : AppCompatActivity() {
                         edSummaPurchase.setText(purchase!!.summa.toString())
                         initDateTime()
                     }
-                    val purchaseItems=dbManager.getPurchaseItems(idPurchase)
+                    val purchaseItems=viewModel!!.getPurchaseItems(idPurchase)
                     (rootElement.vpPurchaseItems.adapter as CardItemPurchaseRcAdapter).update(purchaseItems)
                 }
             }
@@ -114,12 +129,13 @@ class EditPurchaseActivity : AppCompatActivity() {
             val dialog= DialogSpinnerHelper()
             DialogHelper.job?.cancel()
             DialogHelper.job = CoroutineScope(Dispatchers.Main).launch {
-                val listSeller = dialog.getAllSeller(this@EditPurchaseActivity)
+                //val listSeller = dialog.getAllSeller(this@EditPurchaseActivity)
+                viewModel!!.getSellers("")
                 var idseller=0
                 if(rootElement.tvSellerSelect.tag==null || (rootElement.tvSellerSelect.tag as Seller)==null) idseller=purchase!!.idseller
                 else idseller=(rootElement.tvSellerSelect.tag as Seller).id
                 rootElement.tvSellerSelect.setTag(idseller)
-                dialog.showSpinnerDialog(this@EditPurchaseActivity, listSeller, rootElement.tvSellerSelect)
+                dialog.showSpinnerDialog(this@EditPurchaseActivity, listSellers as ArrayList<BaseList>, rootElement.tvSellerSelect)
             }
         }
         if(idPurchase==0) rootElement.purchaseItemButton.visibility=View.VISIBLE
@@ -191,7 +207,7 @@ class EditPurchaseActivity : AppCompatActivity() {
         rootElement.apply {
             job?.cancel()
             job = CoroutineScope(Dispatchers.Main).launch{
-               if(dbManager!=null) {
+               if(viewModel!=null) {
                    //здесь то что редактируется а не пришло из фрагмента
                    purchase!!.summa= edSummaPurchase.value.toDouble();//.text.toString().toDouble()
                    //purchase!!.title=edTitle.text.toString()
@@ -204,9 +220,9 @@ class EditPurchaseActivity : AppCompatActivity() {
                    purchase!!.time= DateTimeUtils.parseDateTimeString(rootElement.edDatePart.text.toString()+" "+rootElement.edTimePart.text.toString())!!
                    if(idPurchase>0){
                        //dbManager.updatePurchase(idPurchase,edTitle.text.toString(),edDescription.text.toString())
-                       dbManager.updatePurchase(purchase!!)
+                       viewModel!!.updatePurchase(purchase!!)
                    }else{
-                       idPurchase= dbManager.insertPurchase(purchase!!)!!
+                       idPurchase= viewModel!!.insertPurchase(purchase!!)!!
                        purchase!!.id=idPurchase
                    }
 
@@ -227,13 +243,13 @@ class EditPurchaseActivity : AppCompatActivity() {
                        if(pit.id==0){
                            //set idPurchase when new Purchase
                            pit.idPurchase=idPurchase
-                           dbManager.insertPurchaseItem(pit)
+                           viewModel!!.insertPurchaseItem(pit)
                        }else{
-                           dbManager.updatePurchaseItem(pit)
+                           viewModel!!.updatePurchaseItem(pit)
                        }
                    }
                    for(pit: PurchaseItem in listDeletedPurchaseItems){
-                       dbManager.removePurchaseItem(pit.id)
+                       viewModel!!.removePurchaseItem(pit.id)
                    }
                    listDeletedPurchaseItems=ArrayList<PurchaseItem>()
                }//dbManager
@@ -306,11 +322,14 @@ class EditPurchaseActivity : AppCompatActivity() {
 // добавить новую позицию покупки
     fun onClickAddPurchaseItem(view: View){
         if(purchaseItemFragment!=null){
+            viewModel!!.getProducts("")
             val pit= PurchaseItem()
             //новая запись
             pit.id=0
             pit.idPurchase=idPurchase
-            DialogHelper.showPurchaseItemInputDialog(this@EditPurchaseActivity,pit,
+            DialogHelper.showPurchaseItemInputDialog(this@EditPurchaseActivity,
+                pit,
+                listProducts as ArrayList<BaseList>,
                 object: IUpdatePurchaseItemList {
                     override fun onUpdatePurchaseItemList(pit: PurchaseItem) {
                         purchaseItemFragment!!.adapter.updateAdapterInsert(pit)

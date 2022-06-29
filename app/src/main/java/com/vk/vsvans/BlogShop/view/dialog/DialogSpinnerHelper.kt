@@ -10,8 +10,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.vk.vsvans.BlogShop.R
-import com.vk.vsvans.BlogShop.view.EditPurchaseActivity
 import com.vk.vsvans.BlogShop.model.data.BaseList
+import com.vk.vsvans.BlogShop.model.data.Seller
 import com.vk.vsvans.BlogShop.view.adapter.DialogSpinnerBaselistAdapter
 
 class DialogSpinnerHelper {
@@ -30,7 +30,7 @@ class DialogSpinnerHelper {
         rcView.adapter=adapter
         // builder нужен уже готовый view
         dialog.setView(rootView)
-        adapter.updateAdapter(list)
+        adapter.updateAdapter(list as ArrayList<BaseList>)
         val pos=adapter.setSelectionPosById(id_baselist)
         // if id found set position on id
         if(pos>0) (rcView.layoutManager as LinearLayoutManager).scrollToPosition(pos)
@@ -76,18 +76,18 @@ class DialogSpinnerHelper {
         }
         return tempList
     }
-    suspend fun getAllSeller(context: Context):ArrayList<BaseList> {
-        val sellerArray=(context as EditPurchaseActivity).dbManager.getSellers("")
-        val baselistArray=ArrayList<BaseList>()
-        baselistArray.addAll(sellerArray)
-        return baselistArray
-    }
-
-    suspend fun getAllProduct(context: Context): ArrayList<BaseList> {
-        val productArray=(context as EditPurchaseActivity).dbManager.getProducts("")
-        val baselistArray=ArrayList<BaseList>()
-        baselistArray.addAll(productArray)
-        return baselistArray
-    }
+//    suspend fun getAllSeller(context: Context):ArrayList<BaseList> {
+//        val sellerArray=(context as EditPurchaseActivity).viewModel!!.getSellers("")
+//        val baselistArray=ArrayList<BaseList>()
+//        baselistArray.addAll(sellerArray)
+//        return baselistArray
+//    }
+//
+//    suspend fun getAllProduct(context: Context): ArrayList<BaseList> {
+//        val productArray=(context as EditPurchaseActivity).viewModel!!.getProducts("")
+//        val baselistArray=ArrayList<BaseList>()
+//        baselistArray.addAll(productArray)
+//        return baselistArray
+//    }
 
 }

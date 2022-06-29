@@ -3,14 +3,12 @@ package com.vk.vsvans.BlogShop.viewmodel
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
-import android.provider.BaseColumns
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.vk.vsvans.BlogShop.model.data.Product
 import com.vk.vsvans.BlogShop.model.data.Purchase
 import com.vk.vsvans.BlogShop.model.data.PurchaseItem
 import com.vk.vsvans.BlogShop.model.data.Seller
-import com.vk.vsvans.BlogShop.model.repository.DbName
 import com.vk.vsvans.BlogShop.model.repository.DbRepositoryImpl
 import com.vk.vsvans.BlogShop.model.repository.IDbRepository
 import com.vk.vsvans.BlogShop.util.FilterForActivity
@@ -67,14 +65,14 @@ class ActivityViewModel(application: Application): AndroidViewModel(application)
         mDbRepositoryImpl.closeDb()
     }
 
-    suspend fun getPurchases(filter: FilterForActivity, purchaseList: ArrayList<Purchase>,
-                     calendar_events: HashMap<String, Int>): Double = withContext(Dispatchers.IO) {
-        return@withContext mDbRepositoryImpl.getPurchases(filter,purchaseList, calendar_events)
-    }
-
-    suspend fun getPurchases(filter: FilterForActivity, purchaseList: ArrayList<Purchase>): Double = withContext(Dispatchers.IO) {
-        return@withContext mDbRepositoryImpl.getPurchases(filter,purchaseList)
-    }
+//    suspend fun getPurchases(filter: FilterForActivity, purchaseList: ArrayList<Purchase>,
+//                     calendar_events: HashMap<String, Int>): Double = withContext(Dispatchers.IO) {
+//        return@withContext mDbRepositoryImpl.getPurchases(filter,purchaseList, calendar_events)
+//    }
+//
+//    suspend fun getPurchases(filter: FilterForActivity, purchaseList: ArrayList<Purchase>): Double = withContext(Dispatchers.IO) {
+//        return@withContext mDbRepositoryImpl.getPurchases(filter,purchaseList)
+//    }
 
     fun removePurchase(id: Int){
         mDbRepositoryImpl.removePurchase(id)
@@ -102,6 +100,10 @@ class ActivityViewModel(application: Application): AndroidViewModel(application)
 
     suspend fun insertPurchaseItem(pit: PurchaseItem) = withContext(Dispatchers.IO) {
         return@withContext mDbRepositoryImpl.insertPurchaseItem(pit)
+    }
+
+    suspend fun getPurchase(idPurchase: Int): Purchase? = withContext(Dispatchers.IO) {
+        return@withContext mDbRepositoryImpl.getPurchase(idPurchase)
     }
 
     suspend fun getProductsFns(key: String): ArrayList<Product> = withContext(Dispatchers.IO) {
@@ -138,6 +140,19 @@ class ActivityViewModel(application: Application): AndroidViewModel(application)
 
     fun removeSeller(id: Int){
         mDbRepositoryImpl.removeSeller(id)
+    }
+
+// PURCAHSE items
+    suspend fun removePurchaseItem(id: Int) = withContext(Dispatchers.IO) {
+        mDbRepositoryImpl.removePurchaseItem(id)
+    }
+
+    suspend fun updatePurchaseItem(pit: PurchaseItem) = withContext(Dispatchers.IO) {
+        mDbRepositoryImpl.updatePurchaseItem(pit)
+    }
+
+    suspend fun getPurchaseItems(idPurchase: Int): ArrayList<PurchaseItem> = withContext(Dispatchers.IO) {
+        return@withContext mDbRepositoryImpl.getPurchaseItems(idPurchase)
     }
 
 }

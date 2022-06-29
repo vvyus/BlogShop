@@ -139,7 +139,7 @@ class DialogSpinnerBaselistAdapter(var tvSelection: TextView, var dialog: AlertD
         }
     }
 
-    fun updateAdapter(list:ArrayList<BaseList>){
+    fun updateAdapter(list: ArrayList<BaseList>){
         mainList.clear()
         mainList.addAll(list)
         notifyDataSetChanged()

@@ -23,7 +23,6 @@ import com.vk.vsvans.BlogShop.view.`interface`.*
 import com.vk.vsvans.BlogShop.model.data.BaseList
 import com.vk.vsvans.BlogShop.model.data.Product
 import com.vk.vsvans.BlogShop.model.data.PurchaseItem
-import com.vk.vsvans.BlogShop.model.data.Seller
 import com.vk.vsvans.BlogShop.util.FilterForActivity
 import com.vk.vsvans.BlogShop.util.UtilsHelper
 import kotlinx.coroutines.CoroutineScope
@@ -31,6 +30,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.util.*
+import kotlin.collections.ArrayList
 import com.vk.vsvans.BlogShop.R as R1
 
 
@@ -86,7 +86,7 @@ object DialogHelper {
 
     }
 
-    fun showPurchaseItemInputDialog(context: Context, pit: PurchaseItem, iupdatePurchaseItemList: IUpdatePurchaseItemList) {
+    fun showPurchaseItemInputDialog(context: Context, pit: PurchaseItem,listProduct:ArrayList<BaseList> ,iupdatePurchaseItemList: IUpdatePurchaseItemList) {
         val customDialog = AlertDialog.Builder(context, 0).create()
         val inflater: LayoutInflater =(context as EditPurchaseActivity).layoutInflater
 
@@ -109,7 +109,8 @@ object DialogHelper {
             val dialog= DialogSpinnerHelper()
             job?.cancel()
             job = CoroutineScope(Dispatchers.Main).launch {
-                val listProduct = dialog.getAllProduct(context)
+                //val listProduct = dialog.getAllProduct(context)
+
                 var idProduct=0
                 if(tvProduct.tag==null || (tvProduct.tag as Product)==null) idProduct=pit!!.idProduct
                 else idProduct=(tvProduct.tag as Product).id
