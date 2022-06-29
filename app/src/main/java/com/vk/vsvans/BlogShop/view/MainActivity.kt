@@ -1,7 +1,6 @@
 package com.vk.vsvans.BlogShop.view
 
 import android.Manifest
-import android.app.Application
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
@@ -15,7 +14,6 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -33,7 +31,6 @@ import com.vk.vsvans.BlogShop.view.dialog.DialogHelper
 import com.vk.vsvans.BlogShop.model.fns.import_checks
 import com.vk.vsvans.BlogShop.view.`interface`.*
 import com.vk.vsvans.BlogShop.model.data.BaseList
-import com.vk.vsvans.BlogShop.model.repository.DbManager
 import com.vk.vsvans.BlogShop.model.data.Purchase
 import com.vk.vsvans.BlogShop.util.FilterForActivity
 import com.vk.vsvans.BlogShop.util.UtilsHelper
@@ -207,7 +204,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     fun fillAdapter() {
         job?.cancel()
         job = CoroutineScope(Dispatchers.Main).launch{
-            viewModel!!.loadAllPurchases(filter_fact)
+            viewModel!!.getPurchases(filter_fact)
 
             if(isSetFilter()) {
                 setFilterPanel(liveAmount,livePurchaseList_size)

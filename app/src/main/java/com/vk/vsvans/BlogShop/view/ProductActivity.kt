@@ -24,6 +24,7 @@ import com.vk.vsvans.BlogShop.view.`interface`.OnClickItemCallback
 import com.vk.vsvans.BlogShop.model.data.BaseList
 import com.vk.vsvans.BlogShop.model.repository.DbManager
 import com.vk.vsvans.BlogShop.model.data.Product
+import com.vk.vsvans.BlogShop.viewmodel.ActivityViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -34,7 +35,8 @@ class ProductActivity : AppCompatActivity() {
     private lateinit var rootElement: ActivityProductBinding
     lateinit var adapter: BaseListRcAdapter
     private lateinit var tb: Toolbar
-    val dbManager= DbManager(this)
+    var viewModel: ActivityViewModel?=null
+    //val dbManager= DbManager(this)
     private var job: Job? = null
     private var selectedId=0
     private lateinit var searchView:SearchView
@@ -42,6 +44,7 @@ class ProductActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel= ActivityViewModel(application)
         rootElement= ActivityProductBinding.inflate(layoutInflater)
         val view=rootElement.root
         setContentView(view)
@@ -66,7 +69,7 @@ class ProductActivity : AppCompatActivity() {
                             override fun onUpdateBaseListItemList(product: BaseList) {
                                 // add single product
                                 adapter.updateAdapterEdit(product)
-                                dbManager.updateProduct(product as Product)
+                                viewModel!!.updateProduct(product as Product)
                             }
 
                         }
@@ -81,10 +84,10 @@ class ProductActivity : AppCompatActivity() {
                             override fun onDeleteItem(id:Int) {
                                 adapter.deleteBaseListItem()
                                 val parent=adapter.getParent()
-                                if(parent!=null) dbManager.updateProduct(parent as Product)
+                                if(parent!=null) viewModel!!.updateProduct(parent as Product)
                                 //reset selectedId
                                 //selectedId=0
-                                dbManager.removeProduct(id)
+                                viewModel!!.removeProduct(id)
                             }
 
                         })
@@ -105,16 +108,16 @@ class ProductActivity : AppCompatActivity() {
                 DialogHelper.showBaseListInputDialog(this@ProductActivity,product,
                     object: IUpdateBaseListItemList {
                         override fun onUpdateBaseListItemList(product: BaseList) {
-                            val id=dbManager.insertProduct(product as Product)
+                            val id=viewModel!!.insertProduct(product as Product)
                             if (id != null) {
                                 product.id=id
                                 product.fullpath=parent.fullpath+id.toString()
                                 // update product array in adapter
                                 adapter.updateAdapterInsert(product)
                                 // update count for parent
-                                dbManager.updateProduct(parent as Product)
+                                viewModel!!.updateProduct(parent as Product)
                                 // update fullpath for product
-                                dbManager.updateProduct(product)
+                                viewModel!!.updateProduct(product)
                             }
                         }
 
@@ -150,23 +153,23 @@ class ProductActivity : AppCompatActivity() {
                                   product.level = parent.level + 1
                                   // set count for new parent
                                   parent.count=parent.count+1
-                                  dbManager.updateProduct(parent as Product)
+                                  viewModel!!.updateProduct(parent as Product)
                               }
                               // replace all children where idparent==product.idparent
                               if(product.count>0){
                                   adapter.childArray.clear()
                                   adapter.setChildren(product.id,product.fullpath,product.level)
                                   for(i in 0 until adapter.childArray.size)
-                                      dbManager.updateProduct(adapter.childArray[i] as Product)
+                                      viewModel!!.updateProduct(adapter.childArray[i] as Product)
                                   adapter.childArray.clear()
                               }
                               if(oldparent!=null){
                                   oldparent.count=oldparent.count-1
-                                  dbManager.updateProduct(oldparent as Product)
+                                  viewModel!!.updateProduct(oldparent as Product)
                               }
                               // update count for parent
                               adapter.updateAdapterParent(oldparent,parent,product)
-                              dbManager.updateProduct(product as Product)
+                              viewModel!!.updateProduct(product as Product)
                               //fillAdapter("")
                               //adapter.notifyDataSetChanged()
                           }
@@ -180,17 +183,28 @@ class ProductActivity : AppCompatActivity() {
         val rcView=rootElement.rcViewProductList
         rcView.layoutManager = LinearLayoutManager(this)
         rcView.adapter = adapter
+
+        initViewModel()
+
+    }// onCreate
+
+    private fun initViewModel(){
+        //{} это слушатель
+        //если наше activity доступно не разрушено или ждет когда можно обновить слушателт сработает
+        viewModel?.liveProductList?.observe(this,{
+            adapter.updateAdapter(it)
+        })
     }
 
     override fun onResume() {
         super.onResume()
-        dbManager.openDb()
+        viewModel!!.openDb()
         fillAdapter("")
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        dbManager.closeDb()
+        viewModel!!.closeDb()
         job?.cancel()
     }
 
@@ -207,11 +221,13 @@ class ProductActivity : AppCompatActivity() {
 
         job?.cancel()
         job = CoroutineScope(Dispatchers.Main).launch{
-            val list = dbManager.getProducts(text)
-            adapter.updateAdapter(list)
+//            val list = viewModel!!.getProducts(text)
+//            adapter.updateAdapter(list)
+            viewModel!!.getProducts(text)
         }
 
     }
+
 // add root element
     fun onClickAddProduct(view: View){
         val product= Product()
@@ -221,12 +237,12 @@ class ProductActivity : AppCompatActivity() {
             object: IUpdateBaseListItemList {
                 override fun onUpdateBaseListItemList(product: BaseList) {
                     // add single product
-                    val id=dbManager.insertProduct(product as Product)
+                    val id=viewModel!!.insertProduct(product as Product)
                     if (id != null) {
                         product.id=id
                         product.idparent=id
                         product.fullpath=id.toString()
-                        dbManager.updateProduct(product as Product)
+                        viewModel!!.updateProduct(product as Product)
                         adapter.updateAdapterInsert(product)
                     }
                 }

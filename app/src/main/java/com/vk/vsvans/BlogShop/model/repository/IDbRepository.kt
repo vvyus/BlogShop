@@ -41,4 +41,9 @@ interface IDbRepository {
     interface ReadDataCallback {
         fun readData(list: ArrayList<Purchase>,hm:HashMap<String, Int>,amount: Double)
     }
+    fun getAllProducts(filterString:String,readProductCallback: ReadProductCallback?)
+    interface ReadProductCallback {
+        fun readData(list: ArrayList<Product>)
+    }
+
 }

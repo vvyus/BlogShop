@@ -3,12 +3,14 @@ package com.vk.vsvans.BlogShop.viewmodel
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
+import android.provider.BaseColumns
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.vk.vsvans.BlogShop.model.data.Product
 import com.vk.vsvans.BlogShop.model.data.Purchase
 import com.vk.vsvans.BlogShop.model.data.PurchaseItem
 import com.vk.vsvans.BlogShop.model.data.Seller
+import com.vk.vsvans.BlogShop.model.repository.DbName
 import com.vk.vsvans.BlogShop.model.repository.DbRepositoryImpl
 import com.vk.vsvans.BlogShop.model.repository.IDbRepository
 import com.vk.vsvans.BlogShop.util.FilterForActivity
@@ -25,13 +27,23 @@ class ActivityViewModel(application: Application): AndroidViewModel(application)
     val livePurchaseList= MutableLiveData<ArrayList<Purchase>>()
     val liveCalendarEvents= MutableLiveData<HashMap<String, Int>>()
     val liveAmount=MutableLiveData<Double>(0.0)
-    fun loadAllPurchases(filter: FilterForActivity){
+    fun getPurchases(filter: FilterForActivity){
         mDbRepositoryImpl.getAllPurchases(filter,object:IDbRepository.ReadDataCallback{
             override fun readData(list: ArrayList<Purchase>,hm:HashMap<String, Int>,amount:Double) {
                 livePurchaseList.value=list
                 liveCalendarEvents.value=hm
                 liveAmount.value=amount//MutableLiveData<Double>(amount)
             }
+
+        })
+    }
+    //for list product
+    val liveProductList= MutableLiveData<ArrayList<Product>>()
+    fun getProducts(filterString:String){
+        mDbRepositoryImpl.getAllProducts(filterString,object:IDbRepository.ReadProductCallback{
+            override fun readData(list: ArrayList<Product>) {
+                liveProductList.value=list
+             }
 
         })
     }
@@ -94,11 +106,17 @@ class ActivityViewModel(application: Application): AndroidViewModel(application)
         return@withContext mDbRepositoryImpl.getProductsFns(key)
     }
 
-    suspend fun insertProduct(product: Product): Int?= withContext(Dispatchers.IO) {
-        return@withContext mDbRepositoryImpl.insertProduct(product)
+    //suspend fun insertProduct(product: Product): Int?= withContext(Dispatchers.IO) {
+    fun insertProduct(product: Product): Int? {
+        return mDbRepositoryImpl.insertProduct(product)
     }
 
-    suspend fun updateProduct(product: Product)= withContext(Dispatchers.IO) {
+    //suspend fun updateProduct(product: Product)= withContext(Dispatchers.IO) {
+    fun updateProduct(product: Product) {
         mDbRepositoryImpl.updateProduct(product)
+    }
+
+    fun removeProduct(id: Int){
+        mDbRepositoryImpl.removeProduct(id)
     }
 }
