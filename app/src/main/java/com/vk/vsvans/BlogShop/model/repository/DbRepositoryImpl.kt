@@ -484,7 +484,11 @@ class DbRepositoryImpl(context: Context):IDbRepository {
     override fun getAllProducts(filterString:String,readProductCallback: IDbRepository.ReadProductCallback?){
         //var productArray=ArrayList<Product>()
         val productArray=getProducts(filterString)
-        if(readProductCallback!=null)readProductCallback.readData(productArray
-        )
+        if(readProductCallback!=null)readProductCallback.readData(productArray)
+    }
+
+    override fun getAllSellers(filterString: String, readSellerCallback: IDbRepository.ReadSellerCallback?) {
+        val sellerArray=getSellers(filterString)
+        if(readSellerCallback!=null)readSellerCallback.readData(sellerArray)
     }
 }

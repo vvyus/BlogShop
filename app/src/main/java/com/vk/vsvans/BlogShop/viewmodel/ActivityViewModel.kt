@@ -47,6 +47,16 @@ class ActivityViewModel(application: Application): AndroidViewModel(application)
 
         })
     }
+    // for list seller
+    val liveSellerList= MutableLiveData<ArrayList<Seller>>()
+    fun getSellers(filterString:String){
+        mDbRepositoryImpl.getAllSellers(filterString,object:IDbRepository.ReadSellerCallback{
+            override fun readData(list: ArrayList<Seller>) {
+                liveSellerList.value=list
+            }
+
+        })
+    }
     //add
 
     fun openDb(){
@@ -86,14 +96,6 @@ class ActivityViewModel(application: Application): AndroidViewModel(application)
         return@withContext mDbRepositoryImpl.getSellersFns(key)
     }
 
-    suspend fun insertSeller(seller: Seller): Int?= withContext(Dispatchers.IO) {
-        return@withContext mDbRepositoryImpl.insertSeller(seller)
-    }
-
-    suspend fun updateSeller(seller: Seller)= withContext(Dispatchers.IO)  {
-        mDbRepositoryImpl.updateSeller(seller)
-    }
-
     suspend fun removePurchaseItems(idPurchase: Int) = withContext(Dispatchers.IO) {
         mDbRepositoryImpl.removePurchaseItems(idPurchase)
     }
@@ -106,12 +108,10 @@ class ActivityViewModel(application: Application): AndroidViewModel(application)
         return@withContext mDbRepositoryImpl.getProductsFns(key)
     }
 
-    //suspend fun insertProduct(product: Product): Int?= withContext(Dispatchers.IO) {
     fun insertProduct(product: Product): Int? {
         return mDbRepositoryImpl.insertProduct(product)
     }
 
-    //suspend fun updateProduct(product: Product)= withContext(Dispatchers.IO) {
     fun updateProduct(product: Product) {
         mDbRepositoryImpl.updateProduct(product)
     }
@@ -119,4 +119,25 @@ class ActivityViewModel(application: Application): AndroidViewModel(application)
     fun removeProduct(id: Int){
         mDbRepositoryImpl.removeProduct(id)
     }
+
+//    suspend fun insertSeller(seller: Seller): Int?= withContext(Dispatchers.IO) {
+//        return@withContext mDbRepositoryImpl.insertSeller(seller)
+//    }
+//
+//    suspend fun updateSeller(seller: Seller)= withContext(Dispatchers.IO)  {
+//        mDbRepositoryImpl.updateSeller(seller)
+//    }
+
+    fun insertSeller(seller: Seller): Int? {
+        return mDbRepositoryImpl.insertSeller(seller)
+    }
+
+    fun updateSeller(seller: Seller) {
+        mDbRepositoryImpl.updateSeller(seller)
+    }
+
+    fun removeSeller(id: Int){
+        mDbRepositoryImpl.removeSeller(id)
+    }
+
 }

@@ -46,4 +46,9 @@ interface IDbRepository {
         fun readData(list: ArrayList<Product>)
     }
 
+    fun getAllSellers(filterString:String,readSellerCallback: ReadSellerCallback?)
+    interface ReadSellerCallback {
+        fun readData(list: ArrayList<Seller>)
+    }
+
 }

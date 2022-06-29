@@ -24,6 +24,7 @@ import com.vk.vsvans.BlogShop.view.`interface`.OnClickItemCallback
 import com.vk.vsvans.BlogShop.model.data.BaseList
 import com.vk.vsvans.BlogShop.model.repository.DbManager
 import com.vk.vsvans.BlogShop.model.data.Seller
+import com.vk.vsvans.BlogShop.viewmodel.ActivityViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -33,7 +34,8 @@ class SellerActivity : AppCompatActivity() {
     private lateinit var rootElement: ActivitySellerBinding
     lateinit var adapter: BaseListRcAdapter
     private lateinit var tb: Toolbar
-    val dbManager= DbManager(this)
+    //val dbManager= DbManager(this)
+    var viewModel: ActivityViewModel?=null
     private var job: Job? = null
     private var selectedId=0
     private lateinit var searchView: SearchView
@@ -41,6 +43,7 @@ class SellerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel= ActivityViewModel(application)
         rootElement= ActivitySellerBinding.inflate(layoutInflater)
         val view=rootElement.root
         setContentView(view)
@@ -65,7 +68,7 @@ class SellerActivity : AppCompatActivity() {
                             override fun onUpdateBaseListItemList(seller: BaseList) {
                                 // add single seller
                                 adapter.updateAdapterEdit(seller)
-                                dbManager.updateSeller(seller as Seller)
+                                viewModel!!.updateSeller(seller as Seller)
                             }
 
                         }
@@ -80,10 +83,10 @@ class SellerActivity : AppCompatActivity() {
                             override fun onDeleteItem(id:Int) {
                                 adapter.deleteBaseListItem()
                                 val parent=adapter.getParent()
-                                if(parent!=null) dbManager.updateSeller(parent as Seller)
+                                if(parent!=null) viewModel!!.updateSeller(parent as Seller)
                                 //reset selectedId
                                 //selectedId=0
-                                dbManager.removeSeller(id)
+                                viewModel!!.removeSeller(id)
                             }
 
                         })
@@ -104,16 +107,16 @@ class SellerActivity : AppCompatActivity() {
                 DialogHelper.showBaseListInputDialog(this@SellerActivity,seller,
                     object: IUpdateBaseListItemList {
                         override fun onUpdateBaseListItemList(seller: BaseList) {
-                            val id=dbManager.insertSeller(seller as Seller)
+                            val id=viewModel!!.insertSeller(seller as Seller)
                             if (id != null) {
                                 seller.id=id
                                 seller.fullpath=parent.fullpath+id.toString()
                                 // update seller array in adapter
                                 adapter.updateAdapterInsert(seller)
                                 // update count for parent
-                                dbManager.updateSeller(parent as Seller)
+                                viewModel!!.updateSeller(parent as Seller)
                                 // update fullpath for seller
-                                dbManager.updateSeller(seller as Seller)
+                                viewModel!!.updateSeller(seller as Seller)
                             }
                         }
 
@@ -149,23 +152,23 @@ class SellerActivity : AppCompatActivity() {
                                     seller.level = parent.level + 1
                                     // set count for new parent
                                     parent.count=parent.count+1
-                                    dbManager.updateSeller(parent as Seller)
+                                    viewModel!!.updateSeller(parent as Seller)
                                 }
                                 // replace all children where idparent==seller.idparent
                                 if(seller.count>0){
                                     adapter.childArray.clear()
                                     adapter.setChildren(seller.id,seller.fullpath,seller.level)
                                     for(i in 0 until adapter.childArray.size)
-                                        dbManager.updateSeller(adapter.childArray[i] as Seller)
+                                        viewModel!!.updateSeller(adapter.childArray[i] as Seller)
                                     adapter.childArray.clear()
                                 }
                                 if(oldparent!=null){
                                     oldparent.count=oldparent.count-1
-                                    dbManager.updateSeller(oldparent as Seller)
+                                    viewModel!!.updateSeller(oldparent as Seller)
                                 }
                                 // update count for parent
                                 adapter.updateAdapterParent(oldparent,parent,seller)
-                                dbManager.updateSeller(seller as Seller)
+                                viewModel!!.updateSeller(seller as Seller)
                                 //fillAdapter("")
                                 //adapter.notifyDataSetChanged()
                             }
@@ -180,17 +183,26 @@ class SellerActivity : AppCompatActivity() {
         rcView.layoutManager = LinearLayoutManager(this)
         rcView.adapter = adapter
 
-    }
+        initViewModel()
 
+    }//onCreate
+
+    private fun initViewModel(){
+        //{} это слушатель
+        //если наше activity доступно не разрушено или ждет когда можно обновить слушателт сработает
+        viewModel?.liveSellerList?.observe(this,{
+            adapter.updateAdapter(it)
+        })
+    }
     override fun onResume() {
         super.onResume()
-        dbManager.openDb()
+        viewModel!!.openDb()
         fillAdapter("")
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        dbManager.closeDb()
+        viewModel!!.closeDb()
         job?.cancel()
     }
 
@@ -207,8 +219,9 @@ class SellerActivity : AppCompatActivity() {
 
         job?.cancel()
         job = CoroutineScope(Dispatchers.Main).launch{
-            val list = dbManager.getSellers(text)
-            adapter.updateAdapter(list)
+//            val list = dbManager.getSellers(text)
+//            adapter.updateAdapter(list)
+            viewModel!!.getSellers(text)
         }
 
     }
@@ -222,12 +235,12 @@ class SellerActivity : AppCompatActivity() {
             object: IUpdateBaseListItemList {
                 override fun onUpdateBaseListItemList(seller: BaseList) {
                     // add single product
-                    val id=dbManager.insertSeller(seller as Seller)
+                    val id=viewModel!!.insertSeller(seller as Seller)
                     if (id != null) {
                         seller.id=id
                         seller.idparent=id
                         seller.fullpath=id.toString()
-                        dbManager.updateSeller(seller as Seller)
+                        viewModel!!.updateSeller(seller as Seller)
                         adapter.updateAdapterInsert(seller)
                     }
                 }
