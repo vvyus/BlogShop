@@ -274,13 +274,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val str_count=count.toString().format(R.string.int_format)
         rootElement.mainContent.tvFilteredSumma.text=str_amount
         rootElement.mainContent.tvFilteredCount.text=str_count
-        rootElement.mainContent.llFilterdPanel.visibility=View.VISIBLE
+        rootElement.mainContent.cvFilterPanel.visibility=View.VISIBLE
     }
 
     private fun showFilterPanel(){
         rootElement.mainContent.tvFilteredSumma.text=""
         rootElement.mainContent.tvFilteredCount.text=""
-        rootElement.mainContent.llFilterdPanel.visibility=View.GONE
+        rootElement.mainContent.cvFilterPanel.visibility=View.GONE
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
