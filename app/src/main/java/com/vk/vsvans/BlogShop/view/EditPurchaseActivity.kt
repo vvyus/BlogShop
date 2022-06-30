@@ -80,6 +80,10 @@ class EditPurchaseActivity : AppCompatActivity() {
             listProducts.clear()
             listProducts.addAll(it)
         })
+        //
+        viewModel?.livePurchaseItemList?.observe(this,{
+            (rootElement.vpPurchaseItems.adapter as CardItemPurchaseRcAdapter).update(it)
+        })
     }
 
     override fun onResume() {
@@ -108,8 +112,9 @@ class EditPurchaseActivity : AppCompatActivity() {
                         edSummaPurchase.setText(purchase!!.summa.toString())
                         initDateTime()
                     }
-                    val purchaseItems=viewModel!!.getPurchaseItems(idPurchase)
-                    (rootElement.vpPurchaseItems.adapter as CardItemPurchaseRcAdapter).update(purchaseItems)
+//                    val purchaseItems=viewModel!!.getPurchaseItems(idPurchase)
+//                    (rootElement.vpPurchaseItems.adapter as CardItemPurchaseRcAdapter).update(purchaseItems)
+                    viewModel!!.getPurchaseItems(idPurchase)
                 }
             }
         }else {

@@ -491,4 +491,9 @@ class DbRepositoryImpl(context: Context):IDbRepository {
         val sellerArray=getSellers(filterString)
         if(readSellerCallback!=null)readSellerCallback.readData(sellerArray)
     }
+
+    override fun getAllPurchaseItems(idPurchase: Int, readPurchaseItemCallback: IDbRepository.ReadPurchaseItemCallback?) {
+        val purchaseItemArray= getPurchaseItems(idPurchase)
+        if(readPurchaseItemCallback!=null)readPurchaseItemCallback.readData(purchaseItemArray)
+    }
 }

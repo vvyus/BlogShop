@@ -51,4 +51,8 @@ interface IDbRepository {
         fun readData(list: ArrayList<Seller>)
     }
 
+    fun getAllPurchaseItems(idPurchase:Int,readPurchaseItemCallback: ReadPurchaseItemCallback?)
+    interface ReadPurchaseItemCallback {
+        fun readData(list: ArrayList<PurchaseItem>)
+    }
 }

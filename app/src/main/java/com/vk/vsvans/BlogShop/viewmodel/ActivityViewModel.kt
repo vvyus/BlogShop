@@ -55,7 +55,20 @@ class ActivityViewModel(application: Application): AndroidViewModel(application)
 
         })
     }
+    // for purchase item
+    val livePurchaseItemList= MutableLiveData<ArrayList<PurchaseItem>>()
+    fun getPurchaseItems(idPurchase: Int){
+        mDbRepositoryImpl.getAllPurchaseItems(idPurchase,object:IDbRepository.ReadPurchaseItemCallback{
+            override fun readData(list: ArrayList<PurchaseItem>) {
+                livePurchaseItemList.value=list
+            }
+
+        })
+    }
     //add
+//    suspend fun getPurchaseItems(idPurchase: Int): ArrayList<PurchaseItem> = withContext(Dispatchers.IO) {
+//        return@withContext mDbRepositoryImpl.getPurchaseItems(idPurchase)
+//    }
 
     fun openDb(){
         mDbRepositoryImpl.openDb()
@@ -151,8 +164,5 @@ class ActivityViewModel(application: Application): AndroidViewModel(application)
         mDbRepositoryImpl.updatePurchaseItem(pit)
     }
 
-    suspend fun getPurchaseItems(idPurchase: Int): ArrayList<PurchaseItem> = withContext(Dispatchers.IO) {
-        return@withContext mDbRepositoryImpl.getPurchaseItems(idPurchase)
-    }
 
 }
