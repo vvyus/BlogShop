@@ -1,14 +1,9 @@
 package com.vk.vsvans.BlogShop.model.fns
 
-import android.app.Activity
-import android.content.Context
 import android.os.Build
 import android.os.Environment
 import android.text.Html
 import androidx.annotation.RequiresApi
-import com.vk.vsvans.BlogShop.view.MainActivity
-import com.vk.vsvans.BlogShop.R
-import com.vk.vsvans.BlogShop.view.dialog.ProgressDialog
 import com.vk.vsvans.BlogShop.model.data.Product
 import com.vk.vsvans.BlogShop.model.data.Purchase
 import com.vk.vsvans.BlogShop.model.data.PurchaseItem
@@ -21,7 +16,9 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.File
+import java.io.FilenameFilter
 import java.io.IOException
+import java.util.*
 
 object import_checks {
    @RequiresApi(Build.VERSION_CODES.N)
@@ -38,9 +35,15 @@ object import_checks {
        var idFns=""
        var dateTimeLong:Long?=0
         val path= Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath
-        val files= File(path).listFiles()
 
-        files?.forEach{ itf ->
+       val files= File(path).listFiles(object : FilenameFilter {
+           override fun accept(dir: File?, name: String): Boolean {
+               return name.lowercase(Locale.getDefault()).endsWith(".json")
+           }
+       })
+  //      val files= File(path).listFiles()
+
+        files.forEach{ itf ->
             println(itf.name)
 
             try {
