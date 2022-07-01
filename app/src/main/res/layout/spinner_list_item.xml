@@ -6,10 +6,15 @@
 
     <TextView
         android:id="@+id/tvSpItem"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
+        android:fontFamily="sans-serif-medium"
+        android:padding="@dimen/default_margin"
         android:text="TextView"
+        android:textAlignment="textStart"
+        android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

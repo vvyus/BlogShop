@@ -1,7 +1,7 @@
 package com.vk.vsvans.BlogShop.calendar;
 import android.util.Log;
 
-import com.vk.vsvans.BlogShop.utils.UtilsHelper;
+import com.vk.vsvans.BlogShop.util.UtilsHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -17,7 +17,11 @@ public class DateManager {
     public DateManager(){
         mCalendar = Calendar.getInstance();
     }
-
+    public DateManager(Date startTme){
+        mCalendar = Calendar.getInstance();
+        //mStartTime=startTme;
+        mCalendar.setTime(startTme);
+    }
     //Get the elements of the month
     public List<Date> getDays(){
         //Keep current state

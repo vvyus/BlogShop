@@ -2,4 +2,8 @@
 <resources>
     <string name="PURCHASE_ID" translatable="false">PURCHASE_ID</string>
     <string name="SEPARATOR" translatable="false">♀</string>
+    <string name="double_format" translatable="false">%12.2d</string>
+    <string name="int_format" translatable="false">%10d</string>
+    <string name="new_purchase_time" translatable="false">NEW_PURCHASE_TIME</string>
+    <string name="old_purchase_time" translatable="false">OLD_PURCHASE_TIME</string>
 </resources>

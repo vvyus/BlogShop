@@ -14,6 +14,9 @@ import androidx.appcompat.widget.AppCompatButton;
 
 import com.vk.vsvans.BlogShop.R;
 
+import java.util.Date;
+import java.util.HashMap;
+
 public class CalendarAlertDialog extends AlertDialog {
     private long mInitialDate;
     private Long select_date;
@@ -31,15 +34,19 @@ public class CalendarAlertDialog extends AlertDialog {
 
     float initialX,initialY;
     boolean directionLeft;
+    Date mStartTime;
+    HashMap<String, Integer> mCalendar_events;
     public CalendarAlertDialog(Context context,
-                                  CalendarDialogAdapter.onItemClickListener listener,
-                                  int type_event
+                               CalendarDialogAdapter.onItemClickListener listener,
+                               int type_event, Date startTime, HashMap<String, Integer> calendar_events
                                   ) {
         super(context);
         // define listener for adapter
         mAdapterListener = listener;
         mContext=context;
         mTypeEvent =type_event;
+        mStartTime=startTime;
+        mCalendar_events=calendar_events;
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -53,7 +60,7 @@ public class CalendarAlertDialog extends AlertDialog {
 
         titleText = findViewById(R.id.titleText);
 
-        mCalendarAdapter=new CalendarDialogAdapter(mContext, mTypeEvent);
+        mCalendarAdapter=new CalendarDialogAdapter(mContext, mTypeEvent,mStartTime,mCalendar_events);
         // set listener for adapter-> mListener.onClick->in adapter
         mCalendarAdapter.setOnItemClickListener(mAdapterListener);
 
@@ -143,7 +150,7 @@ public class CalendarAlertDialog extends AlertDialog {
 
 
 
-    private void clearSelectedDate() {
+    public void clearSelectedDate() {
         mCalendarAdapter.clearSelectedDate();
     }
     public void setSelectedDate(long date) {

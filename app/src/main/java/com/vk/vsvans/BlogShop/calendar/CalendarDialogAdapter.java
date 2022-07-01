@@ -10,7 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.vk.vsvans.BlogShop.R;
-import com.vk.vsvans.BlogShop.utils.UtilsHelper;
+import com.vk.vsvans.BlogShop.util.UtilsHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -63,18 +63,19 @@ public class CalendarDialogAdapter extends BaseAdapter {
 
     private void initEvent() {
         //!
-        //calendar_events=MainActivity.getInstance().getCalendarEvents();
+        //calendar_events=mainActivity.getCalendarEvents();
     }
 
     private void initRemindersEvent() {
         //!calendar_events=RemindersActivity.getInstance().getCalendarEvents();
     }
 
-    public CalendarDialogAdapter(Context context, int type_event){
+    public CalendarDialogAdapter(Context context, int type_event,Date startTime, HashMap<String, Integer> calendar_events){
         mContext = context;
         //float dp = mContext.getResources().getDisplayMetrics().density;
         mLayoutInflater = LayoutInflater.from(mContext);
-        mDateManager = new DateManager();
+        mDateManager = new DateManager(startTime);
+        //mDateManager = new DateManager();
         dateArray = mDateManager.getDays();
         select_position=-1;
         // currentDayColor=//context.getResources().getColor(R.color.teal_200);
@@ -82,6 +83,7 @@ public class CalendarDialogAdapter extends BaseAdapter {
         initMonth();
         if(type_event==1) {
             initEvent();
+            this.calendar_events=calendar_events;
         }else if(type_event==2){
             initRemindersEvent();
         }
