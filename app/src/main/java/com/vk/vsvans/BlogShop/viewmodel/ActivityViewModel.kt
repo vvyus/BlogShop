@@ -19,7 +19,7 @@ import kotlinx.coroutines.withContext
 class ActivityViewModel(application: Application): AndroidViewModel(application) {
     //private val mDbRepositoryImpl:IDbRepository=DbRepositoryImpl(context)
     @SuppressLint("StaticFieldLeak")
-    val context:Context=application.applicationContext
+    val context:Context=application//application.applicationContext
     private val mDbRepositoryImpl:IDbRepository=DbRepositoryImpl(context)
     //add
     val livePurchaseList= MutableLiveData<ArrayList<Purchase>>()
