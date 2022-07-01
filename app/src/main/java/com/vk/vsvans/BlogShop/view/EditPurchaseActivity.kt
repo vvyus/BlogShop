@@ -46,7 +46,7 @@ class EditPurchaseActivity : AppCompatActivity() {
     private var job: Job?=null
     // для работы с firebase
     //val dbManager= DbManager(this)
-    var viewModel: ActivityViewModel?=null
+    var viewModel: ActivityViewModel=ActivityViewModel()//?=null
 
     var idPurchase =0
     private var purchase: Purchase? = null
@@ -58,7 +58,7 @@ class EditPurchaseActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel= ActivityViewModel(application)
+        //viewModel= ActivityViewModel(application)
         rootElement= ActivityEditPurchaseBinding.inflate(layoutInflater)
         setContentView(rootElement.root)
         val intent=getIntent()
@@ -72,28 +72,28 @@ class EditPurchaseActivity : AppCompatActivity() {
     private fun initViewModel(){
         //{} это слушатель
         //если наше activity доступно не разрушено или ждет когда можно обновить слушателт сработает
-        viewModel?.liveSellerList?.observe(this,{
+        viewModel.liveSellerList.observe(this,{
             listSellers.clear()
             listSellers.addAll(it)
         })
-        viewModel?.liveProductList?.observe(this,{
+        viewModel.liveProductList.observe(this,{
             listProducts.clear()
             listProducts.addAll(it)
         })
         //
-        viewModel?.livePurchaseItemList?.observe(this,{
+        viewModel.livePurchaseItemList.observe(this,{
             (rootElement.vpPurchaseItems.adapter as CardItemPurchaseRcAdapter).update(it)
         })
     }
 
     override fun onResume() {
         super.onResume()
-        viewModel!!.openDb()
+        viewModel.openDb()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        viewModel!!.closeDb()
+        viewModel.closeDb()
         job?.cancel()
     }
 
@@ -103,7 +103,7 @@ class EditPurchaseActivity : AppCompatActivity() {
             //dbManager.openDb()
             job?.cancel()
             job = CoroutineScope(Dispatchers.Main).launch{
-                purchase=viewModel!!.getPurchase(idPurchase)
+                purchase=viewModel.getPurchase(idPurchase)
                 if(purchase!=null){
                     rootElement.apply {
                         //content_temp=Html.fromHtml(purchase!!.content_html,0).makeSpannableString()
@@ -114,7 +114,7 @@ class EditPurchaseActivity : AppCompatActivity() {
                     }
 //                    val purchaseItems=viewModel!!.getPurchaseItems(idPurchase)
 //                    (rootElement.vpPurchaseItems.adapter as CardItemPurchaseRcAdapter).update(purchaseItems)
-                    viewModel!!.getPurchaseItems(idPurchase)
+                    viewModel.getPurchaseItems(idPurchase)
                 }
             }
         }else {
@@ -212,52 +212,51 @@ class EditPurchaseActivity : AppCompatActivity() {
         rootElement.apply {
             job?.cancel()
             job = CoroutineScope(Dispatchers.Main).launch{
-               if(viewModel!=null) {
-                   //здесь то что редактируется а не пришло из фрагмента
-                   purchase!!.summa= edSummaPurchase.value.toDouble();//.text.toString().toDouble()
-                   //purchase!!.title=edTitle.text.toString()
-                   if(tvSellerSelect.tag!=null) {
-                       val seller=tvSellerSelect.tag as Seller
-                       purchase!!.idseller=seller.id
-                       purchase!!.sellername=seller.name
-                   }
-                   var old_time=purchase!!.time
-                   purchase!!.time= DateTimeUtils.parseDateTimeString(rootElement.edDatePart.text.toString()+" "+rootElement.edTimePart.text.toString())!!
-                   if(idPurchase>0){
-                       //dbManager.updatePurchase(idPurchase,edTitle.text.toString(),edDescription.text.toString())
-                       viewModel!!.updatePurchase(purchase!!)
-                   }else{
-                       idPurchase= viewModel!!.insertPurchase(purchase!!)!!
-                       purchase!!.id=idPurchase
-                   }
+               //здесь то что редактируется а не пришло из фрагмента
+                purchase!!.summa= edSummaPurchase.value.toDouble();//.text.toString().toDouble()
+                //purchase!!.title=edTitle.text.toString()
+                if(tvSellerSelect.tag!=null) {
+                    val seller=tvSellerSelect.tag as Seller
+                    purchase!!.idseller=seller.id
+                    purchase!!.sellername=seller.name
+                }
+                var old_time=purchase!!.time
+                purchase!!.time= DateTimeUtils.parseDateTimeString(rootElement.edDatePart.text.toString()+" "+rootElement.edTimePart.text.toString())!!
+                if(idPurchase>0){
+                    //dbManager.updatePurchase(idPurchase,edTitle.text.toString(),edDescription.text.toString())
+                    viewModel.updatePurchase(purchase!!)
+                }else{
+                    idPurchase= viewModel.insertPurchase(purchase!!)!!
+                    purchase!!.id=idPurchase
+                }
 
-                   // callback to main activity temporary!!!
-                   //setResult()
-                   val data = Intent()
-                   //if(idPurchase==0) old_time=0L
-                   data.putExtra(getString(R.string.old_purchase_time), old_time)
-                   data.putExtra(getString(R.string.new_purchase_time), purchase!!.time)
-                   data.putExtra(getString(R.string.PURCHASE_ID), idPurchase)
-                   data.putExtra(Purchase::class.java.getSimpleName(), purchase)
-                   setResult(RESULT_OK, data)
-                   //
+                // callback to main activity temporary!!!
+                //setResult()
+                val data = Intent()
+                //if(idPurchase==0) old_time=0L
+                data.putExtra(getString(R.string.old_purchase_time), old_time)
+                data.putExtra(getString(R.string.new_purchase_time), purchase!!.time)
+                data.putExtra(getString(R.string.PURCHASE_ID), idPurchase)
+                data.putExtra(Purchase::class.java.getSimpleName(), purchase)
+                setResult(RESULT_OK, data)
+                //
 //                   if(old_time!=purchase!!.time) mainActivity!!.removePurchaseEvent(old_time)
 //                   mainActivity!!.addPurchaseEvent(purchase!!.time)
 
-                   for(pit: PurchaseItem in (vpPurchaseItems.adapter as CardItemPurchaseRcAdapter).mainArray){
-                       if(pit.id==0){
-                           //set idPurchase when new Purchase
-                           pit.idPurchase=idPurchase
-                           viewModel!!.insertPurchaseItem(pit)
-                       }else{
-                           viewModel!!.updatePurchaseItem(pit)
-                       }
-                   }
-                   for(pit: PurchaseItem in listDeletedPurchaseItems){
-                       viewModel!!.removePurchaseItem(pit.id)
-                   }
-                   listDeletedPurchaseItems=ArrayList<PurchaseItem>()
-               }//dbManager
+                for(pit: PurchaseItem in (vpPurchaseItems.adapter as CardItemPurchaseRcAdapter).mainArray){
+                    if(pit.id==0){
+                        //set idPurchase when new Purchase
+                        pit.idPurchase=idPurchase
+                        viewModel.insertPurchaseItem(pit)
+                    }else{
+                        viewModel.updatePurchaseItem(pit)
+                    }
+                }
+                for(pit: PurchaseItem in listDeletedPurchaseItems){
+                    viewModel.removePurchaseItem(pit.id)
+                }
+                listDeletedPurchaseItems=ArrayList<PurchaseItem>()
+                //dbManager
 
             }//job
             onBackPressed()
@@ -327,7 +326,7 @@ class EditPurchaseActivity : AppCompatActivity() {
 // добавить новую позицию покупки
     fun onClickAddPurchaseItem(view: View){
         if(purchaseItemFragment!=null){
-            viewModel!!.getProducts("")
+            viewModel.getProducts("")
             val pit= PurchaseItem()
             //новая запись
             pit.id=0

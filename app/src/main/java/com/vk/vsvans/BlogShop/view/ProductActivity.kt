@@ -34,7 +34,7 @@ class ProductActivity : AppCompatActivity() {
     private lateinit var rootElement: ActivityProductBinding
     lateinit var adapter: BaseListRcAdapter
     private lateinit var tb: Toolbar
-    var viewModel: ActivityViewModel?=null
+    var viewModel: ActivityViewModel=ActivityViewModel()//?=null
     //val dbManager= DbManager(this)
     private var job: Job? = null
     private var selectedId=0
@@ -43,7 +43,7 @@ class ProductActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel= ActivityViewModel(application)
+        //viewModel= ActivityViewModel(application)
         rootElement= ActivityProductBinding.inflate(layoutInflater)
         val view=rootElement.root
         setContentView(view)
@@ -68,7 +68,7 @@ class ProductActivity : AppCompatActivity() {
                             override fun onUpdateBaseListItemList(product: BaseList) {
                                 // add single product
                                 adapter.updateAdapterEdit(product)
-                                viewModel!!.updateProduct(product as Product)
+                                viewModel.updateProduct(product as Product)
                             }
 
                         }
@@ -83,10 +83,10 @@ class ProductActivity : AppCompatActivity() {
                             override fun onDeleteItem(id:Int) {
                                 adapter.deleteBaseListItem()
                                 val parent=adapter.getParent()
-                                if(parent!=null) viewModel!!.updateProduct(parent as Product)
+                                if(parent!=null) viewModel.updateProduct(parent as Product)
                                 //reset selectedId
                                 //selectedId=0
-                                viewModel!!.removeProduct(id)
+                                viewModel.removeProduct(id)
                             }
 
                         })
@@ -107,16 +107,16 @@ class ProductActivity : AppCompatActivity() {
                 DialogHelper.showBaseListInputDialog(this@ProductActivity,product,
                     object: IUpdateBaseListItemList {
                         override fun onUpdateBaseListItemList(product: BaseList) {
-                            val id=viewModel!!.insertProduct(product as Product)
+                            val id=viewModel.insertProduct(product as Product)
                             if (id != null) {
                                 product.id=id
                                 product.fullpath=parent.fullpath+id.toString()
                                 // update product array in adapter
                                 adapter.updateAdapterInsert(product)
                                 // update count for parent
-                                viewModel!!.updateProduct(parent as Product)
+                                viewModel.updateProduct(parent as Product)
                                 // update fullpath for product
-                                viewModel!!.updateProduct(product)
+                                viewModel.updateProduct(product)
                             }
                         }
 
@@ -134,7 +134,7 @@ class ProductActivity : AppCompatActivity() {
                       //override fun onOkClick(v: View?) {}
                       override fun onOkClick(idParent: Int?) {
 
-                          var parent=if(idParent==null) null else adapter.nodeList.get(idParent)
+                          val parent=if(idParent==null) null else adapter.nodeList.get(idParent)
 
                           val product= adapter.getBaseList()
 
@@ -152,23 +152,23 @@ class ProductActivity : AppCompatActivity() {
                                   product.level = parent.level + 1
                                   // set count for new parent
                                   parent.count=parent.count+1
-                                  viewModel!!.updateProduct(parent as Product)
+                                  viewModel.updateProduct(parent as Product)
                               }
                               // replace all children where idparent==product.idparent
                               if(product.count>0){
                                   adapter.childArray.clear()
                                   adapter.setChildren(product.id,product.fullpath,product.level)
                                   for(i in 0 until adapter.childArray.size)
-                                      viewModel!!.updateProduct(adapter.childArray[i] as Product)
+                                      viewModel.updateProduct(adapter.childArray[i] as Product)
                                   adapter.childArray.clear()
                               }
                               if(oldparent!=null){
                                   oldparent.count=oldparent.count-1
-                                  viewModel!!.updateProduct(oldparent as Product)
+                                  viewModel.updateProduct(oldparent as Product)
                               }
                               // update count for parent
                               adapter.updateAdapterParent(oldparent,parent,product)
-                              viewModel!!.updateProduct(product as Product)
+                              viewModel.updateProduct(product as Product)
                               //fillAdapter("")
                               //adapter.notifyDataSetChanged()
                           }
@@ -190,20 +190,20 @@ class ProductActivity : AppCompatActivity() {
     private fun initViewModel(){
         //{} это слушатель
         //если наше activity доступно не разрушено или ждет когда можно обновить слушателт сработает
-        viewModel?.liveProductList?.observe(this,{
+        viewModel.liveProductList.observe(this,{
             adapter.updateAdapter(it)
         })
     }
 
     override fun onResume() {
         super.onResume()
-        viewModel!!.openDb()
+        viewModel.openDb()
         fillAdapter("")
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        viewModel!!.closeDb()
+        viewModel.closeDb()
         job?.cancel()
     }
 
@@ -222,7 +222,7 @@ class ProductActivity : AppCompatActivity() {
         job = CoroutineScope(Dispatchers.Main).launch{
 //            val list = viewModel!!.getProducts(text)
 //            adapter.updateAdapter(list)
-            viewModel!!.getProducts(text)
+            viewModel.getProducts(text)
         }
 
     }
@@ -236,12 +236,12 @@ class ProductActivity : AppCompatActivity() {
             object: IUpdateBaseListItemList {
                 override fun onUpdateBaseListItemList(product: BaseList) {
                     // add single product
-                    val id=viewModel!!.insertProduct(product as Product)
+                    val id=viewModel.insertProduct(product as Product)
                     if (id != null) {
                         product.id=id
                         product.idparent=id
                         product.fullpath=id.toString()
-                        viewModel!!.updateProduct(product as Product)
+                        viewModel.updateProduct(product as Product)
                         adapter.updateAdapterInsert(product)
                     }
                 }
@@ -256,42 +256,41 @@ class ProductActivity : AppCompatActivity() {
             tb.inflateMenu(R.menu.menu_choose_baselist_item)
 
             val searchItem: MenuItem =tb.menu.findItem(R.id.action_search)
-            if (searchItem != null) {
-                searchView = MenuItemCompat.getActionView(searchItem) as SearchView
-                searchView.setOnCloseListener(object : SearchView.OnCloseListener {
-                    override fun onClose(): Boolean {
-                        return true
-                    }
-                })
+            searchView = MenuItemCompat.getActionView(searchItem) as SearchView
+            searchView.setOnCloseListener(object : SearchView.OnCloseListener {
+                override fun onClose(): Boolean {
+                    return true
+                }
+            })
 
-                val searchPlate =        searchView.findViewById(androidx.appcompat.R.id.search_src_text) as EditText
-                searchPlate.hint = getString(R.string.search_hint)
-                val searchPlateView: View =
-                    searchView.findViewById(androidx.appcompat.R.id.search_plate)
-                searchPlateView.setBackgroundColor(
-                    ContextCompat.getColor(
-                        this@ProductActivity,
-                        android.R.color.transparent
-                    )
+            val searchPlate =        searchView.findViewById(androidx.appcompat.R.id.search_src_text) as EditText
+            searchPlate.hint = getString(R.string.search_hint)
+            val searchPlateView: View =
+                searchView.findViewById(androidx.appcompat.R.id.search_plate)
+            searchPlateView.setBackgroundColor(
+                ContextCompat.getColor(
+                    this@ProductActivity,
+                    android.R.color.transparent
                 )
+            )
 
-                searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                    override fun onQueryTextSubmit(query: String?): Boolean {
-                        return false
+            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    return false
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    if (newText != null) {
+                        fillAdapter(newText)
                     }
+                    return true
+                }
+            })
 
-                    override fun onQueryTextChange(newText: String?): Boolean {
-                        if (newText != null) {
-                            fillAdapter(newText)
-                        }
-                        return true
-                    }
-                })
-
-                val searchManager =
-                    getSystemService(Context.SEARCH_SERVICE) as SearchManager
-                searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
-            }//search_item
+            val searchManager =
+                getSystemService(Context.SEARCH_SERVICE) as SearchManager
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+            //search_item
 
             // GO BACK
             tb.setNavigationOnClickListener {

@@ -5,6 +5,8 @@ import android.app.Application
 import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import com.vk.vsvans.BlogShop.AppStart
 import com.vk.vsvans.BlogShop.model.data.Product
 import com.vk.vsvans.BlogShop.model.data.Purchase
 import com.vk.vsvans.BlogShop.model.data.PurchaseItem
@@ -15,12 +17,12 @@ import com.vk.vsvans.BlogShop.util.FilterForActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-//class ActivityViewModel(context: Context): ViewModel() {
-class ActivityViewModel(application: Application): AndroidViewModel(application) {
+class ActivityViewModel(): ViewModel() {
+//class ActivityViewModel(application: Application): AndroidViewModel(application) {
     //private val mDbRepositoryImpl:IDbRepository=DbRepositoryImpl(context)
     @SuppressLint("StaticFieldLeak")
-    val context:Context=application//application.applicationContext
-    private val mDbRepositoryImpl:IDbRepository=DbRepositoryImpl(context)
+    //val context:Context=application//application.applicationContext
+    private val mDbRepositoryImpl:IDbRepository=AppStart.instance!!.getDatabase()!!//DbRepositoryImpl(context)
     //add
     val livePurchaseList= MutableLiveData<ArrayList<Purchase>>()
     val liveCalendarEvents= MutableLiveData<HashMap<String, Int>>()

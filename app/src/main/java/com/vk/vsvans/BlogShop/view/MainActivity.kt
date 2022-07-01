@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     //val viewModel:ActivityViewModel by viewModels()
 
     //val viewModel= ActivityViewModel(this)
-    var viewModel:ActivityViewModel?=null
+    var viewModel:ActivityViewModel=ActivityViewModel()//?=null
     private val purchaseArray=ArrayList<Purchase>()
     private var job: Job? = null
     private lateinit var toolbar: Toolbar
@@ -93,7 +93,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onCreate(savedInstanceState)
 
         checkPermission()
-        viewModel= ActivityViewModel(application)
+       // viewModel= ActivityViewModel(application)
         mainActivity=this
         rootElement= ActivityMainBinding.inflate(layoutInflater)
         val view=rootElement.root
@@ -153,17 +153,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun initViewModel(){
         //{} это слушатель
         //если наше activity доступно не разрушено или ждет когда можно обновить слушателт сработает
-        viewModel?.livePurchaseList?.observe(this,{
+        viewModel.livePurchaseList.observe(this,{
             adapter.updateAdapter(it)
             livePurchaseList_size=it.size
 
         })
 
-        viewModel?.liveAmount?.observe(this,{
+        viewModel.liveAmount.observe(this,{
             liveAmount=it
         })
 
-        viewModel?.liveCalendarEvents?.observe(this, {
+        viewModel.liveCalendarEvents.observe(this, {
             if(!isSetFilter()) {
                 calendar_events.clear()
                 calendar_events.putAll(it)
@@ -190,21 +190,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onResume() {
         super.onResume()
         //dbManager.openDb()
-        viewModel!!.openDb()
+        viewModel.openDb()
         fillAdapter()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         //dbManager.closeDb()
-        viewModel!!.closeDb()
+        viewModel.closeDb()
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
     fun fillAdapter() {
         job?.cancel()
         job = CoroutineScope(Dispatchers.Main).launch{
-            viewModel!!.getPurchases(filter_fact)
+            viewModel.getPurchases(filter_fact)
 
             if(isSetFilter()) {
                 setFilterPanel(liveAmount,livePurchaseList_size)
@@ -338,7 +338,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     fun launchEditPurchaseActivity(id:Int){
         val intent= Intent(this@MainActivity, EditPurchaseActivity::class.java)
         intent.putExtra(R.string.PURCHASE_ID.toString(),id)
-        launcherEPA?.launch(intent) //getLauncher().launch(intent)
+        launcherEPA.launch(intent) //getLauncher().launch(intent)
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -350,12 +350,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     //result.data is intent
                     val intent=result.data
                     val new_purchase_time=intent!!.getLongExtra(getString(R.string.new_purchase_time),0L)
-                    val old_purchase_time=intent!!.getLongExtra(getString(R.string.old_purchase_time),0L)
-                    val idpurchase=intent!!.getIntExtra(getString(R.string.PURCHASE_ID),0)
+                    val old_purchase_time=
+                        intent.getLongExtra(getString(R.string.old_purchase_time),0L)
+                    val idpurchase= intent.getIntExtra(getString(R.string.PURCHASE_ID),0)
                     //
                     if(old_purchase_time!=new_purchase_time) removePurchaseEvent(old_purchase_time)
                     addPurchaseEvent(new_purchase_time)
-                    val purchase=intent!!.getSerializableExtra(Purchase::class.java.getSimpleName()) as Purchase
+                    val purchase= intent.getSerializableExtra(Purchase::class.java.getSimpleName()) as Purchase
                     // если новая запись
                     if(idpurchase==0) adapter.addPurchase(purchase)
                     else adapter.setPurchase(purchase)
@@ -389,7 +390,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 job = CoroutineScope(Dispatchers.Main).launch{
                     if(viewModel!=null) {
                         val dialog = ProgressDialog.createProgressDialog(this@MainActivity )
-                        import_checks.doImport(viewModel!!)
+                        val separator=resources.getString(R.string.SEPARATOR)
+                        val title_color=getColor(R.color.green_main)
+
+                        import_checks.doImport(viewModel!!,separator, title_color)
                         fillAdapter()
                         dialog.dismiss()
                     }
@@ -413,7 +417,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     removePurchaseEvent(purchase.time)
                     //2 remove purchase from database
                     //dbManager.removePurchase(id)
-                    viewModel!!.removePurchase(id)
+                    viewModel.removePurchase(id)
                     fillAdapter()
                 }
 
