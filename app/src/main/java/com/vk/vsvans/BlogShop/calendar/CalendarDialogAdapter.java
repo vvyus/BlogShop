@@ -9,6 +9,9 @@ import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import androidx.cardview.widget.CardView;
+
+import com.vk.vsvans.BlogShop.AppStart;
 import com.vk.vsvans.BlogShop.R;
 import com.vk.vsvans.BlogShop.util.UtilsHelper;
 
@@ -27,12 +30,14 @@ public class CalendarDialogAdapter extends BaseAdapter {
 
     private static final int DEFAULT_TEXT_COLOR = Color.parseColor("#808080");
     private static final int DEFAULT_OFF_MONTH_DAY_COLOR = Color.parseColor("#a0a0a0");
-    int currentDayColor=Color.parseColor("#a0a0a0");
+    int currentDayColor=Color.parseColor("#1DA6E0");//"#a0a0a0"
 
     private HashMap<String, Date> selected_date = new HashMap<String, Date>();
-    int default_background_color=Color.WHITE;
-    int select_background_color=0xff008577;
+    int default_background_color= Color.WHITE;
+    int select_background_color=Color.RED; //0xff008577;
     int select_text_color=Color.WHITE;
+    int text_color_event=Color.parseColor("#008577");
+    int text_color_calendar=DEFAULT_TEXT_COLOR;//Color.BLACK;
     onItemClickListener mItemClickListener;
 
     HashMap<String,String> month_names=new HashMap<String,String>();
@@ -44,6 +49,7 @@ public class CalendarDialogAdapter extends BaseAdapter {
     private static class ViewHolder {
         public TextView dateText;
         public TextView eventText;
+        public CardView cvCalendar;
     }
 
     private void initMonth() {
@@ -112,6 +118,7 @@ public class CalendarDialogAdapter extends BaseAdapter {
             holder = new ViewHolder();
             holder.dateText = convertView.findViewById(R.id.dateText);
             holder.eventText = convertView.findViewById(R.id.eventText);
+            holder.cvCalendar=convertView.findViewById(R.id.cvCalendar);
             convertView.setLayoutParams( new AbsListView.LayoutParams(90,    100));
 
             convertView.setTag(holder);
@@ -150,28 +157,30 @@ public class CalendarDialogAdapter extends BaseAdapter {
         Date value=dateArray.get(position);
         String key=UtilsHelper.getDate(value.getTime());
         if(selected_date.get(key)!=null){
-            convertView.setBackgroundColor(select_background_color);
+            holder.cvCalendar.setBackgroundColor(select_background_color); //convertView.setBackgroundColor(select_background_color);
         } else if (mDateManager.isToday(dateArray.get(position))){
-            convertView.setBackgroundColor(currentDayColor);
+            holder.cvCalendar.setBackgroundColor(currentDayColor);//convertView.setBackgroundColor(currentDayColor);
         }else if (mDateManager.isCurrentMonth(dateArray.get(position))){
-            convertView.setBackgroundColor(Color.WHITE);//current month
+            holder.cvCalendar.setBackgroundColor(Color.WHITE);//convertView.setBackgroundColor(Color.WHITE);//current month
         }else {
-            convertView.setBackgroundColor(Color.LTGRAY);
+            holder.cvCalendar.setBackgroundColor(Color.LTGRAY);//convertView.setBackgroundColor(Color.LTGRAY);
         }
 
         //set text color Sunday to red, Saturday to blue
         int colorId;
         switch (mDateManager.getDayOfWeek(dateArray.get(position))){
+            // 1 and 7 is weekend
             case 1:
-                colorId = Color.RED;
-                break;
             case 7:
-                colorId =Color.RED; //! Color.BLUE;
+                if(selected_date.get(key)!=null)
+                    colorId =select_text_color;
+                else
+                    colorId =Color.RED;
                 break;
 
             default:
                 if(selected_date.get(key)!=null) colorId =select_text_color;
-                else colorId =DEFAULT_TEXT_COLOR; //!Color.BLACK;
+                else colorId =text_color_calendar;
                 break;
         }
         // show events
@@ -179,6 +188,11 @@ public class CalendarDialogAdapter extends BaseAdapter {
         Integer event_int=getEvent(position);
         if(event_int!=null && mType_event!=0) {
             holder.eventText.setText(event_int.toString());
+            if(selected_date.get(key)!=null)
+                holder.eventText.setTextColor(select_text_color);
+            else
+                holder.eventText.setTextColor(text_color_event);
+
         }else {
             holder.eventText.setText("");
         }
