@@ -8,6 +8,7 @@ import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.WindowManager
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
@@ -280,6 +281,11 @@ private fun createTreeArrayAdapter(
             }
         })
         mCalendar.show()
+        mCalendar.getWindow()?.setLayout(
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.MATCH_PARENT
+        )
+
         selected_date.clear()
         mCalendar.clearSelectedDate()
         // set prev selected stored date from filter

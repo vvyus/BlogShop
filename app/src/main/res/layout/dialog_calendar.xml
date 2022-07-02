@@ -7,6 +7,7 @@
     android:orientation="vertical"
     android:background="@color/white"
     >
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,15 +18,14 @@
             android:id="@+id/titleText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Month name"
-            android:textSize="16dp"
+            android:layout_centerVertical="true"
             android:layout_toStartOf="@+id/nextButton"
             android:layout_toLeftOf="@+id/nextButton"
             android:layout_toEndOf="@+id/prevButton"
             android:layout_toRightOf="@+id/prevButton"
             android:gravity="center"
-            android:layout_centerVertical="true"
-            />
+            android:text="Month name"
+            android:textSize="16dp" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/prevButton"
@@ -34,8 +34,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:background="@drawable/ic_baseline_arrow_left_24"
-            />
+            android:background="@drawable/ic_baseline_arrow_left_24" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/nextButton"
@@ -44,8 +43,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:background="@drawable/ic_baseline_arrow_right_24"
-            />
+            android:background="@drawable/ic_baseline_arrow_right_24" />
     </RelativeLayout>
 
     <LinearLayout
@@ -53,9 +51,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="0dp"
-        android:weightSum="7"
         android:background="@color/daycaptionColor"
-        >
+        android:weightSum="7">
+
         <TextView
             android:id="@+id/text_view_monday"
             android:layout_width="wrap_content"
@@ -117,24 +115,22 @@
     <GridView
         android:id="@+id/calendarGridView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="20"
+        android:layout_height="match_parent"
 
+        android:layout_weight="200"
+        android:horizontalSpacing="0dp"
         android:numColumns="7"
-        android:stretchMode="columnWidth"
         android:paddingLeft="0dp"
         android:paddingTop="0dp"
-        android:horizontalSpacing="0dp"
-        android:verticalSpacing="0dp"
-        >
-    </GridView>
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="0dp"></GridView>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_gravity="center_horizontal"
-        >
+        android:layout_weight="4"
+        android:orientation="horizontal">
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/negativeButton"
