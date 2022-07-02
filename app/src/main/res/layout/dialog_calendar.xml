@@ -52,6 +52,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="0dp"
         android:background="@color/daycaptionColor"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         android:weightSum="7">
 
         <TextView
@@ -117,11 +119,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 
+        android:layout_marginBottom="20dp"
         android:layout_weight="200"
         android:horizontalSpacing="0dp"
         android:numColumns="7"
         android:paddingLeft="0dp"
-        android:paddingTop="0dp"
+        android:paddingTop="5dp"
         android:stretchMode="columnWidth"
         android:verticalSpacing="0dp"></GridView>
 
@@ -129,6 +132,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="40dp"
         android:layout_weight="4"
         android:orientation="horizontal">
 
@@ -137,7 +144,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_marginEnd="40dp"
             android:layout_weight="1"
+            android:background="@drawable/calendar_background"
             android:text="@string/cancel_dialog" />
 
         <androidx.appcompat.widget.AppCompatButton
@@ -146,8 +155,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_weight="1"
+            android:background="@drawable/calendar_background"
             android:text="@string/confirm_dialog" />
 
     </LinearLayout>
 
- </LinearLayout>
+</LinearLayout>
