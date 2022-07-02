@@ -8,7 +8,7 @@ import com.vk.vsvans.BlogShop.model.data.Product
 import com.vk.vsvans.BlogShop.model.data.Purchase
 import com.vk.vsvans.BlogShop.model.data.PurchaseItem
 import com.vk.vsvans.BlogShop.model.data.Seller
-import com.vk.vsvans.BlogShop.util.DateTimeUtils
+import com.vk.vsvans.BlogShop.util.ImportUtils
 import com.vk.vsvans.BlogShop.util.makeSpannableString
 import com.vk.vsvans.BlogShop.util.plus
 import com.vk.vsvans.BlogShop.viewmodel.ActivityViewModel
@@ -47,22 +47,22 @@ object import_checks {
             println(itf.name)
 
             try {
-                if(itf.name.endsWith(".json")) {
-                    val bufferedReader: BufferedReader = File(itf.absolutePath).bufferedReader()
-                    val inputString = bufferedReader.readText()
-                    //val post= JSONObject(inputString)
+                //if(itf.name.endsWith(".json")) {
+                val bufferedReader: BufferedReader = File(itf.absolutePath).bufferedReader()
+                val inputString = bufferedReader.readText()
+                //val post= JSONObject(inputString)
+                if(ImportUtils.isJsonArray(inputString)){
                     val post = JSONArray(inputString)
-                    for (i in 0 until post.length()) {
-//                  // get docs header
-                        val jsonObject = JSONObject(post[i].toString())
-                        if(jsonObject!=null) {
-                            val ticket = jsonObject.getJSONObject("ticket")
-                            if (ticket != null) {
-                                val document = ticket.getJSONObject("document")
-                                if (document != null) {
-                                    val receipt = document.getJSONObject("receipt")
-                                    if(receipt!=null) {
 
+                    for (i in 0 until post.length()) {
+                        if(ImportUtils.isJsonObject(post[i].toString())) {
+                            val jsonObject = JSONObject(post[i].toString())
+                            if (ImportUtils.isJsonObject(jsonObject,"ticket")) {
+                                val ticket = jsonObject.getJSONObject("ticket")
+                                if (ImportUtils.isJsonObject(ticket,"document")) {
+                                    val document = ticket.getJSONObject("document")
+                                    if(ImportUtils.isJsonObject(document,"receipt")) {
+                                        val receipt = document.getJSONObject("receipt")
                                         user = receipt.getString("user")
                                         dateTime = receipt.getString("dateTime")
                                         totalSum = receipt.getLong("totalSum") / 100.0
@@ -74,11 +74,11 @@ object import_checks {
                                         purchase= Purchase()
                                         idPurchase=viewModel.getPurchaseFns(idFns)
                                         if(idPurchase==0){
-                                           idPurchase= viewModel.insertPurchase(purchase!!)!!
+                                            idPurchase= viewModel.insertPurchase(purchase!!)!!
                                         }
                                         purchase!!.id=idPurchase
                                         purchase!!.idfns=idFns
-                                        dateTimeLong=DateTimeUtils.parseDateTimeQrString(dateTime)
+                                        dateTimeLong=ImportUtils.parseDateTimeQrString(dateTime)
                                         if (dateTimeLong != null) {
                                             purchase!!.time= dateTimeLong as Long
                                         }
@@ -156,7 +156,7 @@ object import_checks {
                             }// if document
                         }//if jsonobj
                     }
-                } // if json
+                } // if jsonarray
             }catch (e: IOException){
             }
 

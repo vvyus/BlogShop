@@ -221,7 +221,7 @@ class EditPurchaseActivity : AppCompatActivity() {
                     purchase!!.sellername=seller.name
                 }
                 var old_time=purchase!!.time
-                purchase!!.time= DateTimeUtils.parseDateTimeString(rootElement.edDatePart.text.toString()+" "+rootElement.edTimePart.text.toString())!!
+                purchase!!.time= ImportUtils.parseDateTimeString(rootElement.edDatePart.text.toString()+" "+rootElement.edTimePart.text.toString())!!
                 if(idPurchase>0){
                     //dbManager.updatePurchase(idPurchase,edTitle.text.toString(),edDescription.text.toString())
                     viewModel.updatePurchase(purchase!!)
