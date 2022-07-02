@@ -126,7 +126,7 @@
         android:paddingLeft="0dp"
         android:paddingTop="5dp"
         android:stretchMode="columnWidth"
-        android:verticalSpacing="0dp"></GridView>
+        android:verticalSpacing="5dp"></GridView>
 
     <LinearLayout
         android:layout_width="match_parent"
