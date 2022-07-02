@@ -283,7 +283,7 @@ private fun createTreeArrayAdapter(
         mCalendar.show()
         mCalendar.getWindow()?.setLayout(
             WindowManager.LayoutParams.MATCH_PARENT,
-            WindowManager.LayoutParams.WRAP_CONTENT
+            WindowManager.LayoutParams.MATCH_PARENT
         )
 
         selected_date.clear()
