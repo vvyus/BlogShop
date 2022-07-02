@@ -31,8 +31,12 @@ public class DateManager {
         int count = getWeeks() * 7 ;
 
         //Calculate the number of days for the previous month displayed on the calendar for the current month
-        mCalendar.set(Calendar.DATE, 1);
-        int dayOfWeek = mCalendar.get(Calendar.DAY_OF_WEEK) - 1;
+        mCalendar.set(Calendar.DATE, 1); // устанавливаем 1-е число для дня календаря
+        //int dayOfWeek =Calendar.DAY_OF_WEEK; // вс это 0-й день недели
+        //int count = getWeeks() * 7 ;
+        //
+        int dayOfWeek = mCalendar.get(Calendar.DAY_OF_WEEK)-1;// нмер дня недели(для 1-го число) -1(с 0-го)
+        dayOfWeek=(dayOfWeek==0) ? 7: dayOfWeek;
         mCalendar.add(Calendar.DATE, -dayOfWeek);
 
         List<Date> days = new ArrayList<>();
