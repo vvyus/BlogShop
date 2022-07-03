@@ -66,79 +66,6 @@ object DialogHelper {
 
     }
 
-    fun showLoadChecksDialog(context: Context,idialog_import:IDialogImportChecks) {
-        //val arrayAdapter = RecyclerView.Adapter<String>(context as MainActivity, R.layout.simple_list_item_1)
-        val adapter:StringRcAdapter=StringRcAdapter()
-        val load_selected_date=HashMap<String, Date?>()
-        val filter_fact=FilterForActivity("")
-        val alertDialog = AlertDialog.Builder(context).create()
-        val inflater: LayoutInflater =(context as MainActivity).layoutInflater
-        val view: View = inflater.inflate(R1.layout.import_checks_dialog, null)
-        alertDialog.setView(view)
-        val rootView=view.rootView
-
-        val btnCancelCheckDialog=rootView.findViewById<Button>(R1.id.btnCancelCheckDialog)
-        btnCancelCheckDialog.setOnClickListener {
-            alertDialog.dismiss()
-        }
-
-        val btnOkCheckDialog=rootView.findViewById<Button>(R1.id.btnOkCheckDialog)
-        btnOkCheckDialog.setOnClickListener {
-            idialog_import.import_checks(load_selected_date)
-            alertDialog.dismiss()
-         }
-
-        val fabCheckDialogAdd=rootView.findViewById<FloatingActionButton>(R1.id.fabCheckDialogAdd)
-        fabCheckDialogAdd.setOnClickListener {
-            DialogHelper.getCalendarDialog(context,object: IDialogDateFiterCallback {
-                override fun confirmFilter(selected_date: HashMap<String, Date?>) {
-                    if (selected_date.size != 0) {
-                        load_selected_date.putAll(selected_date)
-                        val dates = ArrayList(selected_date.values)
-                        Collections.sort(dates, object : Comparator<Date?> {
-
-                            override fun compare(o1: Date?, o2: Date?): Int {
-                                if (o1 != null) {
-                                    return o1.compareTo(o2)
-                                }else return 0
-                            }
-                        })
-                        println("Dates size is :"+dates.size+" selected date size is "+selected_date.size)
-                        adapter.clear()
-                        filter_fact.dates_begin = ArrayList<String>()
-                        var str: String?
-                        for (i in 0 until dates.size) {
-                            println("To filter Date is :"+dates[i])
-                            str = valueOf(UtilsHelper.correct_date_begin(dates[i]!!.time))
-                            filter_fact.dates_begin!!.add(str)
-                            //to do
-                            str = UtilsHelper.getDate(dates[i]!!.time)
-                            adapter.add(str)
-                        }
-                        filter_fact.dates_begin=null
-                        //fillAdapter()
-                    }
-                }
-
-                override fun cancelFilter() {
-                    adapter.clear()
-                }
-            },filter_fact,UtilsHelper.getCurrentDate())
-        }
-        val rvCheckDialog=rootView.findViewById<RecyclerView>(R1.id.rvCheckDialog)
-        rvCheckDialog.layoutManager= LinearLayoutManager(context)
-
-        rvCheckDialog.adapter=adapter
-        //adapter.add("test")
-
-        alertDialog.show()
-        alertDialog.getWindow()?.setLayout(
-            WindowManager.LayoutParams.MATCH_PARENT,
-            WindowManager.LayoutParams.MATCH_PARENT
-        )
-
-    }
-
     fun showPurchaseItemInputDialog(context: Context, pit: PurchaseItem,listProduct:ArrayList<BaseList> ,iupdatePurchaseItemList: IUpdatePurchaseItemList) {
         val customDialog = AlertDialog.Builder(context, 0).create()
         val inflater: LayoutInflater =(context as EditPurchaseActivity).layoutInflater
@@ -368,6 +295,81 @@ private fun createTreeArrayAdapter(
             }
         }
 println("Ok")
+    }
+
+    fun showLoadChecksDialog(context: Context,idialog_import:IDialogImportChecks) {
+        //val arrayAdapter = RecyclerView.Adapter<String>(context as MainActivity, R.layout.simple_list_item_1)
+        val adapter:StringRcAdapter=StringRcAdapter()
+        val load_selected_date=HashMap<String, Date?>()
+        val filter_fact=FilterForActivity("")
+
+        val alertDialog = AlertDialog.Builder(context).create()
+        val inflater: LayoutInflater =(context as MainActivity).layoutInflater
+        val view: View = inflater.inflate(R1.layout.import_checks_dialog, null)
+        alertDialog.setView(view)
+        val rootView=view.rootView
+
+        val btnCancelCheckDialog=rootView.findViewById<Button>(R1.id.btnCancelCheckDialog)
+        btnCancelCheckDialog.setOnClickListener {
+            alertDialog.dismiss()
+        }
+
+        val btnOkCheckDialog=rootView.findViewById<Button>(R1.id.btnOkCheckDialog)
+        btnOkCheckDialog.setOnClickListener {
+            idialog_import.import_checks(load_selected_date)
+            alertDialog.dismiss()
+        }
+
+        val fabCheckDialogAdd=rootView.findViewById<FloatingActionButton>(R1.id.fabCheckDialogAdd)
+        fabCheckDialogAdd.setOnClickListener {
+            DialogHelper.getCalendarDialog(context,object: IDialogDateFiterCallback {
+                override fun confirmFilter(selected_date: HashMap<String, Date?>) {
+                    if (selected_date.size != 0) {
+                        load_selected_date.putAll(selected_date)
+                        val dates = ArrayList(selected_date.values)
+                        Collections.sort(dates, object : Comparator<Date?> {
+
+                            override fun compare(o1: Date?, o2: Date?): Int {
+                                if (o1 != null) {
+                                    return o1.compareTo(o2)
+                                }else return 0
+                            }
+                        })
+                        println("Dates size is :"+dates.size+" selected date size is "+selected_date.size)
+                        adapter.clear()
+                        filter_fact.dates_begin = ArrayList<String>()
+                        var str: String?
+                        for (i in 0 until dates.size) {
+                            println("To filter Date is :"+dates[i])
+                            str = valueOf(UtilsHelper.correct_date_begin(dates[i]!!.time))
+                            filter_fact.dates_begin!!.add(str)
+                            //to do
+                            str = UtilsHelper.getDate(dates[i]!!.time)
+                            adapter.add(str)
+                        }
+
+                        //fillAdapter()
+                    }
+                }
+
+                override fun cancelFilter() {
+                    filter_fact.dates_begin=null
+                    adapter.clear()
+                }
+            },filter_fact,UtilsHelper.getCurrentDate())
+        }
+        val rvCheckDialog=rootView.findViewById<RecyclerView>(R1.id.rvCheckDialog)
+        rvCheckDialog.layoutManager= LinearLayoutManager(context)
+
+        rvCheckDialog.adapter=adapter
+        //adapter.add("test")
+
+        alertDialog.show()
+        alertDialog.getWindow()?.setLayout(
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.MATCH_PARENT
+        )
+
     }
 
 }
