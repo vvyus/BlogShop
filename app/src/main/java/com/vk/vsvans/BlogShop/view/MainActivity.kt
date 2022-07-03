@@ -42,6 +42,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.lang.String.valueOf
 import java.util.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -123,9 +124,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                             var str: String?
                             for (i in 0 until dates.size) {
                                 println("To filter Date is :"+dates[i])
-                                str = java.lang.String.valueOf(UtilsHelper.correct_date_begin(dates[i]!!.time))
+                                str = valueOf(UtilsHelper.correct_date_begin(dates[i]!!.time))
                                 filter_fact.dates_begin!!.add(str)
-                                str = java.lang.String.valueOf(UtilsHelper.correct_date_end(dates[i]!!.time))
+                                str = valueOf(UtilsHelper.correct_date_end(dates[i]!!.time))
                                 filter_fact.dates_end!!.add(str)
                             }
 
@@ -383,8 +384,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun importPurchase(){
         DialogHelper.showLoadChecksDialog(this@MainActivity,object: IDialogImportChecks{
-            @RequiresApi(Build.VERSION_CODES.N)
             override fun import_checks() {
+            }
+
+            @RequiresApi(Build.VERSION_CODES.N)
+            override fun import_checks(selected_date: HashMap<String, Date?>) {
 
                 job?.cancel()
                 job = CoroutineScope(Dispatchers.Main).launch{
@@ -393,7 +397,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         val separator=resources.getString(R.string.SEPARATOR)
                         val title_color=getColor(R.color.green_main)
 
-                        import_checks.doImport(viewModel!!,separator, title_color)
+                        import_checks.doImport(viewModel!!,separator, title_color,selected_date)
                         fillAdapter()
                         dialog.dismiss()
                     }

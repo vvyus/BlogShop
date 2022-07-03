@@ -9,6 +9,7 @@ import com.vk.vsvans.BlogShop.model.data.Purchase
 import com.vk.vsvans.BlogShop.model.data.PurchaseItem
 import com.vk.vsvans.BlogShop.model.data.Seller
 import com.vk.vsvans.BlogShop.util.ImportUtils
+import com.vk.vsvans.BlogShop.util.UtilsHelper
 import com.vk.vsvans.BlogShop.util.makeSpannableString
 import com.vk.vsvans.BlogShop.util.plus
 import com.vk.vsvans.BlogShop.viewmodel.ActivityViewModel
@@ -22,7 +23,7 @@ import java.util.*
 
 object import_checks {
    @RequiresApi(Build.VERSION_CODES.N)
-   suspend fun doImport(viewModel:ActivityViewModel,separator:String,title_color:Int){
+   suspend fun doImport(viewModel:ActivityViewModel,separator:String,title_color:Int,selected_date: HashMap<String, Date?>){
        var fn=""
        var fd=""
        var fp=""
@@ -65,6 +66,9 @@ object import_checks {
                                         val receipt = document.getJSONObject("receipt")
                                         user = receipt.getString("user")
                                         dateTime = receipt.getString("dateTime")
+                                        dateTimeLong=ImportUtils.parseDateTimeQrString(dateTime)
+                                        val key: String = UtilsHelper.getDate(dateTimeLong!!)
+                                        if(selected_date.size>0 && selected_date.get(key)==null) continue
                                         totalSum = receipt.getLong("totalSum") / 100.0
                                         fn = receipt.getString("fiscalDriveNumber")//fn
                                         fd = receipt.getString("fiscalDocumentNumber") //fd
@@ -78,7 +82,7 @@ object import_checks {
                                         }
                                         purchase!!.id=idPurchase
                                         purchase!!.idfns=idFns
-                                        dateTimeLong=ImportUtils.parseDateTimeQrString(dateTime)
+
                                         if (dateTimeLong != null) {
                                             purchase!!.time= dateTimeLong as Long
                                         }
