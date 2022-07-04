@@ -325,6 +325,7 @@ println("Ok")
             DialogHelper.getCalendarDialog(context,object: IDialogDateFiterCallback {
                 override fun confirmFilter(selected_date: HashMap<String, Date?>) {
                     if (selected_date.size != 0) {
+                        // выгружаем хэш в другой хэш для передачи в import_checks
                         load_selected_date.putAll(selected_date)
                         val dates = ArrayList(selected_date.values)
                         Collections.sort(dates, object : Comparator<Date?> {
@@ -336,7 +337,9 @@ println("Ok")
                             }
                         })
                         println("Dates size is :"+dates.size+" selected date size is "+selected_date.size)
+                        // для показа в rc
                         adapter.clear()
+                        //filter_fact.dates_begin используется для показа дат при повторном заходе в календарь
                         filter_fact.dates_begin = ArrayList<String>()
                         var str: String?
                         for (i in 0 until dates.size) {

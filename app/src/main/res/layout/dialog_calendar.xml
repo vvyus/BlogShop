@@ -141,19 +141,23 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/negativeButton"
+            style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginEnd="40dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="60dp"
             android:layout_weight="1"
             android:background="@drawable/calendar_background"
             android:text="@string/cancel_dialog" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/positiveButton"
+            style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal|end"
+            android:layout_marginEnd="40dp"
             android:layout_weight="1"
             android:background="@drawable/calendar_background"
             android:text="@string/confirm_dialog" />

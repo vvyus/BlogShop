@@ -52,4 +52,5 @@
     <string name="caption_filter_count">Покупок</string>
     <string name="ProgressJsonLoading">Загрузка чеков...</string>
     <string name="import_checks">Загрузить чеки?</string>
+    <string name="confirm_load_check">Загрузка</string>
 </resources>
