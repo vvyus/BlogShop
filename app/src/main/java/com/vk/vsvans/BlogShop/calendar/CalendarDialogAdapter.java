@@ -5,12 +5,16 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.cardview.widget.CardView;
 
+//import com.google.type.DateTime;
 import com.vk.vsvans.BlogShop.AppStart;
 import com.vk.vsvans.BlogShop.R;
 import com.vk.vsvans.BlogShop.util.UtilsHelper;
@@ -21,7 +25,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-
+import java.util.Calendar;
 public class CalendarDialogAdapter extends BaseAdapter {
     private List<Date> dateArray = new ArrayList();
     private Context mContext;
@@ -38,6 +42,9 @@ public class CalendarDialogAdapter extends BaseAdapter {
     int select_text_color=Color.WHITE;
     int text_color_event=Color.parseColor("#008577");
     int text_color_calendar=DEFAULT_TEXT_COLOR;//Color.BLACK;
+    private Animation anim;
+    private long start_range_select=0;
+
     onItemClickListener mItemClickListener;
 
     HashMap<String,String> month_names=new HashMap<String,String>();
@@ -93,6 +100,11 @@ public class CalendarDialogAdapter extends BaseAdapter {
         }else if(type_event==2){
             initRemindersEvent();
         }
+        anim = new AlphaAnimation(0.0f, 1.0f);
+        anim.setDuration(100); //You can manage the time of the blink with this parameter
+        anim.setStartOffset(20);
+        anim.setRepeatMode(Animation.REVERSE);
+        anim.setRepeatCount(Animation.INFINITE);
     }
 
     @Override
@@ -132,15 +144,34 @@ public class CalendarDialogAdapter extends BaseAdapter {
 //                (parent.getHeight() - (int)dp * mDateManager.getWeeks() ) / mDateManager.getWeeks());
 //        convertView.setLayoutParams(params);
 
-        convertView.setOnClickListener(new View.OnClickListener() {
+        holder.cvCalendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //onItemClickListner.onClick(position);
                 Date value=dateArray.get(position);
                 String key=UtilsHelper.getDate(value.getTime());
-                if(selected_date.get(key)==null){
-                    selected_date.put(key,value);
-                }else selected_date.remove(key);
+                if(start_range_select>0) {
+                    long end_range_select = value.getTime();
+                    if (start_range_select != end_range_select) {
+                        Date end = start_range_select > end_range_select ? new Date(start_range_select) : new Date(end_range_select);
+                        Date current = start_range_select > end_range_select ? new Date(end_range_select) : new Date(start_range_select);
+                        while (current.getTime() <= end.getTime()) {
+                            String key_ = UtilsHelper.getDate(current.getTime());
+                            if (selected_date.get(key_) == null) selected_date.put(key_, current);
+                            mItemClickListener.onClick(current);
+                            current = UtilsHelper.addDays(current, 1);
+                        }
+                    }
+                    start_range_select = 0;
+                    Toast.makeText(mContext, "Закончено выделение диапазона!", Toast.LENGTH_LONG);
+//                }else if(start_range_select==0){
+//                    start_range_select=value.getTime();
+//                    Toast.makeText(mContext, "Начато выделение диапазона!", Toast.LENGTH_LONG);
+                }else{
+                    if(selected_date.get(key)==null){
+                        selected_date.put(key,value);
+                    }else selected_date.remove(key);
+                }
                 notifyDataSetChanged();
 
                 mItemClickListener.onClick(value);
@@ -148,7 +179,19 @@ public class CalendarDialogAdapter extends BaseAdapter {
                 notifyDataSetChanged();
             }
         });
+        //for rangecells select
+        holder.cvCalendar.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Date value=dateArray.get(position);
+                if(start_range_select==0){
+                    start_range_select=value.getTime();
 
+                    Toast.makeText(mContext, "Начато выделение диапазона!", Toast.LENGTH_LONG);
+                } else start_range_select=0;
+                return true;
+            }
+        });
         //show the dates day
         SimpleDateFormat dateFormat = new SimpleDateFormat("d", Locale.US);
         holder.dateText.setText(dateFormat.format(dateArray.get(position)));
@@ -157,7 +200,9 @@ public class CalendarDialogAdapter extends BaseAdapter {
         Date value=dateArray.get(position);
         String key=UtilsHelper.getDate(value.getTime());
         if(selected_date.get(key)!=null){
-            holder.cvCalendar.setBackgroundColor(select_background_color); //convertView.setBackgroundColor(select_background_color);
+            //convertView.setBackgroundColor(Color.WHITE);
+            holder.cvCalendar.setBackgroundColor(select_background_color); //
+
         } else if (mDateManager.isToday(dateArray.get(position))){
             holder.cvCalendar.setBackgroundColor(currentDayColor);//convertView.setBackgroundColor(currentDayColor);
         }else if (mDateManager.isCurrentMonth(dateArray.get(position))){
@@ -196,6 +241,9 @@ public class CalendarDialogAdapter extends BaseAdapter {
         }else {
             holder.eventText.setText("");
         }
+
+        if(start_range_select==0) holder.dateText.clearAnimation();
+        else holder.dateText.startAnimation(anim);
 
         return convertView;
     }

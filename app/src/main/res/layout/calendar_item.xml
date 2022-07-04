@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/calendar_background"
     android:gravity="center"
     android:orientation="vertical">
 
@@ -12,8 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="5dp"
-        app:cardCornerRadius="10dp"
-        app:cardElevation="5dp">
+        app:cardCornerRadius="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
