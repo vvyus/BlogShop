@@ -363,7 +363,8 @@ println("Ok")
         }
         val rvCheckDialog=rootView.findViewById<RecyclerView>(R1.id.rvCheckDialog)
         rvCheckDialog.layoutManager= LinearLayoutManager(context)
-
+        rvCheckDialog.setHasFixedSize(false);
+        rvCheckDialog.setNestedScrollingEnabled(false);
         rvCheckDialog.adapter=adapter
         //adapter.add("test")
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="10dp"
+        app:layout_constraintBottom_toTopOf="@id/llRc"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -39,23 +40,29 @@
 
     </LinearLayout>
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/llRc"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="400dp"
 
         android:layout_marginBottom="20dp"
-        android:layout_weight="200"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/llBottom"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@id/llBottom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/llTop"
+        app:layout_constraintTop_toBottomOf="@id/llTop"
         app:layout_constraintVertical_bias="0.0">
 
-        <ScrollView
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nestedScrollView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="0dp"
+            android:background="@color/gray_light"
+            android:fillViewport="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -70,19 +77,21 @@
                 </androidx.recyclerview.widget.RecyclerView>
 
             </LinearLayout>
-        </ScrollView>
+        </androidx.core.widget.NestedScrollView>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabCheckDialogAdd"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/fab_margin"
             android:backgroundTint="@color/gray"
             android:clickable="true"
+            app:layout_constraintBottom_toBottomOf="@id/llRc"
+            app:layout_constraintEnd_toEndOf="@id/llRc"
             app:srcCompat="@drawable/ic_add_purchase_item" />
 
-    </FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
         android:id="@+id/llBottom"
@@ -93,7 +102,8 @@
         android:padding="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llRc">
 
         <LinearLayout
             android:id="@+id/llButtonCancel"
@@ -133,4 +143,4 @@
         </LinearLayout>
 
     </LinearLayout>
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

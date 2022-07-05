@@ -163,6 +163,7 @@ public class CalendarDialogAdapter extends BaseAdapter {
                         }
                     }
                     start_range_select = 0;
+                    v.clearAnimation();
                     Toast.makeText(mContext, "Закончено выделение диапазона!", Toast.LENGTH_LONG);
 //                }else if(start_range_select==0){
 //                    start_range_select=value.getTime();
@@ -186,7 +187,7 @@ public class CalendarDialogAdapter extends BaseAdapter {
                 Date value=dateArray.get(position);
                 if(start_range_select==0){
                     start_range_select=value.getTime();
-
+                    v.startAnimation(anim);
                     Toast.makeText(mContext, "Начато выделение диапазона!", Toast.LENGTH_LONG);
                 } else start_range_select=0;
                 return true;
@@ -242,9 +243,9 @@ public class CalendarDialogAdapter extends BaseAdapter {
             holder.eventText.setText("");
         }
 
-        if(start_range_select==0) holder.dateText.clearAnimation();
-        else holder.dateText.startAnimation(anim);
-
+//        if(start_range_select==0) holder.dateText.clearAnimation();
+//        else if(new Date(start_range_select)==dateArray.get(position))holder.dateText.startAnimation(anim);
+//        notifyDataSetChanged();
         return convertView;
     }
 
