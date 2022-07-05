@@ -263,12 +263,14 @@ class DbRepositoryImpl(context: Context):IDbRepository {
         }
         if(filter.dates_begin!=null && filter.dates_end!=null) {
             for (i in filter.dates_begin!!.indices) {
+                if(i==0)selection+="("
                 selection += "${DbName.COLUMN_NAME_TIME} >= " + filter.dates_begin!![i] + " AND ${DbName.COLUMN_NAME_TIME}<=" + filter.dates_end!![i]
-                if (i < filter.dates_begin!!.size - 1) selection += " OR " else selection += " AND "
+                if (i < filter.dates_begin!!.size - 1) selection += " OR " else selection +=")" //" AND "
             }
         }
         if(selection.endsWith(" AND "))selection=selection.substring(0, selection.length - 5)
         val selectionArgs: Array<String> = args.toTypedArray()
+        println(" !!! "+selection)
         //selectionArgs = arrayOf(idSeller.toString())
 
         val temp: String = DbName.PURCHASE_QUERY

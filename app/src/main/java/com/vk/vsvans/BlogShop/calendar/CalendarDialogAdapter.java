@@ -157,8 +157,10 @@ public class CalendarDialogAdapter extends BaseAdapter {
                         Date current = start_range_select > end_range_select ? new Date(end_range_select) : new Date(start_range_select);
                         while (current.getTime() <= end.getTime()) {
                             String key_ = UtilsHelper.getDate(current.getTime());
-                            if (selected_date.get(key_) == null) selected_date.put(key_, current);
-                            mItemClickListener.onClick(current);
+                            if (selected_date.get(key_) == null){
+                                selected_date.put(key_, current);
+                                mItemClickListener.onClick(current);
+                            }
                             current = UtilsHelper.addDays(current, 1);
                         }
                     }
@@ -172,11 +174,8 @@ public class CalendarDialogAdapter extends BaseAdapter {
                     if(selected_date.get(key)==null){
                         selected_date.put(key,value);
                     }else selected_date.remove(key);
+                    mItemClickListener.onClick(value);
                 }
-                notifyDataSetChanged();
-
-                mItemClickListener.onClick(value);
-
                 notifyDataSetChanged();
             }
         });
@@ -189,7 +188,10 @@ public class CalendarDialogAdapter extends BaseAdapter {
                     start_range_select=value.getTime();
                     v.startAnimation(anim);
                     Toast.makeText(mContext, "Начато выделение диапазона!", Toast.LENGTH_LONG);
-                } else start_range_select=0;
+                } else {
+                    start_range_select=0;
+                    v.clearAnimation();
+                }
                 return true;
             }
         });
