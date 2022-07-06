@@ -116,6 +116,7 @@ class BaseListRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
     fun setSelectedPositionById(id:Int){
         //var i=0;
         for(i in 0 until BaseListArray.size){
+            if(BaseListArray[i].count>0)BaseListArray[i].expanded=true
             if(BaseListArray[i].id==id){
                 selected_position=i;
                 //notifyDataSetChanged()
