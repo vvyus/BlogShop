@@ -42,6 +42,8 @@ class BaseListRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
             if (selected_position != holder.getAdapterPosition()) {
                 selectItem(holder.adapterPosition)
             }else{
+
+                if(clickItemCallback!=null) clickItemCallback.onClickItem(getBaseList()!!)
                 unSelectItem()
             }
             notifyItemChanged(selected_position)
@@ -109,6 +111,18 @@ class BaseListRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
             } else break
         }
         return true
+    }
+
+    fun setSelectedPositionById(id:Int){
+        //var i=0;
+        for(i in 0 until BaseListArray.size){
+            if(BaseListArray[i].id==id){
+                selected_position=i;
+                //notifyDataSetChanged()
+                break;
+            }
+            //i++;
+        }
     }
 
     fun getBaseListId():Int{

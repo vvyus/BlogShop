@@ -1,6 +1,8 @@
 package com.vk.vsvans.BlogShop.model.data
 
-open class BaseList : Comparable<BaseList> {
+import java.io.Serializable
+
+open class BaseList : Serializable,Comparable<BaseList> {
     var id=0
     var name=""
     var id_fns=""

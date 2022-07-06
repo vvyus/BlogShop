@@ -60,6 +60,10 @@ class ProductActivity : AppCompatActivity() {
                 }
             }
 
+            override fun onClickItem(baseList: BaseList) {
+                //
+            }
+
             override fun onEditItem() {
                 val product= adapter.getBaseList()
                 if (product != null) {

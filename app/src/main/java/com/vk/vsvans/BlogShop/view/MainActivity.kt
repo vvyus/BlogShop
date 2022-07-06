@@ -80,6 +80,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         }
 
+        override fun onClickItem(baseList: BaseList) {
+        }
+
         override fun onEditItem() {}
 
         override fun onDeleteItem() {}

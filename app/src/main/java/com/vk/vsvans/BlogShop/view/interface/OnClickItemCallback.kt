@@ -4,6 +4,7 @@ import com.vk.vsvans.BlogShop.model.data.BaseList
 
 interface OnClickItemCallback {
     fun onClickItem(id:Int)
+    fun onClickItem(baseList:BaseList)
     fun onEditItem()
     fun onDeleteItem()
     fun onNewItem(parent: BaseList)

@@ -61,6 +61,9 @@ class PurchaseItemListFragment(private val fragCloseInterface:IFragmentCloseInte
                 }
             }
 
+            override fun onClickItem(baseList: BaseList) {
+             }
+
             override fun onEditItem() {
                 val pit= adapter.getPurchaseItem()
                 if (pit != null) {

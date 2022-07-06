@@ -2,6 +2,7 @@ package com.vk.vsvans.BlogShop.view
 
 import android.app.SearchManager
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
@@ -22,6 +23,7 @@ import com.vk.vsvans.BlogShop.view.`interface`.IDialogListener
 import com.vk.vsvans.BlogShop.view.`interface`.IUpdateBaseListItemList
 import com.vk.vsvans.BlogShop.view.`interface`.OnClickItemCallback
 import com.vk.vsvans.BlogShop.model.data.BaseList
+import com.vk.vsvans.BlogShop.model.data.Purchase
 import com.vk.vsvans.BlogShop.model.data.Seller
 import com.vk.vsvans.BlogShop.viewmodel.ActivityViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -37,12 +39,15 @@ class SellerActivity : AppCompatActivity() {
     var viewModel: ActivityViewModel=ActivityViewModel()//?=null
     private var job: Job? = null
     private var selectedId=0
+    private var setSelectedId=0
     private lateinit var searchView: SearchView
     val TAG="MyLog"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //viewModel= ActivityViewModel(application)
+        val intent=getIntent()
+        setSelectedId=intent.getIntExtra(R.string.SELLER_ID.toString(), 0)
         rootElement= ActivitySellerBinding.inflate(layoutInflater)
         val view=rootElement.root
         setContentView(view)
@@ -56,7 +61,18 @@ class SellerActivity : AppCompatActivity() {
                 if(id>0) {
                     // may be delete item
                     selectedId=id
+
                 }
+            }
+
+            override fun onClickItem(baseList: BaseList) {
+                val data = Intent()
+                //if(idPurchase==0) old_time=0L
+                data.putExtra(getString(R.string.SELLER_ID), baseList.id)
+                //Seller seller=adapter.
+                data.putExtra(Seller::class.java.getSimpleName(), baseList as Seller)
+                setResult(RESULT_OK, data)
+                onBackPressed()
             }
 
             override fun onEditItem() {
@@ -177,7 +193,8 @@ class SellerActivity : AppCompatActivity() {
 
             //override fun onTimeClick() {}
 
-        })
+        })// adapter
+
         val rcView=rootElement.rcViewSellerList
         rcView.layoutManager = LinearLayoutManager(this)
         rcView.adapter = adapter
@@ -191,12 +208,18 @@ class SellerActivity : AppCompatActivity() {
         //если наше activity доступно не разрушено или ждет когда можно обновить слушателт сработает
         viewModel.liveSellerList.observe(this,{
             adapter.updateAdapter(it)
+            if(setSelectedId>0){
+                adapter.setSelectedPositionById(setSelectedId)
+                setSelectedId=0;
+                //adapter.notifyDataSetChanged()
+            }
         })
     }
     override fun onResume() {
         super.onResume()
         viewModel.openDb()
         fillAdapter("")
+
     }
 
     override fun onDestroy() {

@@ -9,6 +9,9 @@ import android.text.Html
 import android.view.View
 import android.widget.DatePicker
 import android.widget.TimePicker
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.vk.vsvans.BlogShop.R
@@ -54,6 +57,7 @@ class EditPurchaseActivity : AppCompatActivity() {
     var listProducts=ArrayList<Product>()
     private var listSellers=ArrayList<Seller>()
     //var content_temp:SpannableString="".makeSpannableString()
+    lateinit var launcherSeller: ActivityResultLauncher<Intent>
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -131,20 +135,26 @@ class EditPurchaseActivity : AppCompatActivity() {
         cardItemPurchaseAdapter= CardItemPurchaseRcAdapter()
         rootElement.vpPurchaseItems.adapter=cardItemPurchaseAdapter
         rootElement.tvSellerSelect.setOnClickListener {
-            val dialog= DialogSpinnerHelper()
-            DialogHelper.job?.cancel()
-            DialogHelper.job = CoroutineScope(Dispatchers.Main).launch {
-                //val listSeller = dialog.getAllSeller(this@EditPurchaseActivity)
-                viewModel!!.getSellers("")
-                var idseller=0
-                if(rootElement.tvSellerSelect.tag==null || (rootElement.tvSellerSelect.tag as Seller)==null) idseller=purchase!!.idseller
-                else idseller=(rootElement.tvSellerSelect.tag as Seller).id
-                rootElement.tvSellerSelect.setTag(idseller)
-                dialog.showSpinnerDialog(this@EditPurchaseActivity, listSellers as ArrayList<BaseList>, rootElement.tvSellerSelect)
-            }
+            var idseller=0
+            if(rootElement.tvSellerSelect.tag==null || (rootElement.tvSellerSelect.tag as Seller)==null) idseller=purchase!!.idseller
+            else idseller=(rootElement.tvSellerSelect.tag as Seller).id
+            rootElement.tvSellerSelect.setTag(idseller)
+            launchSellerActivity(idseller)
+//            val dialog= DialogSpinnerHelper()
+//            DialogHelper.job?.cancel()
+//            DialogHelper.job = CoroutineScope(Dispatchers.Main).launch {
+//                //val listSeller = dialog.getAllSeller(this@EditPurchaseActivity)
+//                viewModel!!.getSellers("")
+//                var idseller=0
+//                if(rootElement.tvSellerSelect.tag==null || (rootElement.tvSellerSelect.tag as Seller)==null) idseller=purchase!!.idseller
+//                else idseller=(rootElement.tvSellerSelect.tag as Seller).id
+//                rootElement.tvSellerSelect.setTag(idseller)
+//                dialog.showSpinnerDialog(this@EditPurchaseActivity, listSellers as ArrayList<BaseList>, rootElement.tvSellerSelect)
+//            }
         }
         if(idPurchase==0) rootElement.purchaseItemButton.visibility=View.VISIBLE
         else rootElement.purchaseItemButton.visibility=View.GONE
+        launcherSeller=getLauncher()
     }
 
     private fun initDateTime(){
@@ -194,6 +204,32 @@ class EditPurchaseActivity : AppCompatActivity() {
         rootElement.edDatePart.setText(mDateMediumFormat.format(Date(purchase!!.time)))
         val mDateShortFormat =  SimpleDateFormat("HH:mm", Locale.getDefault())
         rootElement.edTimePart.setText(mDateShortFormat.format(Date(purchase!!.time)))
+    }
+
+    fun launchSellerActivity(id:Int){
+        val intent= Intent(this@EditPurchaseActivity, SellerActivity::class.java)
+        intent.putExtra(R.string.SELLER_ID.toString(),id)
+        launcherSeller.launch(intent) //getLauncher().launch(intent)
+    }
+
+
+
+    private fun getLauncher():ActivityResultLauncher<Intent>{
+        return registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+                result: ActivityResult ->
+            if(result.resultCode==AppCompatActivity.RESULT_OK){
+                if(result.data!=null){
+                    //result.data is intent
+                    val intent=result.data
+                    //val new_purchase_time=intent!!.getLongExtra(getString(R.string.new_purchase_time),0L)
+                    val seller= intent!!.getSerializableExtra(Seller::class.java.getSimpleName()) as Seller
+                    rootElement.tvSellerSelect.setTag(seller)
+                    rootElement.tvSellerSelect.text=seller.name
+//                    tvSelection.text=selectItem.name
+//                    tvSelection.setTag(selectItem)
+                }
+            }
+        }
     }
 
     fun clearResultArray(){
