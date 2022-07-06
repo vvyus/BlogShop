@@ -104,7 +104,7 @@ class EditPurchaseActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.N)
     private fun initPurchase(){
         if(idPurchase>0) {
-            //dbManager.openDb()
+            //viewModel.openDb()
             job?.cancel()
             job = CoroutineScope(Dispatchers.Main).launch{
                 purchase=viewModel.getPurchase(idPurchase)
@@ -225,6 +225,7 @@ class EditPurchaseActivity : AppCompatActivity() {
                     val seller= intent!!.getSerializableExtra(Seller::class.java.getSimpleName()) as Seller
                     rootElement.tvSellerSelect.setTag(seller)
                     rootElement.tvSellerSelect.text=seller.name
+
 //                    tvSelection.text=selectItem.name
 //                    tvSelection.setTag(selectItem)
                 }
@@ -245,6 +246,7 @@ class EditPurchaseActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.N)
     fun onClickSavePurchase(view: View){
         var remove=true
+        viewModel.openDb()
         rootElement.apply {
             job?.cancel()
             job = CoroutineScope(Dispatchers.Main).launch{
