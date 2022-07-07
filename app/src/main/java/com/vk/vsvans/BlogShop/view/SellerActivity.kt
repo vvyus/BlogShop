@@ -211,7 +211,7 @@ class SellerActivity : AppCompatActivity() {
         bNavView.setOnItemSelectedListener {
             when(it.itemId){
                 R.id.id_new_baselist->{
-                    val parent=adapter.getParent()
+                    val parent=adapter.getBaseList() //getParent()
                     if(parent!=null) {
                         val seller = Seller()
                         //новая запись
