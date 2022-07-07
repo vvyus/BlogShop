@@ -43,6 +43,7 @@ var title_color=0
             if (selected_position != holder.getAdapterPosition()) {
                 selectItem(holder.adapterPosition)
             }else{
+                if (clickItemCallback != null) clickItemCallback!!.onEditItem()
                 unSelectItem()
             }
             notifyItemChanged(selected_position)
@@ -119,9 +120,9 @@ var title_color=0
                 //val tvContent = view.findViewById<TextView>(R.id.tvContentPurchaseItem)
                 tvContentPurchaseItem.text = purchaseItem.getContent(title_color)
                 tvTitlePurchaseItem.text = "Позиция- ${adapterPosition + 1}"
-                imEditPurchaseItem.setOnClickListener {
-                    if (clickItemCallback != null) clickItemCallback!!.onEditItem()
-                }
+//                imEditPurchaseItem.setOnClickListener {
+//                    if (clickItemCallback != null) clickItemCallback!!.onEditItem()
+//                }
                 imDeletePurchaseItem.setOnClickListener {
                     if (clickItemCallback != null) clickItemCallback!!.onDeleteItem()
                 }
