@@ -2,6 +2,7 @@ package com.vk.vsvans.BlogShop.view
 
 import android.app.SearchManager
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
@@ -23,6 +24,7 @@ import com.vk.vsvans.BlogShop.view.`interface`.IUpdateBaseListItemList
 import com.vk.vsvans.BlogShop.view.`interface`.OnClickItemCallback
 import com.vk.vsvans.BlogShop.model.data.BaseList
 import com.vk.vsvans.BlogShop.model.data.Product
+import com.vk.vsvans.BlogShop.model.data.Seller
 import com.vk.vsvans.BlogShop.viewmodel.ActivityViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -38,12 +40,16 @@ class ProductActivity : AppCompatActivity() {
     //val dbManager= DbManager(this)
     private var job: Job? = null
     private var selectedId=0
+    private var startSelectedId=0
     private lateinit var searchView:SearchView
     val TAG="MyLog"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //viewModel= ActivityViewModel(application)
+
+        val intent=getIntent()
+        startSelectedId=intent.getIntExtra(R.string.PRODUCT_ID.toString(), 0)
+
         rootElement= ActivityProductBinding.inflate(layoutInflater)
         val view=rootElement.root
         setContentView(view)
@@ -61,7 +67,12 @@ class ProductActivity : AppCompatActivity() {
             }
 
             override fun onClickItem(baseList: BaseList) {
-                //
+                val data = Intent()
+                 data.putExtra(getString(R.string.PRODUCT_ID), baseList.id)
+                //Seller seller=adapter.
+                data.putExtra(Product::class.java.getSimpleName(), baseList as Product)
+                setResult(RESULT_OK, data)
+                onBackPressed()
             }
 
             override fun onEditItem() {
@@ -196,6 +207,13 @@ class ProductActivity : AppCompatActivity() {
         //если наше activity доступно не разрушено или ждет когда можно обновить слушателт сработает
         viewModel.liveProductList.observe(this,{
             adapter.updateAdapter(it)
+            if(startSelectedId>0){
+                val pos=adapter.setSelectedPositionById(startSelectedId)
+                if(pos>0) {
+                    rootElement.rcViewProductList.scrollToPosition(pos)
+                }
+                startSelectedId=0;
+            }
         })
     }
 

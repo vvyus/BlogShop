@@ -4,6 +4,7 @@ import android.R
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,7 +14,11 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -22,6 +27,7 @@ import com.vk.vsvans.BlogShop.calendar.CalendarDialogAdapter
 import com.vk.vsvans.BlogShop.model.data.BaseList
 import com.vk.vsvans.BlogShop.model.data.Product
 import com.vk.vsvans.BlogShop.model.data.PurchaseItem
+import com.vk.vsvans.BlogShop.model.data.Seller
 import com.vk.vsvans.BlogShop.util.FilterForActivity
 import com.vk.vsvans.BlogShop.util.UtilsHelper
 import com.vk.vsvans.BlogShop.view.EditPurchaseActivity
@@ -66,10 +72,11 @@ object DialogHelper {
 
     }
 
-    fun showPurchaseItemInputDialog(context: Context, pit: PurchaseItem,listProduct:ArrayList<BaseList> ,iupdatePurchaseItemList: IUpdatePurchaseItemList) {
+    fun showPurchaseItemInputDialog(context: Context, pit: PurchaseItem,
+                                    launcherProduct: ActivityResultLauncher<Intent> ,
+                                    iupdatePurchaseItemList: IUpdatePurchaseItemList):AlertDialog {
         val customDialog = AlertDialog.Builder(context, 0).create()
         val inflater: LayoutInflater =(context as EditPurchaseActivity).layoutInflater
-
         val view: View = inflater.inflate(R1.layout.input_purchase_item, null)
         customDialog.setView(view)
         val rootView=view.rootView
@@ -85,17 +92,24 @@ object DialogHelper {
         if(!pit.productName.isEmpty()){
             tvProduct.setText(pit.productName)
         }
+
+
         tvProduct.setOnClickListener {
             val dialog= DialogSpinnerHelper()
             job?.cancel()
             job = CoroutineScope(Dispatchers.Main).launch {
-                //val listProduct = dialog.getAllProduct(context)
+                var idproduct=0
+                if(tvProduct.tag==null ) idproduct=pit!!.idProduct
+                else idproduct=(tvProduct.tag as Product).id
+                val intent= Intent(context as EditPurchaseActivity, ProductActivity::class.java)
+                intent.putExtra(com.vk.vsvans.BlogShop.R.string.PRODUCT_ID.toString(),idproduct)
+                launcherProduct.launch(intent) //getLauncher().launch(intent)
 
-                var idProduct=0
-                if(tvProduct.tag==null || (tvProduct.tag as Product)==null) idProduct=pit!!.idProduct
-                else idProduct=(tvProduct.tag as Product).id
-                tvProduct.setTag(idProduct)
-                dialog.showSpinnerDialog(context, listProduct, tvProduct)
+//                var idProduct=0
+//                if(tvProduct.tag==null || (tvProduct.tag as Product)==null) idProduct=pit!!.idProduct
+//                else idProduct=(tvProduct.tag as Product).id
+//                tvProduct.setTag(idProduct)
+//                dialog.showSpinnerDialog(context, listProduct, tvProduct)
             }
         }
 
@@ -122,7 +136,7 @@ object DialogHelper {
 
         customDialog.show()
 
-
+        return customDialog
     }
 
     fun showBaseListInputDialog(context: Context, product: BaseList, iupdateBaseListItemList: IUpdateBaseListItemList) {
