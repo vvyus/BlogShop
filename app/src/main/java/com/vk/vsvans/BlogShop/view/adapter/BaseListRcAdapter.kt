@@ -55,8 +55,9 @@ class BaseListRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
 
         //
         holder.itemView.setBackgroundColor(if (selected_position == position) selected_color else Color.TRANSPARENT)
-        val llButtons=holder.itemView.findViewById<LinearLayout>(R.id.llButtons)
-        llButtons.visibility=if (selected_position == position) View.VISIBLE else View.GONE
+        // вся функциональность llbuttons теперь в bottommenu на активити
+//        val llButtons=holder.itemView.findViewById<LinearLayout>(R.id.llButtons)
+//        llButtons.visibility=if (selected_position == position) View.VISIBLE else View.GONE
         //!
 
         val parentid=BaseList.idparent

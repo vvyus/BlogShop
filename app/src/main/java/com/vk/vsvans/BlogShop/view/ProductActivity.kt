@@ -75,130 +75,19 @@ class ProductActivity : AppCompatActivity() {
                 onBackPressed()
             }
 
-            override fun onEditItem() {
-                val product= adapter.getBaseList()
-                if (product != null) {
-                    DialogHelper.showBaseListInputDialog(this@ProductActivity,product,
-                        object: IUpdateBaseListItemList {
-                            override fun onUpdateBaseListItemList(product: BaseList) {
-                                // add single product
-                                adapter.updateAdapterEdit(product)
-                                viewModel.updateProduct(product as Product)
-                            }
-
-                        }
-                    )
-                }
-            }
-
-            override fun onDeleteItem() {
-                if(selectedId>0){
-                    DialogHelper.showPurchaseDeleteItemDialog(this@ProductActivity,selectedId,
-                        object: IDeleteItem {
-                            override fun onDeleteItem(id:Int) {
-                                adapter.deleteBaseListItem()
-                                val parent=adapter.getParent()
-                                if(parent!=null) viewModel.updateProduct(parent as Product)
-                                //reset selectedId
-                                //selectedId=0
-                                viewModel.removeProduct(id)
-                            }
-
-                        })
-                }else {
-                    Toast.makeText(this@ProductActivity,R.string.no_selected_item, Toast.LENGTH_LONG).show()
-                }
-            }
-
-            override fun onNewItem(parent: BaseList) {
-                //adapter.addProductItem(product)
-                // add single product with parent
-                val product= Product()
-                //новая запись
-                product.id=0
-                product.idparent=parent.id
-                product.level=parent.level+1
-                parent.count=parent.count+1
-                DialogHelper.showBaseListInputDialog(this@ProductActivity,product,
-                    object: IUpdateBaseListItemList {
-                        override fun onUpdateBaseListItemList(product: BaseList) {
-                            val id=viewModel.insertProduct(product as Product)
-                            if (id != null) {
-                                product.id=id
-                                product.fullpath=parent.fullpath+id.toString()
-                                // update product array in adapter
-                                adapter.updateAdapterInsert(product)
-                                // update count for parent
-                                viewModel.updateProduct(parent as Product)
-                                // update fullpath for product
-                                viewModel.updateProduct(product)
-                            }
-                        }
-
-                    }
-                )
-            }
-
-            override fun refreshItem() {
-                adapter.refreshItem()
-            }
-
-            override fun onParentItem() {
-              DialogHelper.showSelectParentBaseListDialog("Выберите родителя",this@ProductActivity,
-                  object: IDialogListener {
-                      //override fun onOkClick(v: View?) {}
-                      override fun onOkClick(idParent: Int?) {
-
-                          val parent=if(idParent==null) null else adapter.nodeList.get(idParent)
-
-                          val product= adapter.getBaseList()
-
-                          val oldparent=adapter.getParent()
-                          if (product != null ) {
-                              // select root
-                              if(parent==null){
-                                  product.idparent=product.id
-                                  product.fullpath=product.id.toString()
-                                  product.level=0
-                              }else {
-                                  //select normal node get from parent
-                                  product.idparent = parent.id
-                                  product.fullpath = parent.fullpath + product.id
-                                  product.level = parent.level + 1
-                                  // set count for new parent
-                                  parent.count=parent.count+1
-                                  viewModel.updateProduct(parent as Product)
-                              }
-                              // replace all children where idparent==product.idparent
-                              if(product.count>0){
-                                  adapter.childArray.clear()
-                                  adapter.setChildren(product.id,product.fullpath,product.level)
-                                  for(i in 0 until adapter.childArray.size)
-                                      viewModel.updateProduct(adapter.childArray[i] as Product)
-                                  adapter.childArray.clear()
-                              }
-                              if(oldparent!=null){
-                                  oldparent.count=oldparent.count-1
-                                  viewModel.updateProduct(oldparent as Product)
-                              }
-                              // update count for parent
-                              adapter.updateAdapterParent(oldparent,parent,product)
-                              viewModel.updateProduct(product as Product)
-                              //fillAdapter("")
-                              //adapter.notifyDataSetChanged()
-                          }
-                      }
-                  })
-            }
-
-            //override fun onTimeClick() {}
-
+            override fun onEditItem() {}
+            override fun onDeleteItem() {}
+            override fun onNewItem(parent: BaseList) {}
+            override fun refreshItem() { adapter.refreshItem() }
+            override fun onParentItem() {}
         })
+
         val rcView=rootElement.rcViewProductList
         rcView.layoutManager = LinearLayoutManager(this)
         rcView.adapter = adapter
 
         initViewModel()
+        bottomMenuOnClick()
 
     }// onCreate
 
@@ -320,5 +209,126 @@ class ProductActivity : AppCompatActivity() {
             }
         }
     }//setupToolbar
+
+    private fun bottomMenuOnClick()=with(rootElement){
+        bNavView.setOnItemSelectedListener {
+            when(it.itemId){
+                R.id.id_new_baselist->{
+                    val parent=adapter.getBaseList()
+                    if(parent!=null) {
+                        val product= Product()
+                        //новая запись
+                        product.id=0
+                        product.idparent=parent.id
+                        product.level=parent.level+1
+                        parent.count=parent.count+1
+                        DialogHelper.showBaseListInputDialog(this@ProductActivity,product,
+                            object: IUpdateBaseListItemList {
+                                override fun onUpdateBaseListItemList(product: BaseList) {
+                                    val id=viewModel.insertProduct(product as Product)
+                                    if (id != null) {
+                                        product.id=id
+                                        product.fullpath=parent.fullpath+id.toString()
+                                        // update product array in adapter
+                                        adapter.updateAdapterInsert(product)
+                                        // update count for parent
+                                        viewModel.updateProduct(parent as Product)
+                                        // update fullpath for product
+                                        viewModel.updateProduct(product)
+                                    }
+                                }
+
+                            }
+                        )
+                    }
+                }
+                R.id.id_delete_baselist->{
+                    if(selectedId>0){
+                        DialogHelper.showPurchaseDeleteItemDialog(this@ProductActivity,selectedId,
+                            object: IDeleteItem {
+                                override fun onDeleteItem(id:Int) {
+                                    adapter.deleteBaseListItem()
+                                    val parent=adapter.getParent()
+                                    if(parent!=null) viewModel.updateProduct(parent as Product)
+                                    //reset selectedId
+                                    //selectedId=0
+                                    viewModel.removeProduct(id)
+                                }
+
+                            })
+                    }else {
+                        Toast.makeText(this@ProductActivity,R.string.no_selected_item, Toast.LENGTH_LONG).show()
+                    }
+
+                }
+
+                R.id.id_edit_baselist->{
+                    val product= adapter.getBaseList()
+                    if (product != null) {
+                        DialogHelper.showBaseListInputDialog(this@ProductActivity,product,
+                            object: IUpdateBaseListItemList {
+                                override fun onUpdateBaseListItemList(product: BaseList) {
+                                    // add single product
+                                    adapter.updateAdapterEdit(product)
+                                    viewModel.updateProduct(product as Product)
+                                }
+
+                            }
+                        )
+                    }
+
+                }
+                R.id.id_parent_baselist->{
+                    DialogHelper.showSelectParentBaseListDialog("Выберите родителя",this@ProductActivity,
+                        object: IDialogListener {
+                            //override fun onOkClick(v: View?) {}
+                            override fun onOkClick(idParent: Int?) {
+
+                                val parent=if(idParent==null) null else adapter.nodeList.get(idParent)
+
+                                val product= adapter.getBaseList()
+
+                                val oldparent=adapter.getParent()
+                                if (product != null ) {
+                                    // select root
+                                    if(parent==null){
+                                        product.idparent=product.id
+                                        product.fullpath=product.id.toString()
+                                        product.level=0
+                                    }else {
+                                        //select normal node get from parent
+                                        product.idparent = parent.id
+                                        product.fullpath = parent.fullpath + product.id
+                                        product.level = parent.level + 1
+                                        // set count for new parent
+                                        parent.count=parent.count+1
+                                        viewModel.updateProduct(parent as Product)
+                                    }
+                                    // replace all children where idparent==product.idparent
+                                    if(product.count>0){
+                                        adapter.childArray.clear()
+                                        adapter.setChildren(product.id,product.fullpath,product.level)
+                                        for(i in 0 until adapter.childArray.size)
+                                            viewModel.updateProduct(adapter.childArray[i] as Product)
+                                        adapter.childArray.clear()
+                                    }
+                                    if(oldparent!=null){
+                                        oldparent.count=oldparent.count-1
+                                        viewModel.updateProduct(oldparent as Product)
+                                    }
+                                    // update count for parent
+                                    adapter.updateAdapterParent(oldparent,parent,product)
+                                    viewModel.updateProduct(product as Product)
+                                    //fillAdapter("")
+                                    //adapter.notifyDataSetChanged()
+                                }
+                            }
+                        })
+
+                }
+            }//when
+            true
+        }
+    } // bottom menu
 
 }
