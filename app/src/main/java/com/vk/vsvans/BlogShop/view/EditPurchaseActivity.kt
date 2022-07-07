@@ -369,7 +369,7 @@ class EditPurchaseActivity : AppCompatActivity() {
 // добавить новую позицию покупки
     fun onClickAddPurchaseItem(view: View){
         if(purchaseItemFragment!=null){
-            viewModel.getProducts("")
+            //viewModel.getProducts("")
             val pit= PurchaseItem()
             //новая запись
             pit.id=0

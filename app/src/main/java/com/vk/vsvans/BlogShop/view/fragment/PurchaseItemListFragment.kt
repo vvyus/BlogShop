@@ -67,7 +67,7 @@ class PurchaseItemListFragment(private val fragCloseInterface:IFragmentCloseInte
             override fun onEditItem() {
                 val pit= adapter.getPurchaseItem()
                 if (pit != null) {
-                    (activity as EditPurchaseActivity).viewModel!!.getProducts("")
+                    //(activity as EditPurchaseActivity).viewModel!!.getProducts("")
                     (activity as EditPurchaseActivity).pitDialog=DialogHelper.showPurchaseItemInputDialog(activity as EditPurchaseActivity,
                         pit,
                         (activity as EditPurchaseActivity).launcherProduct ,
