@@ -56,8 +56,8 @@ class EditPurchaseActivity : AppCompatActivity() {
     var idPurchase =0
     private var purchase: Purchase? = null
     private var listDeletedPurchaseItems=ArrayList<PurchaseItem>()
-    var listProducts=ArrayList<Product>()
-    private var listSellers=ArrayList<Seller>()
+//    var listProducts=ArrayList<Product>()
+//    private var listSellers=ArrayList<Seller>()
     //var content_temp:SpannableString="".makeSpannableString()
     lateinit var launcherSeller: ActivityResultLauncher<Intent>
     lateinit var launcherProduct: ActivityResultLauncher<Intent>
@@ -80,14 +80,15 @@ class EditPurchaseActivity : AppCompatActivity() {
     private fun initViewModel(){
         //{} это слушатель
         //если наше activity доступно не разрушено или ждет когда можно обновить слушателт сработает
-        viewModel.liveSellerList.observe(this,{
-            listSellers.clear()
-            listSellers.addAll(it)
-        })
-        viewModel.liveProductList.observe(this,{
-            listProducts.clear()
-            listProducts.addAll(it)
-        })
+        // теперь списки для спиннера нам не нужны
+//        viewModel.liveSellerList.observe(this,{
+//            listSellers.clear()
+//            listSellers.addAll(it)
+//        })
+//        viewModel.liveProductList.observe(this,{
+//            listProducts.clear()
+//            listProducts.addAll(it)
+//        })
         //
         viewModel.livePurchaseItemList.observe(this,{
             (rootElement.vpPurchaseItems.adapter as CardItemPurchaseRcAdapter).update(it)
