@@ -74,124 +74,11 @@ class SellerActivity : AppCompatActivity() {
                 onBackPressed()
             }
 
-            override fun onEditItem() {
-                val seller= adapter.getBaseList()
-                if (seller != null) {
-                    DialogHelper.showBaseListInputDialog(this@SellerActivity,seller,
-                        object: IUpdateBaseListItemList {
-                            override fun onUpdateBaseListItemList(seller: BaseList) {
-                                // add single seller
-                                adapter.updateAdapterEdit(seller)
-                                viewModel.updateSeller(seller as Seller)
-                            }
-
-                        }
-                    )
-                }
-            }
-
-            override fun onDeleteItem() {
-                if(selectedId>0){
-                    DialogHelper.showPurchaseDeleteItemDialog(this@SellerActivity,selectedId,
-                        object: IDeleteItem {
-                            override fun onDeleteItem(id:Int) {
-                                adapter.deleteBaseListItem()
-                                val parent=adapter.getParent()
-                                if(parent!=null) viewModel.updateSeller(parent as Seller)
-                                //reset selectedId
-                                //selectedId=0
-                                viewModel.removeSeller(id)
-                            }
-
-                        })
-                }else {
-                    Toast.makeText(this@SellerActivity,R.string.no_selected_item, Toast.LENGTH_LONG).show()
-                }
-            }
-
-            override fun onNewItem(parent: BaseList) {
-                //adapter.addsellerItem(seller)
-                // add single seller with parent
-                val seller= Seller()
-                //новая запись
-                seller.id=0
-                seller.idparent=parent.id
-                seller.level=parent.level+1
-                parent.count=parent.count+1
-                DialogHelper.showBaseListInputDialog(this@SellerActivity,seller,
-                    object: IUpdateBaseListItemList {
-                        override fun onUpdateBaseListItemList(seller: BaseList) {
-                            val id=viewModel.insertSeller(seller as Seller)
-                            if (id != null) {
-                                seller.id=id
-                                seller.fullpath=parent.fullpath+id.toString()
-                                // update seller array in adapter
-                                adapter.updateAdapterInsert(seller)
-                                // update count for parent
-                                viewModel.updateSeller(parent as Seller)
-                                // update fullpath for seller
-                                viewModel.updateSeller(seller as Seller)
-                            }
-                        }
-
-                    }
-                )
-            }
-
-            override fun refreshItem() {
-                adapter.refreshItem()
-            }
-
-            override fun onParentItem() {
-                DialogHelper.showSelectParentBaseListDialog("Выберите родителя",this@SellerActivity,
-                    object: IDialogListener {
-                        //override fun onOkClick(v: View?) {}
-                        override fun onOkClick(idParent: Int?) {
-
-                            val parent=if(idParent==null) null else adapter.nodeList.get(idParent)
-
-                            val seller= adapter.getBaseList()
-
-                            val oldparent=adapter.getParent()
-                            if (seller != null ) {
-                                // select root
-                                if(parent==null){
-                                    seller.idparent=seller.id
-                                    seller.fullpath=seller.id.toString()
-                                    seller.level=0
-                                }else {
-                                    //select normal node get from parent
-                                    seller.idparent = parent.id
-                                    seller.fullpath = parent.fullpath + seller.id
-                                    seller.level = parent.level + 1
-                                    // set count for new parent
-                                    parent.count=parent.count+1
-                                    viewModel.updateSeller(parent as Seller)
-                                }
-                                // replace all children where idparent==seller.idparent
-                                if(seller.count>0){
-                                    adapter.childArray.clear()
-                                    adapter.setChildren(seller.id,seller.fullpath,seller.level)
-                                    for(i in 0 until adapter.childArray.size)
-                                        viewModel.updateSeller(adapter.childArray[i] as Seller)
-                                    adapter.childArray.clear()
-                                }
-                                if(oldparent!=null){
-                                    oldparent.count=oldparent.count-1
-                                    viewModel.updateSeller(oldparent as Seller)
-                                }
-                                // update count for parent
-                                adapter.updateAdapterParent(oldparent,parent,seller)
-                                viewModel.updateSeller(seller as Seller)
-                                //fillAdapter("")
-                                //adapter.notifyDataSetChanged()
-                            }
-                        }
-                    })
-            }
-
-            //override fun onTimeClick() {}
-
+            override fun onEditItem() {}
+            override fun onDeleteItem() {}
+            override fun onNewItem(parent: BaseList) {}
+            override fun refreshItem() { adapter.refreshItem() }
+            override fun onParentItem() {}
         })// adapter
 
         val rcView=rootElement.rcViewSellerList
@@ -199,7 +86,7 @@ class SellerActivity : AppCompatActivity() {
         rcView.adapter = adapter
 
         initViewModel()
-
+        bottomMenuOnClick()
     }//onCreate
 
     private fun initViewModel(){
@@ -319,5 +206,125 @@ class SellerActivity : AppCompatActivity() {
             }
         }
     }//setupToolbar
+
+    private fun bottomMenuOnClick()=with(rootElement){
+        bNavView.setOnItemSelectedListener {
+            when(it.itemId){
+                R.id.id_new_baselist->{
+                    val parent=adapter.getParent()
+                    if(parent!=null) {
+                        val seller = Seller()
+                        //новая запись
+                        seller.id = 0
+                        seller.idparent = parent.id
+                        seller.level = parent.level + 1
+                        parent.count = parent.count + 1
+                        DialogHelper.showBaseListInputDialog(this@SellerActivity, seller,
+                            object : IUpdateBaseListItemList {
+                                override fun onUpdateBaseListItemList(seller: BaseList) {
+                                    val id = viewModel.insertSeller(seller as Seller)
+                                    if (id != null) {
+                                        seller.id = id
+                                        seller.fullpath = parent.fullpath + id.toString()
+                                        // update seller array in adapter
+                                        adapter.updateAdapterInsert(seller)
+                                        // update count for parent
+                                        viewModel.updateSeller(parent as Seller)
+                                        // update fullpath for seller
+                                        viewModel.updateSeller(seller as Seller)
+                                    }
+                                }
+
+                            }
+                        )
+                    }
+                }
+                R.id.id_delete_baselist->{
+                    // selectedId устанавливается в onItemClick
+                    if(selectedId>0){
+                        DialogHelper.showPurchaseDeleteItemDialog(this@SellerActivity,selectedId,
+                            object: IDeleteItem {
+                                override fun onDeleteItem(id:Int) {
+                                    adapter.deleteBaseListItem()
+                                    val parent=adapter.getParent()
+                                    if(parent!=null) viewModel.updateSeller(parent as Seller)
+                                    //reset selectedId
+                                    //selectedId=0
+                                    viewModel.removeSeller(id)
+                                }
+
+                            })
+                    }else {
+                        Toast.makeText(this@SellerActivity,R.string.no_selected_item, Toast.LENGTH_LONG).show()
+                    }
+                }
+                R.id.id_edit_baselist->{
+                    val seller= adapter.getBaseList()
+                    if (seller != null) {
+                        DialogHelper.showBaseListInputDialog(this@SellerActivity,seller,
+                            object: IUpdateBaseListItemList {
+                                override fun onUpdateBaseListItemList(seller: BaseList) {
+                                    // add single seller
+                                    adapter.updateAdapterEdit(seller)
+                                    viewModel.updateSeller(seller as Seller)
+                                }
+
+                            }
+                        )
+                    }
+
+                }
+                R.id.id_parent_baselist->{
+                    DialogHelper.showSelectParentBaseListDialog("Выберите родителя",this@SellerActivity,
+                        object: IDialogListener {
+                            //override fun onOkClick(v: View?) {}
+                            override fun onOkClick(idParent: Int?) {
+
+                                val parent=if(idParent==null) null else adapter.nodeList.get(idParent)
+
+                                val seller= adapter.getBaseList()
+
+                                val oldparent=adapter.getParent()
+                                if (seller != null ) {
+                                    // select root
+                                    if(parent==null){
+                                        seller.idparent=seller.id
+                                        seller.fullpath=seller.id.toString()
+                                        seller.level=0
+                                    }else {
+                                        //select normal node get from parent
+                                        seller.idparent = parent.id
+                                        seller.fullpath = parent.fullpath + seller.id
+                                        seller.level = parent.level + 1
+                                        // set count for new parent
+                                        parent.count=parent.count+1
+                                        viewModel.updateSeller(parent as Seller)
+                                    }
+                                    // replace all children where idparent==seller.idparent
+                                    if(seller.count>0){
+                                        adapter.childArray.clear()
+                                        adapter.setChildren(seller.id,seller.fullpath,seller.level)
+                                        for(i in 0 until adapter.childArray.size)
+                                            viewModel.updateSeller(adapter.childArray[i] as Seller)
+                                        adapter.childArray.clear()
+                                    }
+                                    if(oldparent!=null){
+                                        oldparent.count=oldparent.count-1
+                                        viewModel.updateSeller(oldparent as Seller)
+                                    }
+                                    // update count for parent
+                                    adapter.updateAdapterParent(oldparent,parent,seller)
+                                    viewModel.updateSeller(seller as Seller)
+                                    //fillAdapter("")
+                                    //adapter.notifyDataSetChanged()
+                                }
+                            }
+                        })
+
+                }
+            }//when
+            true
+        }
+    }
 
 }

@@ -53,5 +53,10 @@
     <string name="ProgressJsonLoading">Загрузка чеков...</string>
     <string name="import_checks">Загрузить чеки?</string>
     <string name="confirm_load_check">Загрузка</string>
+    <string name="bottom_menu_new">New</string>
+    <string name="bottom_menu_delete">Delete</string>
+    <string name="bottom_menu_update">Update</string>
+    <string name="bottom_menu_edit">Edit</string>
+    <string name="bottom_menu_parent">Родитель</string>
 
 </resources>
