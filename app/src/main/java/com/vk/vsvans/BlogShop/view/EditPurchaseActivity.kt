@@ -136,9 +136,10 @@ class EditPurchaseActivity : AppCompatActivity() {
         rootElement.vpPurchaseItems.adapter=cardItemPurchaseAdapter
         rootElement.tvSellerSelect.setOnClickListener {
             var idseller=0
-            if(rootElement.tvSellerSelect.tag==null || (rootElement.tvSellerSelect.tag as Seller)==null) idseller=purchase!!.idseller
+            //if(rootElement.tvSellerSelect.tag==null || (rootElement.tvSellerSelect.tag as Seller)==null) idseller=purchase!!.idseller
+            if(rootElement.tvSellerSelect.tag==null ) idseller=purchase!!.idseller
             else idseller=(rootElement.tvSellerSelect.tag as Seller).id
-            rootElement.tvSellerSelect.setTag(idseller)
+           // rootElement.tvSellerSelect.setTag(idseller)
             launchSellerActivity(idseller)
 //            val dialog= DialogSpinnerHelper()
 //            DialogHelper.job?.cancel()

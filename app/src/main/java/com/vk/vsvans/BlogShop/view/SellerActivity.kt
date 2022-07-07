@@ -23,7 +23,6 @@ import com.vk.vsvans.BlogShop.view.`interface`.IDialogListener
 import com.vk.vsvans.BlogShop.view.`interface`.IUpdateBaseListItemList
 import com.vk.vsvans.BlogShop.view.`interface`.OnClickItemCallback
 import com.vk.vsvans.BlogShop.model.data.BaseList
-import com.vk.vsvans.BlogShop.model.data.Purchase
 import com.vk.vsvans.BlogShop.model.data.Seller
 import com.vk.vsvans.BlogShop.viewmodel.ActivityViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -39,7 +38,7 @@ class SellerActivity : AppCompatActivity() {
     var viewModel: ActivityViewModel=ActivityViewModel()//?=null
     private var job: Job? = null
     private var selectedId=0
-    private var setSelectedId=0
+    private var startSelectedId=0
     private lateinit var searchView: SearchView
     val TAG="MyLog"
 
@@ -47,7 +46,7 @@ class SellerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         //viewModel= ActivityViewModel(application)
         val intent=getIntent()
-        setSelectedId=intent.getIntExtra(R.string.SELLER_ID.toString(), 0)
+        startSelectedId=intent.getIntExtra(R.string.SELLER_ID.toString(), 0)
         rootElement= ActivitySellerBinding.inflate(layoutInflater)
         val view=rootElement.root
         setContentView(view)
@@ -208,10 +207,12 @@ class SellerActivity : AppCompatActivity() {
         //если наше activity доступно не разрушено или ждет когда можно обновить слушателт сработает
         viewModel.liveSellerList.observe(this,{
             adapter.updateAdapter(it)
-            if(setSelectedId>0){
-                adapter.setSelectedPositionById(setSelectedId)
-                setSelectedId=0;
-                //adapter.notifyDataSetChanged()
+            if(startSelectedId>0){
+                val pos=adapter.setSelectedPositionById(startSelectedId)
+                if(pos>0) {
+                    rootElement.rcViewSellerList.scrollToPosition(pos)
+                }
+                startSelectedId=0;
             }
         })
     }

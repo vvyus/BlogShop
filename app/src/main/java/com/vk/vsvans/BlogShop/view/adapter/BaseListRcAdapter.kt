@@ -113,17 +113,15 @@ class BaseListRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
         return true
     }
 
-    fun setSelectedPositionById(id:Int){
-        //var i=0;
-        for(i in 0 until BaseListArray.size){
+    fun setSelectedPositionById(id:Int):Int{
+         for(i in 0 until BaseListArray.size){
             if(BaseListArray[i].count>0)BaseListArray[i].expanded=true
             if(BaseListArray[i].id==id){
-                selected_position=i;
-                //notifyDataSetChanged()
-                break;
+                selected_position=i
+                return i
             }
-            //i++;
         }
+        return -1
     }
 
     fun getBaseListId():Int{
