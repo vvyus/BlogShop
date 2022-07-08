@@ -58,5 +58,6 @@
     <string name="bottom_menu_update">Update</string>
     <string name="bottom_menu_edit">Edit</string>
     <string name="bottom_menu_parent">Родитель</string>
+    <string name="bottom_menu_expand_more">Развернуть</string>
 
 </resources>

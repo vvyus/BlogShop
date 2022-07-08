@@ -39,6 +39,7 @@ class SellerActivity : AppCompatActivity() {
     private var job: Job? = null
     private var selectedId=0
     private var startSelectedId=0
+    private var expandedList=false
     private lateinit var searchView: SearchView
     val TAG="MyLog"
 
@@ -275,6 +276,7 @@ class SellerActivity : AppCompatActivity() {
 
                 }
                 R.id.id_parent_baselist->{
+                    if(selectedId>0){
                     DialogHelper.showSelectParentBaseListDialog("Выберите родителя",this@SellerActivity,
                         object: IDialogListener {
                             //override fun onOkClick(v: View?) {}
@@ -320,7 +322,18 @@ class SellerActivity : AppCompatActivity() {
                                 }
                             }
                         })
+                    }else {//if selected
+                        Toast.makeText(this@SellerActivity,R.string.no_selected_item, Toast.LENGTH_LONG).show()
+                    }
+                }
+                R.id.id_expand->{
+                    expandedList=!expandedList
+                    adapter.expandAll(expandedList)
 
+                    if(expandedList)it.setIcon(R.drawable.ic_expand_less)
+                    else it.setIcon(R.drawable.ic_expand_more)
+
+                    adapter.notifyDataSetChanged()
                 }
             }//when
             true

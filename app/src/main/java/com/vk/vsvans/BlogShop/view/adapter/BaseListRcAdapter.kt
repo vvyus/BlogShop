@@ -125,6 +125,12 @@ class BaseListRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
         return -1
     }
 
+    fun expandAll(expand:Boolean) {
+        for(i in 0 until BaseListArray.size){
+            if(BaseListArray[i].count>0)BaseListArray[i].expanded=expand
+        }
+    }
+
     fun getBaseListId():Int{
         if(BaseListArray.size!=0 && selected_position!= RecyclerView.NO_POSITION && selected_position<BaseListArray.size){
             return BaseListArray[selected_position].id
@@ -271,4 +277,6 @@ class BaseListRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
     fun refreshItem() {
         notifyDataSetChanged()
     }
+
+
 }
