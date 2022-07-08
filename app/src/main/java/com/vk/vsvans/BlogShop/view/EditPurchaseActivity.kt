@@ -343,7 +343,10 @@ class EditPurchaseActivity : AppCompatActivity() {
                 purchase!!.content_html=Html.toHtml(content_temp,0)
                 rootElement.edSummaPurchase.setText(summa.toString())
             }
-        },
+
+                override fun onFragClose() {
+                }
+            },
             object: IFragmentCallBack {
                 override fun onFragmentCallBack(pit: PurchaseItem) {
                     //dbManager.removePurchaseItem(pit)
