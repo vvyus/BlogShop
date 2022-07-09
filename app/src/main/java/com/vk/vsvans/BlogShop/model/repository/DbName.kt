@@ -112,6 +112,6 @@ object DbName {
             "LEFT JOIN Purchases ON PurchaseItems.idpurchase=Purchases._id WHERE Purchases.time>=? "+
             "UNION ALL SELECT PurchaseItems.idproduct,0,0,PurchaseItems.summa FROM PurchaseItems "+
             "LEFT JOIN Purchases ON PurchaseItems.idpurchase=Purchases._id WHERE Purchases.time>=? ) GROUP BY idproduct ) t " +
-            "LEFT JOIN products as p ON p._id=t.idproduct"
+            "LEFT JOIN products as p ON p._id=t.idproduct ORDER BY p.fullpath ASC"
 
 }
