@@ -487,17 +487,25 @@ class DbRepositoryImpl(context: Context):IDbRepository {
         productAmount.idparent = idparent?:0
         productAmount.fullpath = fullpath?:""
         productAmount.count = count?:0
+        productAmount.monthAmount=cursor.getDouble(cursor.getColumnIndex("monthamount"))
+        productAmount.yearAmount=cursor.getDouble(cursor.getColumnIndex("yearamount"))
+        productAmount.weekAmount=cursor.getDouble(cursor.getColumnIndex("weekamount"))
         return productAmount
     }
 
     override fun getProductAmount(searchText: String): ArrayList<ProductAmount> {
         val dataList = ArrayList<ProductAmount>()
-        val selection = "${DbName.COLUMN_NAME_NAME_PRODUCTS} like ?"
-        val cursor = db?.query(
-            DbName.TABLE_NAME_PRODUCTS,null,selection,arrayOf("%$searchText%"),//, arrayOf("_id","idparent","name","id_fns","level","count","fullpath"), selection, arrayOf("%$searchText%"),
-            null, null, "fullpath ASC"
-        )
-
+//        val selection = "${DbName.COLUMN_NAME_NAME_PRODUCTS} like ?"
+//        val cursor = db?.query(
+//            DbName.TABLE_NAME_PRODUCTS,null,selection,arrayOf("%$searchText%"),//, arrayOf("_id","idparent","name","id_fns","level","count","fullpath"), selection, arrayOf("%$searchText%"),
+//            null, null, "fullpath ASC"
+//        )
+        val datey=UtilsHelper.getFirstDayOfYear()
+        val datem=UtilsHelper.getFirstDayOfMonth()
+        val datew=UtilsHelper.getFirstDayOfWeek()
+        val selectionArgs = arrayOf(datey.toString(),datem.toString(),datew.toString())
+        val selectQuery: String = DbName.PRODUCT_AMOUNT_QUERY
+        val cursor = db?.rawQuery(selectQuery, selectionArgs)
         while (cursor?.moveToNext()!!) {
             val product=getProductAmountFromCursor(cursor)
             dataList.add(product)

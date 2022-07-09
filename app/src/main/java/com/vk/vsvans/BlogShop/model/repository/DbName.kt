@@ -103,4 +103,15 @@ object DbName {
             "ON $TABLE_NAME.$COLUMN_NAME_SELLER_ID=$TABLE_NAME_SELLERS.${BaseColumns._ID} " +
              WHERE_FOR_PURCHASE_QUERY +
             "ORDER BY $COLUMN_NAME_TIME DESC"
+    //ADD
+    val PRODUCT_AMOUNT_QUERY="SELECT p._id,p.name,p.id_fns,p.bcolor,p.idparent,p.level,p.fullpath,p.count,t.yearamount,t.monthamount,t.weekamount FROM "+
+            "( SELECT idproduct,SUM(yearamount) as yearamount,SUM(monthamount) as monthamount,SUM(weekamount) as weekamount FROM (" +
+            "SELECT PurchaseItems.idproduct,PurchaseItems.summa as yearamount,0 as monthamount,0 as weekamount FROM PurchaseItems " +
+            "LEFT JOIN Purchases ON PurchaseItems.idpurchase=Purchases._id WHERE Purchases.time>=? " +
+            "UNION ALL SELECT PurchaseItems.idproduct,0,PurchaseItems.summa,0 FROM PurchaseItems "+
+            "LEFT JOIN Purchases ON PurchaseItems.idpurchase=Purchases._id WHERE Purchases.time>=? "+
+            "UNION ALL SELECT PurchaseItems.idproduct,0,0,PurchaseItems.summa FROM PurchaseItems "+
+            "LEFT JOIN Purchases ON PurchaseItems.idpurchase=Purchases._id WHERE Purchases.time>=? ) GROUP BY idproduct ) t " +
+            "LEFT JOIN products as p ON p._id=t.idproduct"
+
 }

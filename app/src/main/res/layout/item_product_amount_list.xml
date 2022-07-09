@@ -35,20 +35,26 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="TextView" />
+            android:text="TextView"
+            android:textAlignment="textEnd"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tvMonthAmount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="TextView" />
+            android:text="TextView"
+            android:textAlignment="textEnd"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tvWeekAmount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="TextView" />
+            android:text="TextView"
+            android:textAlignment="textEnd"
+            android:textStyle="bold" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

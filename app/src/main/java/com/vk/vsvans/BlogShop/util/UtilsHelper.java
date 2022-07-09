@@ -24,6 +24,24 @@ public class UtilsHelper {
         return 0;
     }
 
+    public static long getFirstDayOfMonth(){
+        Calendar c = Calendar.getInstance();   // this takes current date
+        c.set(Calendar.DAY_OF_MONTH, 1);
+        return c.getTimeInMillis();
+    }
+
+    public static long getFirstDayOfYear(){
+        Calendar c = Calendar.getInstance();   // this takes current date
+        c.set(Calendar.DAY_OF_YEAR, 1);
+        return c.getTimeInMillis();
+    }
+
+    public static long getFirstDayOfWeek(){
+        Calendar c = Calendar.getInstance();   // this takes current date
+        c.set(Calendar.DAY_OF_WEEK, 1);
+        return c.getTimeInMillis();
+    }
+
     public static String getDate(long time) {
         Date date = new Date(time);
         DateFormat format = new SimpleDateFormat(DATE_FORMAT_1, Locale.getDefault());
