@@ -104,7 +104,8 @@ object DbName {
              WHERE_FOR_PURCHASE_QUERY +
             "ORDER BY $COLUMN_NAME_TIME DESC"
     //ADD
-    val PRODUCT_AMOUNT_QUERY="SELECT p._id,p.name,p.id_fns,p.bcolor,p.idparent,p.level,p.fullpath,p.count,t.yearamount,t.monthamount,t.weekamount FROM "+
+    val PRODUCT_AMOUNT_QUERY="SELECT p._id,p.name,p.id_fns,p.bcolor,p.idparent,p.level,p.fullpath,p.count,t.yearamount,t.monthamount,t.weekamount " +
+            "FROM products as p LEFT JOIN "+
             "( SELECT idproduct,SUM(yearamount) as yearamount,SUM(monthamount) as monthamount,SUM(weekamount) as weekamount FROM (" +
             "SELECT PurchaseItems.idproduct,PurchaseItems.summa as yearamount,0 as monthamount,0 as weekamount FROM PurchaseItems " +
             "LEFT JOIN Purchases ON PurchaseItems.idpurchase=Purchases._id WHERE Purchases.time>=? " +
@@ -112,6 +113,6 @@ object DbName {
             "LEFT JOIN Purchases ON PurchaseItems.idpurchase=Purchases._id WHERE Purchases.time>=? "+
             "UNION ALL SELECT PurchaseItems.idproduct,0,0,PurchaseItems.summa FROM PurchaseItems "+
             "LEFT JOIN Purchases ON PurchaseItems.idpurchase=Purchases._id WHERE Purchases.time>=? ) GROUP BY idproduct ) t " +
-            "LEFT JOIN products as p ON p._id=t.idproduct ORDER BY p.fullpath ASC"
+            "ON p._id=t.idproduct ORDER BY p.fullpath ASC"
 
 }
