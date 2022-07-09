@@ -1,10 +1,7 @@
 package com.vk.vsvans.BlogShop.model.repository
 
 import androidx.lifecycle.MutableLiveData
-import com.vk.vsvans.BlogShop.model.data.Product
-import com.vk.vsvans.BlogShop.model.data.Purchase
-import com.vk.vsvans.BlogShop.model.data.PurchaseItem
-import com.vk.vsvans.BlogShop.model.data.Seller
+import com.vk.vsvans.BlogShop.model.data.*
 import com.vk.vsvans.BlogShop.util.FilterForActivity
 
 interface IDbRepository {
@@ -36,6 +33,9 @@ interface IDbRepository {
     fun insertPurchaseItem(purchaseItem: PurchaseItem):Int?
     fun removePurchaseItem(id: Int)
     fun removePurchaseItems(idpurchase: Int)
+    //
+    // PRODUCT
+    fun getProductAmount(searchText:String): ArrayList<ProductAmount>
     //ADD
     fun getAllPurchases(filter: FilterForActivity,readDataCallback: ReadDataCallback?)
     interface ReadDataCallback {
@@ -55,4 +55,10 @@ interface IDbRepository {
     interface ReadPurchaseItemCallback {
         fun readData(list: ArrayList<PurchaseItem>)
     }
+
+    fun getAllProductAmount(filterString:String,readProductCallback: ReadProductAmountCallback?)
+    interface ReadProductAmountCallback {
+        fun readData(list: ArrayList<ProductAmount>)
+    }
+
 }

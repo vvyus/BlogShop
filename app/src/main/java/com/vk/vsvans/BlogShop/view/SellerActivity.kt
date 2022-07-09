@@ -106,14 +106,14 @@ class SellerActivity : AppCompatActivity() {
     }
     override fun onResume() {
         super.onResume()
-        viewModel.openDb()
+ //       viewModel.openDb()
         fillAdapter("")
 
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        viewModel.closeDb()
+//        viewModel.closeDb()
         job?.cancel()
     }
 

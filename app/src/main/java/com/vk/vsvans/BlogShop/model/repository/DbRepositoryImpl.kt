@@ -8,10 +8,7 @@ import android.provider.BaseColumns
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.vk.vsvans.BlogShop.model.MyDbHelper
-import com.vk.vsvans.BlogShop.model.data.Product
-import com.vk.vsvans.BlogShop.model.data.Purchase
-import com.vk.vsvans.BlogShop.model.data.PurchaseItem
-import com.vk.vsvans.BlogShop.model.data.Seller
+import com.vk.vsvans.BlogShop.model.data.*
 import com.vk.vsvans.BlogShop.util.FilterForActivity
 import com.vk.vsvans.BlogShop.util.UtilsHelper
 
@@ -472,6 +469,44 @@ class DbRepositoryImpl(context: Context):IDbRepository {
         db?.delete(DbName.TABLE_NAME_PURCHASE_ITEMS,selection, null)
     }
 
+// PRODUCT AMOUNT
+
+    private fun getProductAmountFromCursor(cursor: Cursor): ProductAmount {
+        val dataId = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
+        val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_ID_FNS_PRODUCTS))
+        val dataName = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_NAME_PRODUCTS))
+        val idparent = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_IDPARENT_PRODUCTS))
+        val level = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_LEVEL_PRODUCTS))
+        val fullpath = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_FULLPATH_PRODUCTS))
+        val count = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_COUNT_PRODUCTS))
+        val productAmount = ProductAmount()
+        productAmount.id = dataId
+        productAmount.name = dataName
+        productAmount.id_fns=dataTitle
+        productAmount.level = level?:0
+        productAmount.idparent = idparent?:0
+        productAmount.fullpath = fullpath?:""
+        productAmount.count = count?:0
+        return productAmount
+    }
+
+    override fun getProductAmount(searchText: String): ArrayList<ProductAmount> {
+        val dataList = ArrayList<ProductAmount>()
+        val selection = "${DbName.COLUMN_NAME_NAME_PRODUCTS} like ?"
+        val cursor = db?.query(
+            DbName.TABLE_NAME_PRODUCTS,null,selection,arrayOf("%$searchText%"),//, arrayOf("_id","idparent","name","id_fns","level","count","fullpath"), selection, arrayOf("%$searchText%"),
+            null, null, "fullpath ASC"
+        )
+
+        while (cursor?.moveToNext()!!) {
+            val product=getProductAmountFromCursor(cursor)
+            dataList.add(product)
+        }
+        cursor.close()
+        return dataList
+    }
+
+
     // ADD
     override fun getAllPurchases(filter: FilterForActivity,readDataCallback: IDbRepository.ReadDataCallback?){
         val purchaseArray=ArrayList<Purchase>()
@@ -497,5 +532,11 @@ class DbRepositoryImpl(context: Context):IDbRepository {
     override fun getAllPurchaseItems(idPurchase: Int, readPurchaseItemCallback: IDbRepository.ReadPurchaseItemCallback?) {
         val purchaseItemArray= getPurchaseItems(idPurchase)
         if(readPurchaseItemCallback!=null)readPurchaseItemCallback.readData(purchaseItemArray)
+    }
+
+    override fun getAllProductAmount(filterString:String,readProductAmountCallback: IDbRepository.ReadProductAmountCallback?){
+
+        val productArray=getProductAmount(filterString)
+        if(readProductAmountCallback!=null)readProductAmountCallback.readData(productArray)
     }
 }

@@ -31,6 +31,7 @@ import com.vk.vsvans.BlogShop.view.dialog.DialogHelper
 import com.vk.vsvans.BlogShop.model.fns.import_checks
 import com.vk.vsvans.BlogShop.view.`interface`.*
 import com.vk.vsvans.BlogShop.model.data.BaseList
+import com.vk.vsvans.BlogShop.model.data.ProductAmount
 import com.vk.vsvans.BlogShop.model.data.Purchase
 import com.vk.vsvans.BlogShop.model.data.PurchaseItem
 import com.vk.vsvans.BlogShop.util.FilterForActivity
@@ -73,6 +74,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     var livePurchaseList_size=0
     var liveAmount=0.0
     var liveCalendarEvents=HashMap<String, Int>()
+    var liveProductAmount=ArrayList<ProductAmount>()
+
     private var productAmountFragment: ProductAmountFragment?=null
 
     val adapter= PurchaseRcAdapter(object:OnClickItemCallback{
@@ -178,7 +181,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 calendar_events.putAll(it)
             }
         })
-
+// product amount
+        viewModel.liveProductAmountList.observe(this,{
+            liveProductAmount.clear()
+            liveProductAmount.addAll(it)
+        })
     }
 
      @RequiresApi(Build.VERSION_CODES.N)
@@ -321,6 +328,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 //                    intent.putExtra(R.string.PURCHASE_ID.toString(),0)
 //                    // сообщаем системе о запуске активити
 //                    startActivity(intent)
+                    // это вызов ответ придет в liveProductAmount
+                    viewModel.getProductAmount("")
                     mainContent.llMainContent.visibility=View.GONE
                     productAmountFragment=ProductAmountFragment(object: IFragmentCloseInterface {
                         override fun onFragClose(list: ArrayList<PurchaseItem>) {
@@ -330,7 +339,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         override fun onFragClose() {
                             mainContent.llMainContent.visibility=View.VISIBLE
                         }
-                    })
+                    },liveProductAmount)
+
                     val fm=supportFragmentManager.beginTransaction()
                     fm.replace(R.id.drawerLayout, productAmountFragment!!)
                     fm.commit()

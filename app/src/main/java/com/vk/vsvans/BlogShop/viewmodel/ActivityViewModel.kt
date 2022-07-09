@@ -7,10 +7,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.vk.vsvans.BlogShop.AppStart
-import com.vk.vsvans.BlogShop.model.data.Product
-import com.vk.vsvans.BlogShop.model.data.Purchase
-import com.vk.vsvans.BlogShop.model.data.PurchaseItem
-import com.vk.vsvans.BlogShop.model.data.Seller
+import com.vk.vsvans.BlogShop.model.data.*
 import com.vk.vsvans.BlogShop.model.repository.DbRepositoryImpl
 import com.vk.vsvans.BlogShop.model.repository.IDbRepository
 import com.vk.vsvans.BlogShop.util.FilterForActivity
@@ -27,6 +24,7 @@ class ActivityViewModel(): ViewModel() {
     val livePurchaseList= MutableLiveData<ArrayList<Purchase>>()
     val liveCalendarEvents= MutableLiveData<HashMap<String, Int>>()
     val liveAmount=MutableLiveData<Double>(0.0)
+
     fun getPurchases(filter: FilterForActivity){
         mDbRepositoryImpl.getAllPurchases(filter,object:IDbRepository.ReadDataCallback{
             override fun readData(list: ArrayList<Purchase>,hm:HashMap<String, Int>,amount:Double) {
@@ -37,6 +35,18 @@ class ActivityViewModel(): ViewModel() {
 
         })
     }
+
+    // for list productamount
+    val liveProductAmountList= MutableLiveData<ArrayList<ProductAmount>>()
+
+    fun getProductAmount(filter: String){
+        mDbRepositoryImpl.getAllProductAmount(filter,object:IDbRepository.ReadProductAmountCallback{
+            override fun readData(list: ArrayList<ProductAmount>) {
+                liveProductAmountList.value=list
+            }
+        })
+    }
+
     //for list product
     val liveProductList= MutableLiveData<ArrayList<Product>>()
     fun getProducts(filterString:String){
