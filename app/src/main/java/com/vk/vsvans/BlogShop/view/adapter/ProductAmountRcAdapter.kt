@@ -129,9 +129,9 @@ class ProductAmountRcAdapter(val callBack:ICallBackAmountAdapter,val filterForAc
             val tvMonthAmount=itemView.findViewById<TextView>(R.id.tvMonthAmount)
             val tvWeekAmount=itemView.findViewById<TextView>(R.id.tvWeekAmount)
             tvProdNameAmount.text=productAmount.name
-            tvYearAmount.text= productAmount.yearAmount.toString()
-            tvMonthAmount.text= productAmount.monthAmount.toString()
-            tvWeekAmount.text= productAmount.weekAmount.toString()
+            tvYearAmount.text= UtilsString.format_string(productAmount.yearAmount.toString())//productAmount.yearAmount.toString()
+            tvMonthAmount.text= UtilsString.format_string(productAmount.monthAmount.toString())
+            tvWeekAmount.text= UtilsString.format_string(productAmount.weekAmount.toString())
             // присваиваем onClick выбранному элементу
             itemView.setOnClickListener(this)
         }
