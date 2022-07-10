@@ -104,6 +104,7 @@ object DbName {
              WHERE_FOR_PURCHASE_QUERY +
             "ORDER BY $COLUMN_NAME_TIME DESC"
     //ADD
+    // case when p._id=p.idparent then p.idparent else p._id end = t.idproduct
     val PRODUCT_AMOUNT_QUERY="SELECT p._id,p.name,p.id_fns,p.bcolor,p.idparent,p.level,p.fullpath,p.count,t.yearamount,t.monthamount,t.weekamount " +
             "FROM products as p LEFT JOIN "+
             "( SELECT idproduct,SUM(yearamount) as yearamount,SUM(monthamount) as monthamount,SUM(weekamount) as weekamount FROM (" +
@@ -112,7 +113,20 @@ object DbName {
             "UNION ALL SELECT PurchaseItems.idproduct,0,PurchaseItems.summa,0 FROM PurchaseItems "+
             "LEFT JOIN Purchases ON PurchaseItems.idpurchase=Purchases._id WHERE Purchases.time>=? "+
             "UNION ALL SELECT PurchaseItems.idproduct,0,0,PurchaseItems.summa FROM PurchaseItems "+
-            "LEFT JOIN Purchases ON PurchaseItems.idpurchase=Purchases._id WHERE Purchases.time>=? ) GROUP BY idproduct ) t " +
-            "ON p._id=t.idproduct ORDER BY p.fullpath ASC"
+            "LEFT JOIN Purchases ON PurchaseItems.idpurchase=Purchases._id WHERE Purchases.time>=? " +
+            //
+            "UNION ALL SELECT PR.idparent,PurchaseItems.summa,0,0 FROM PurchaseItems "+
+            "LEFT JOIN Purchases ON PurchaseItems.idpurchase=Purchases._id " +
+            "LEFT JOIN Products as PR ON PurchaseItems.idproduct=PR._id WHERE PR._id!=PR.idparent and Purchases.time>=? " +
+            //
+            "UNION ALL SELECT PR.idparent,0,PurchaseItems.summa,0 FROM PurchaseItems "+
+            "LEFT JOIN Purchases ON PurchaseItems.idpurchase=Purchases._id " +
+            "LEFT JOIN Products as PR ON PurchaseItems.idproduct=PR._id WHERE PR._id!=PR.idparent and Purchases.time>=? " +
+            //
+            "UNION ALL SELECT PR.idparent,0,0,PurchaseItems.summa FROM PurchaseItems "+
+            "LEFT JOIN Purchases ON PurchaseItems.idpurchase=Purchases._id " +
+            "LEFT JOIN Products as PR ON PurchaseItems.idproduct=PR._id WHERE PR._id!=PR.idparent and Purchases.time>=? " +
+            //
+            ") GROUP BY idproduct ) t ON p._id = t.idproduct ORDER BY p.fullpath ASC"
 
 }

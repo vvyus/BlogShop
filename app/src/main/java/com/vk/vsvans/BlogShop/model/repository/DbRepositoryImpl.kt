@@ -503,7 +503,7 @@ class DbRepositoryImpl(context: Context):IDbRepository {
         val datey=UtilsHelper.getFirstDayOfYear()
         val datem=UtilsHelper.getFirstDayOfMonth()
         val datew=UtilsHelper.getFirstDayOfWeek()
-        val selectionArgs = arrayOf(datey.toString(),datem.toString(),datew.toString())
+        val selectionArgs = arrayOf(datey.toString(),datem.toString(),datew.toString(),datey.toString(),datem.toString(),datew.toString())
         val selectQuery: String = DbName.PRODUCT_AMOUNT_QUERY
         val cursor = db?.rawQuery(selectQuery, selectionArgs)
         while (cursor?.moveToNext()!!) {

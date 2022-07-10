@@ -11,11 +11,13 @@ import com.vk.vsvans.BlogShop.databinding.FragmentProductAmountBinding
 import com.vk.vsvans.BlogShop.databinding.ListPurchaseItemFragBinding
 import com.vk.vsvans.BlogShop.model.data.ProductAmount
 import com.vk.vsvans.BlogShop.model.data.PurchaseItem
+import com.vk.vsvans.BlogShop.util.FilterForActivity
+import com.vk.vsvans.BlogShop.view.`interface`.ICallBackAmountAdapter
 import com.vk.vsvans.BlogShop.view.`interface`.IFragmentCloseInterface
 import com.vk.vsvans.BlogShop.view.adapter.ProductAmountRcAdapter
 import com.vk.vsvans.BlogShop.view.adapter.PurchaseItemRcAdapter
 
-class ProductAmountFragment(val fragCloseInterface: IFragmentCloseInterface, val newList:ArrayList<ProductAmount>?) : Fragment() {
+class ProductAmountFragment(val fragCloseInterface: IFragmentCloseInterface, val newList:ArrayList<ProductAmount>?,val filterForActivity: FilterForActivity) : Fragment() {
     lateinit var binding:FragmentProductAmountBinding
     lateinit var adapter: ProductAmountRcAdapter
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -27,7 +29,14 @@ class ProductAmountFragment(val fragCloseInterface: IFragmentCloseInterface, val
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter= ProductAmountRcAdapter()
+        adapter= ProductAmountRcAdapter(object : ICallBackAmountAdapter {
+            override fun onClickItem() {
+                //binding.tbProductAmount.
+                activity?.supportFragmentManager?.beginTransaction()?.remove(this@ProductAmountFragment)?.commit()
+
+            }
+
+        },filterForActivity)
         setupToolbar()
         binding.apply {
             val rcView = rcViewProductAmount

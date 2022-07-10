@@ -38,7 +38,15 @@ public class UtilsHelper {
 
     public static long getFirstDayOfWeek(){
         Calendar c = Calendar.getInstance();   // this takes current date
-        c.set(Calendar.DAY_OF_WEEK, 1);
+        c.setFirstDayOfWeek(Calendar.MONDAY);
+        // Получить текущую дату - день недели
+        int day = c.get(Calendar.DAY_OF_WEEK);
+        // Согласно правилам календаря вычтите разницу между днем недели и
+        // первым днем недели для текущей даты
+        c.add(Calendar.DATE, c.getFirstDayOfWeek() - day);
+
+        //c.set(Calendar.DAY_OF_WEEK, 0);
+
         return c.getTimeInMillis();
     }
 

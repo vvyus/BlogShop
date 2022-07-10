@@ -338,8 +338,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         // при закрытии фрагмента
                         override fun onFragClose() {
                             mainContent.llMainContent.visibility=View.VISIBLE
+                            fillAdapter()
                         }
-                    },liveProductAmount)
+
+                    },liveProductAmount,filter_fact)
 
                     val fm=supportFragmentManager.beginTransaction()
                     fm.replace(R.id.drawerLayout, productAmountFragment!!)

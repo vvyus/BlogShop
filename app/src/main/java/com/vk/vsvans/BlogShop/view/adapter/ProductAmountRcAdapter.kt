@@ -10,9 +10,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.vk.vsvans.BlogShop.R
 import com.vk.vsvans.BlogShop.model.data.BaseList
 import com.vk.vsvans.BlogShop.model.data.ProductAmount
+import com.vk.vsvans.BlogShop.util.FilterForActivity
 import com.vk.vsvans.BlogShop.util.UtilsString
+import com.vk.vsvans.BlogShop.view.`interface`.ICallBackAmountAdapter
 
-class ProductAmountRcAdapter() : RecyclerView.Adapter<ProductAmountRcAdapter.SpViewHolder>() {
+class ProductAmountRcAdapter(val callBack:ICallBackAmountAdapter,val filterForActivity: FilterForActivity) : RecyclerView.Adapter<ProductAmountRcAdapter.SpViewHolder>() {
 
     private val mainList=ArrayList<ProductAmount>()
     //private val context=context
@@ -39,6 +41,12 @@ class ProductAmountRcAdapter() : RecyclerView.Adapter<ProductAmountRcAdapter.SpV
             if (selected_position != holder.getAdapterPosition()) {
                 selectItem(holder.adapterPosition)
             }else{
+                val tvProdNameAmount=holder.itemView.findViewById<TextView>(R.id.tvProdNameAmount)
+                filterForActivity.content=tvProdNameAmount!!.text.toString()
+                filterForActivity.dates_begin=null
+                filterForActivity.dates_end=null
+                filterForActivity.idSeller=null
+
                 unSelectItem()
 
             }
@@ -83,7 +91,7 @@ class ProductAmountRcAdapter() : RecyclerView.Adapter<ProductAmountRcAdapter.SpV
         val selectItem=getProductAmount()
         if(selectItem!=null){
         }else selected_position= RecyclerView.NO_POSITION
-        //if(clickItemCallback!=null) clickItemCallback!!.onClickItem(getBaseListId())
+        callBack.onClickItem()
     }
 
     fun setSelectionPosById(id:Int):Int{
