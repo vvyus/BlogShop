@@ -36,7 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Покупки/Расходы с"
+                android:text="Покупки/Расходы с начала"
                 android:textAlignment="viewStart"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -53,7 +53,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="нач года"
+                android:text="года"
                 android:textAlignment="textStart"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -63,7 +63,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="нач месяца"
+                android:text="месяца"
                 android:textAlignment="center"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -73,7 +73,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="нач недели"
+                android:text="недели"
                 android:textAlignment="textEnd"
                 android:textSize="16sp"
                 android:textStyle="bold" />
