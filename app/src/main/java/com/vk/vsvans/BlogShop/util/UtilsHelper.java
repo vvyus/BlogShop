@@ -37,17 +37,20 @@ public class UtilsHelper {
     }
 
     public static long getFirstDayOfWeek(){
-        Calendar c = Calendar.getInstance();   // this takes current date
-        c.setFirstDayOfWeek(Calendar.MONDAY);
-        // Получить текущую дату - день недели
-        int day = c.get(Calendar.DAY_OF_WEEK);
-        // Согласно правилам календаря вычтите разницу между днем недели и
-        // первым днем недели для текущей даты
-        c.add(Calendar.DATE, c.getFirstDayOfWeek() - day);
 
-        //c.set(Calendar.DAY_OF_WEEK, 0);
-
-        return c.getTimeInMillis();
+//        int dayOfWeek = 2; // Monday
+//        Calendar now = Calendar.getInstance();
+//        int weekday = now.get(Calendar.DAY_OF_WEEK);
+//
+//        // calculate how much to add
+//        int days = dayOfWeek - weekday;
+//        if (days < 0) days += 7;
+//        now.add(Calendar.DAY_OF_YEAR, days);
+        Calendar now = Calendar.getInstance();
+        int dayOfWeek = now.get(Calendar.DAY_OF_WEEK)-1;// нмер дня недели(для 1-го число) -1(с 0-го)
+        dayOfWeek=(dayOfWeek==0) ? 7: dayOfWeek;
+        now.add(Calendar.DATE, -dayOfWeek);
+        return now.getTimeInMillis();
     }
 
     public static String getDate(long time) {
