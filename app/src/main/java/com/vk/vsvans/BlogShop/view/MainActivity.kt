@@ -301,10 +301,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
-            R.id.id_purchase_food->{
-                Toast.makeText(this,"Pressed food", Toast.LENGTH_LONG).show()
+            R.id.id_products->{
+                val intent= Intent(this@MainActivity, ProductActivity::class.java)
+                intent.putExtra(R.string.PURCHASE_ID.toString(),0)
+                // сообщаем системе о запуске активити
+                startActivity(intent)
             }
-            R.id.id_purchase_drug->{
+            R.id.id_sellers->{
                 Toast.makeText(this,"Pressed drug", Toast.LENGTH_LONG).show()
             }else-> rootElement.drawerLayout.closeDrawer(GravityCompat.START)
 
@@ -324,10 +327,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     deletePurchase()
                 }
                 R.id.id_product->{
-//                    val intent= Intent(this@MainActivity, ProductActivity::class.java)
-//                    intent.putExtra(R.string.PURCHASE_ID.toString(),0)
-//                    // сообщаем системе о запуске активити
-//                    startActivity(intent)
+
                     // это вызов ответ придет в liveProductAmount
                     viewModel.getProductAmount("")
                     mainContent.llMainContent.visibility=View.GONE

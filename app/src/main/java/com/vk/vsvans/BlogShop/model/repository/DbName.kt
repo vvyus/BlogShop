@@ -129,4 +129,29 @@ object DbName {
             //
             ") GROUP BY idproduct ) t ON p._id = t.idproduct ORDER BY p.fullpath ASC"
 
+//    val PRODUCT_AMOUNT_QUERY="select _id,name,id_fns,bcolor,idparent,level,fullpath,count,yearamount,monthamount,weekamount from(" +
+//            "SELECT p._id,p.name,p.id_fns,p.bcolor,p.idparent,p.level,p.fullpath,p.count,t.yearamount,t.monthamount,t.weekamount " +
+//            "FROM products as p LEFT JOIN "+
+//            "( SELECT idproduct,SUM(yearamount) as yearamount,SUM(monthamount) as monthamount,SUM(weekamount) as weekamount FROM (" +
+//            "SELECT PurchaseItems.idproduct,PurchaseItems.summa as yearamount,0 as monthamount,0 as weekamount FROM PurchaseItems " +
+//            "LEFT JOIN Purchases ON PurchaseItems.idpurchase=Purchases._id WHERE Purchases.time>=? " +
+//            "UNION ALL SELECT PurchaseItems.idproduct,0,PurchaseItems.summa,0 FROM PurchaseItems "+
+//            "LEFT JOIN Purchases ON PurchaseItems.idpurchase=Purchases._id WHERE Purchases.time>=? "+
+//            "UNION ALL SELECT PurchaseItems.idproduct,0,0,PurchaseItems.summa FROM PurchaseItems "+
+//            "LEFT JOIN Purchases ON PurchaseItems.idpurchase=Purchases._id WHERE Purchases.time>=? " +
+//            //
+//            "UNION ALL SELECT PR.idparent,PurchaseItems.summa,0,0 FROM PurchaseItems "+
+//            "LEFT JOIN Purchases ON PurchaseItems.idpurchase=Purchases._id " +
+//            "LEFT JOIN Products as PR ON PurchaseItems.idproduct=PR._id WHERE PR._id!=PR.idparent and Purchases.time>=? " +
+//            //
+//            "UNION ALL SELECT PR.idparent,0,PurchaseItems.summa,0 FROM PurchaseItems "+
+//            "LEFT JOIN Purchases ON PurchaseItems.idpurchase=Purchases._id " +
+//            "LEFT JOIN Products as PR ON PurchaseItems.idproduct=PR._id WHERE PR._id!=PR.idparent and Purchases.time>=? " +
+//            //
+//            "UNION ALL SELECT PR.idparent,0,0,PurchaseItems.summa FROM PurchaseItems "+
+//            "LEFT JOIN Purchases ON PurchaseItems.idpurchase=Purchases._id " +
+//            "LEFT JOIN Products as PR ON PurchaseItems.idproduct=PR._id WHERE PR._id!=PR.idparent and Purchases.time>=? " +
+//            //
+//            ") GROUP BY idproduct ) t ON p._id = t.idproduct ORDER BY p.fullpath ASC) ORDER BY fullpath ASC,count DESC"
+
 }

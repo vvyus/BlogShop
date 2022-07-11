@@ -3,15 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:ShowIn="navigation_view"
     >
-    <item android:title="@string/purchase_cat1">
+    <item android:title="@string/base_list">
         <menu>
             <item
-                android:id="@+id/id_purchase_food"
-                android:title="@string/purchase_foods"></item>
+                android:id="@+id/id_products"
+                android:title="@string/baselist_product"></item>
 
             <item
-                android:id="@+id/id_purchase_drug"
-                android:title="@string/purchase_drugs" ></item>
+                android:id="@+id/id_sellers"
+                android:title="@string/baselist_seller" ></item>
 
         </menu>
     </item>
