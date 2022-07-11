@@ -98,6 +98,7 @@ class SellerActivity : AppCompatActivity() {
             if(startSelectedId>0){
                 val pos=adapter.setSelectedPositionById(startSelectedId)
                 if(pos>0) {
+                    selectedId=startSelectedId
                     rootElement.rcViewSellerList.scrollToPosition(pos)
                 }
                 startSelectedId=0;
