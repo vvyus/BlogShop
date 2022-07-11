@@ -163,17 +163,7 @@ class ProductAmountRcAdapter(val callBack:ICallBackAmountAdapter,val filterForAc
                     idparent=mainList[i].idparent
                     // пошло в копилку superparent
                     y_Amount+=yAmount
-                    yAmount=0.0;
-//                }else if(idparent!=mainList[i].idparent && mainList[i].count>0){
-//                    idparent=mainList[i].idparent
-//                    //its simple parent
-//                    if(yAmount==mainList[i].yearAmount){
-//                        //y_Amount+=yAmount
-//                    }else {
-//                        mainList[i].yearAmount+=yAmount
-//                        yAmount=0.0
-//                    }
-//
+                    yAmount=0.0
                 }
                 yAmount+=mainList[i].yearAmount
                 --i
@@ -184,26 +174,12 @@ class ProductAmountRcAdapter(val callBack:ICallBackAmountAdapter,val filterForAc
                 idparent=mainList[i].idparent
                 yAmount=0.0
                 y_Amount=0.0
-            // its simple parent for leaves
-            }else if(mainList[i].id!=mainList[i].idparent && mainList[i].count>0 && mainList[i].id==idparent){
+                // its simple parent for leaves
+            }else if(mainList[i].id!=mainList[i].idparent && mainList[i].count>0 && mainList[i].id==idparent) {
                 //mainList[i].yearAmount fill in query for simple parent
-                idparent=mainList[i].idparent
-                y_Amount+=yAmount
-                yAmount=0.0
-                //its simple parent
-//                if(yAmount==mainList[i].yearAmount){
-//                    y_Amount+=yAmount
-//                }else {
-//                    mainList[i].yearAmount+=yAmount
-//                    yAmount=0.0
-//                }
-
-
-                // not simple parent but no superparent
-//            }else if(mainList[i].id!=mainList[i].idparent && mainList[i].count>0){
-//                idparent=mainList[i].idparent
-//                mainList[i].yearAmount+=yAmount
-//                yAmount=0.0
+                idparent = mainList[i].idparent
+                y_Amount += yAmount
+                yAmount = 0.0
             }
             --i
         }
