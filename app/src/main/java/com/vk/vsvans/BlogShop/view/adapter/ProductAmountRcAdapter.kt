@@ -152,6 +152,7 @@ class ProductAmountRcAdapter(val callBack:ICallBackAmountAdapter,val filterForAc
         var i=mainList.size-1
         var yAmount=0.0;
         var y_Amount=0.0;//копилка для simpleparent + листья in superparent
+        val nodeAmount=HashMap<Int,Array<Double>>()
         var idparent=0
         idparent=mainList[i].idparent
         while(i>0){
@@ -160,28 +161,45 @@ class ProductAmountRcAdapter(val callBack:ICallBackAmountAdapter,val filterForAc
             while(mainList[i].id!=mainList[i].idparent && mainList[i].count==0){
                 // сменился вдруг новый владелец leaves
                 if(idparent!=mainList[i].idparent && mainList[i].count==0){
+                    // in old parent save yAmount
                     idparent=mainList[i].idparent
+
                     // пошло в копилку superparent
                     y_Amount+=yAmount
+
                     yAmount=0.0
                 }
                 yAmount+=mainList[i].yearAmount
                 --i
             }
+
             // its super parent for leaves and simpleparent
             if(mainList[i].id==mainList[i].idparent && mainList[i].count>0){
                 mainList[i].yearAmount=y_Amount+yAmount
+//                if(nodeAmount.get(mainList[i].id)!=null)
+//                    mainList[i].yearAmount+= nodeAmount.get(mainList[i].id)!![0]
                 idparent=mainList[i].idparent
                 yAmount=0.0
                 y_Amount=0.0
+
                 // its simple parent for leaves
             }else if(mainList[i].id!=mainList[i].idparent && mainList[i].count>0 && mainList[i].id==idparent) {
                 //mainList[i].yearAmount fill in query for simple parent
+                if(nodeAmount.get(mainList[i].id)!=null)
+                    mainList[i].yearAmount+= nodeAmount.get(mainList[i].id)!![0]
+
                 idparent = mainList[i].idparent
+                val arrayNode=nodeAmount.get(idparent)
+                if(arrayNode==null) nodeAmount.put(idparent, arrayOf(yAmount,0.0,0.0))
+                else {
+                    nodeAmount.put(idparent, arrayOf(arrayNode[0]+yAmount,0.0,0.0))
+                }
                 y_Amount += yAmount
                 yAmount = 0.0
             }
             --i
         }
+        if(mainList[i].id==mainList[i].idparent && mainList[i].count>0)
+            mainList[i].yearAmount=y_Amount+yAmount
     }
 }
