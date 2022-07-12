@@ -150,56 +150,81 @@ class ProductAmountRcAdapter(val callBack:ICallBackAmountAdapter,val filterForAc
 
     fun fillParentAmount(){
         var i=mainList.size-1
-        var yAmount=0.0;
-        var y_Amount=0.0;//копилка для simpleparent + листья in superparent
+        var yAmount=0.0
+        var mAmount=0.0
+        var wAmount=0.0
+        //var y_Amount=0.0;//копилка для simpleparent + листья in superparent
         val nodeAmount=HashMap<Int,Array<Double>>()
         var idparent=0
         idparent=mainList[i].idparent
         while(i>0){
-            //idparent=mainList[i].idparent
-            // оработка leaves count==0
             while(mainList[i].id!=mainList[i].idparent && mainList[i].count==0){
                 // сменился вдруг новый владелец leaves
                 if(idparent!=mainList[i].idparent && mainList[i].count==0){
                     // in old parent save yAmount
                     idparent=mainList[i].idparent
-
                     // пошло в копилку superparent
-                    y_Amount+=yAmount
-
+                    //y_Amount+=yAmount
                     yAmount=0.0
+                    mAmount=0.0
+                    wAmount=0.0
                 }
                 yAmount+=mainList[i].yearAmount
+                mAmount+=mainList[i].monthAmount
+                wAmount+=mainList[i].weekAmount
                 --i
             }
 
             // its super parent for leaves and simpleparent
             if(mainList[i].id==mainList[i].idparent && mainList[i].count>0){
-                mainList[i].yearAmount=y_Amount+yAmount
-//                if(nodeAmount.get(mainList[i].id)!=null)
-//                    mainList[i].yearAmount+= nodeAmount.get(mainList[i].id)!![0]
+//                mainList[i].yearAmount=y_Amount+yAmount
+                if(nodeAmount.get(mainList[i].id)!=null){
+                    mainList[i].yearAmount+= nodeAmount.get(mainList[i].id)!![0]
+                    mainList[i].monthAmount+= nodeAmount.get(mainList[i].id)!![1]
+                    mainList[i].weekAmount+= nodeAmount.get(mainList[i].id)!![2]
+                }
                 idparent=mainList[i].idparent
                 yAmount=0.0
-                y_Amount=0.0
+                mAmount=0.0
+                wAmount=0.0
+                //y_Amount=0.0
 
                 // its simple parent for leaves
             }else if(mainList[i].id!=mainList[i].idparent && mainList[i].count>0 && mainList[i].id==idparent) {
                 //mainList[i].yearAmount fill in query for simple parent
-                if(nodeAmount.get(mainList[i].id)!=null)
-                    mainList[i].yearAmount+= nodeAmount.get(mainList[i].id)!![0]
-
+                val id=mainList[i].id
+                if(nodeAmount.get(id)!=null) {
+                    mainList[i].yearAmount += nodeAmount.get(id)!![0]
+                    yAmount+=nodeAmount.get(id)!![0]
+                    mainList[i].monthAmount += nodeAmount.get(id)!![1]
+                    mAmount+=nodeAmount.get(id)!![1]
+                    mainList[i].weekAmount += nodeAmount.get(id)!![2]
+                    wAmount+=nodeAmount.get(id)!![2]
+                }
                 idparent = mainList[i].idparent
                 val arrayNode=nodeAmount.get(idparent)
-                if(arrayNode==null) nodeAmount.put(idparent, arrayOf(yAmount,0.0,0.0))
-                else {
-                    nodeAmount.put(idparent, arrayOf(arrayNode[0]+yAmount,0.0,0.0))
+                if(arrayNode==null) {
+                    nodeAmount.put(idparent, arrayOf(yAmount,mAmount,wAmount))
+                    //println("${mainList[i].name} ${yAmount}")
                 }
-                y_Amount += yAmount
+                else {
+                    nodeAmount.put(idparent, arrayOf(arrayNode[0]+yAmount,arrayNode[1]+mAmount,arrayNode[2]+wAmount))
+                }
+                //y_Amount += yAmount
                 yAmount = 0.0
+                mAmount = 0.0
+                wAmount = 0.0
             }
             --i
         }
-        if(mainList[i].id==mainList[i].idparent && mainList[i].count>0)
-            mainList[i].yearAmount=y_Amount+yAmount
+        if(mainList[i].id==mainList[i].idparent && mainList[i].count>0){
+//            mainList[i].yearAmount=y_Amount+yAmount
+            if(nodeAmount.get(mainList[i].id)!=null){
+                mainList[i].yearAmount+= nodeAmount.get(mainList[i].id)!![0]
+                mainList[i].monthAmount+= nodeAmount.get(mainList[i].id)!![1]
+                mainList[i].weekAmount+= nodeAmount.get(mainList[i].id)!![2]
+            }
+        }
+
     }
 }
