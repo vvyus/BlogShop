@@ -7,14 +7,15 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.vk.vsvans.BlogShop.R
+import com.vk.vsvans.BlogShop.model.data.BaseAmount
 import com.vk.vsvans.BlogShop.model.data.ProductAmount
 import com.vk.vsvans.BlogShop.util.FilterForActivity
 import com.vk.vsvans.BlogShop.util.UtilsString
 import com.vk.vsvans.BlogShop.view.`interface`.ICallBackAmountAdapter
 
-class ProductAmountRcAdapter(val callBack:ICallBackAmountAdapter,val filterForActivity: FilterForActivity) : RecyclerView.Adapter<ProductAmountRcAdapter.SpViewHolder>() {
+class BaseAmountRcAdapter(val callBack:ICallBackAmountAdapter, val filterForActivity: FilterForActivity) : RecyclerView.Adapter<BaseAmountRcAdapter.SpViewHolder>() {
 
-    private val mainList=ArrayList<ProductAmount>()
+    private val mainList=ArrayList<BaseAmount>()
     //private val context=context
     var offset16=0
     var selected_position = RecyclerView.NO_POSITION
@@ -86,7 +87,7 @@ class ProductAmountRcAdapter(val callBack:ICallBackAmountAdapter,val filterForAc
 
     fun unSelectItem(){
 
-        val selectItem=getProductAmount()
+        val selectItem=getBaseAmount()
         if(selectItem!=null){
         }else selected_position= RecyclerView.NO_POSITION
         callBack.onClickItem()
@@ -105,7 +106,7 @@ class ProductAmountRcAdapter(val callBack:ICallBackAmountAdapter,val filterForAc
         return -1
     }
 
-    fun getProductAmount(): ProductAmount?{
+    fun getBaseAmount(): BaseAmount?{
         if(mainList.size!=0 && selected_position!= RecyclerView.NO_POSITION && selected_position<mainList.size){
             return mainList[selected_position]
         }else{
@@ -121,15 +122,15 @@ class ProductAmountRcAdapter(val callBack:ICallBackAmountAdapter,val filterForAc
     class SpViewHolder(itemView: View) :
         RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
-        fun setData(productAmount: ProductAmount){
+        fun setData(baseAmount: BaseAmount){
             val tvProdNameAmount=itemView.findViewById<TextView>(R.id.tvProdNameAmount)
             val tvYearAmount=itemView.findViewById<TextView>(R.id.tvYearAmount)
             val tvMonthAmount=itemView.findViewById<TextView>(R.id.tvMonthAmount)
             val tvWeekAmount=itemView.findViewById<TextView>(R.id.tvWeekAmount)
-            tvProdNameAmount.text=productAmount.name
-            tvYearAmount.text= UtilsString.format_string(productAmount.yearAmount.toString())//productAmount.yearAmount.toString()
-            tvMonthAmount.text= UtilsString.format_string(productAmount.monthAmount.toString())
-            tvWeekAmount.text= UtilsString.format_string(productAmount.weekAmount.toString())
+            tvProdNameAmount.text=baseAmount.name
+            tvYearAmount.text= UtilsString.format_string(baseAmount.yearAmount.toString())//baseAmount.yearAmount.toString()
+            tvMonthAmount.text= UtilsString.format_string(baseAmount.monthAmount.toString())
+            tvWeekAmount.text= UtilsString.format_string(baseAmount.weekAmount.toString())
             // присваиваем onClick выбранному элементу
             itemView.setOnClickListener(this)
         }
@@ -138,7 +139,7 @@ class ProductAmountRcAdapter(val callBack:ICallBackAmountAdapter,val filterForAc
         }
     }
 
-    fun updateAdapter(list: ArrayList<ProductAmount>){
+    fun updateAdapter(list: ArrayList<BaseAmount>){
 
         mainList.clear()
         mainList.addAll(list)

@@ -27,13 +27,10 @@ import com.google.android.material.navigation.NavigationView
 import com.vk.vsvans.BlogShop.R
 import com.vk.vsvans.BlogShop.view.adapter.PurchaseRcAdapter
 import com.vk.vsvans.BlogShop.databinding.ActivityMainBinding
+import com.vk.vsvans.BlogShop.model.data.*
 import com.vk.vsvans.BlogShop.view.dialog.DialogHelper
 import com.vk.vsvans.BlogShop.model.fns.import_checks
 import com.vk.vsvans.BlogShop.view.`interface`.*
-import com.vk.vsvans.BlogShop.model.data.BaseList
-import com.vk.vsvans.BlogShop.model.data.ProductAmount
-import com.vk.vsvans.BlogShop.model.data.Purchase
-import com.vk.vsvans.BlogShop.model.data.PurchaseItem
 import com.vk.vsvans.BlogShop.util.FilterForActivity
 import com.vk.vsvans.BlogShop.util.UtilsHelper
 import com.vk.vsvans.BlogShop.util.UtilsString
@@ -74,7 +71,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     var livePurchaseList_size=0
     var liveAmount=0.0
     var liveCalendarEvents=HashMap<String, Int>()
-    var liveProductAmount=ArrayList<ProductAmount>()
+    var liveProductAmount=ArrayList<BaseAmount>()
 
     private var productAmountFragment: ProductAmountFragment?=null
 

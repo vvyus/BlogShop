@@ -8,25 +8,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.DatePicker
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.vk.vsvans.BlogShop.R
 import com.vk.vsvans.BlogShop.databinding.FragmentProductAmountBinding
-import com.vk.vsvans.BlogShop.databinding.ListPurchaseItemFragBinding
+import com.vk.vsvans.BlogShop.model.data.BaseAmount
 import com.vk.vsvans.BlogShop.model.data.ProductAmount
-import com.vk.vsvans.BlogShop.model.data.PurchaseItem
 import com.vk.vsvans.BlogShop.util.FilterForActivity
 import com.vk.vsvans.BlogShop.util.UtilsHelper
 import com.vk.vsvans.BlogShop.view.MainActivity
 import com.vk.vsvans.BlogShop.view.`interface`.ICallBackAmountAdapter
 import com.vk.vsvans.BlogShop.view.`interface`.IFragmentCloseInterface
-import com.vk.vsvans.BlogShop.view.adapter.ProductAmountRcAdapter
-import com.vk.vsvans.BlogShop.view.adapter.PurchaseItemRcAdapter
+import com.vk.vsvans.BlogShop.view.adapter.BaseAmountRcAdapter
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class ProductAmountFragment(val fragCloseInterface: IFragmentCloseInterface, val newList:ArrayList<ProductAmount>?,val filterForActivity: FilterForActivity) : Fragment() {
+class ProductAmountFragment(val fragCloseInterface: IFragmentCloseInterface, val newList:ArrayList<BaseAmount>?,val filterForActivity: FilterForActivity) : Fragment() {
     lateinit var binding:FragmentProductAmountBinding
-    lateinit var adapter: ProductAmountRcAdapter
+    lateinit var adapter: BaseAmountRcAdapter
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         //return inflater.inflate(R.layout.fragment_product_amount, container, false)
@@ -36,7 +33,7 @@ class ProductAmountFragment(val fragCloseInterface: IFragmentCloseInterface, val
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter= ProductAmountRcAdapter(object : ICallBackAmountAdapter {
+        adapter= BaseAmountRcAdapter(object : ICallBackAmountAdapter {
             override fun onClickItem() {
                 //binding.tbProductAmount.
                 activity?.supportFragmentManager?.beginTransaction()?.remove(this@ProductAmountFragment)?.commit()
