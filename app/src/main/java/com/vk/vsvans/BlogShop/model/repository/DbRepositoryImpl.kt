@@ -493,16 +493,16 @@ class DbRepositoryImpl(context: Context):IDbRepository {
         return productAmount
     }
 
-    override fun getProductAmount(searchText: String): ArrayList<ProductAmount> {
+    override fun getProductAmount(searchText: String,time:Long): ArrayList<ProductAmount> {
         val dataList = ArrayList<ProductAmount>()
 //        val selection = "${DbName.COLUMN_NAME_NAME_PRODUCTS} like ?"
 //        val cursor = db?.query(
 //            DbName.TABLE_NAME_PRODUCTS,null,selection,arrayOf("%$searchText%"),//, arrayOf("_id","idparent","name","id_fns","level","count","fullpath"), selection, arrayOf("%$searchText%"),
 //            null, null, "fullpath ASC"
 //        )
-        val datey=UtilsHelper.getFirstDayOfYear()
-        val datem=UtilsHelper.getFirstDayOfMonth()
-        val datew=UtilsHelper.getFirstDayOfWeek()
+        val datey=UtilsHelper.getFirstDayOfYear(time)
+        val datem=UtilsHelper.getFirstDayOfMonth(time)
+        val datew=UtilsHelper.getFirstDayOfWeek(time)
         val selectionArgs = arrayOf(datey.toString(),datem.toString(),datew.toString(),datey.toString(),datem.toString(),datew.toString())
         val selectQuery: String = DbName.PRODUCT_AMOUNT_QUERY
         val cursor = db?.rawQuery(selectQuery, selectionArgs)
@@ -542,9 +542,9 @@ class DbRepositoryImpl(context: Context):IDbRepository {
         if(readPurchaseItemCallback!=null)readPurchaseItemCallback.readData(purchaseItemArray)
     }
 
-    override fun getAllProductAmount(filterString:String,readProductAmountCallback: IDbRepository.ReadProductAmountCallback?){
+    override fun getAllProductAmount(filterString:String,readProductAmountCallback: IDbRepository.ReadProductAmountCallback?,time:Long){
 
-        val productArray=getProductAmount(filterString)
+        val productArray=getProductAmount(filterString,time)
         if(readProductAmountCallback!=null)readProductAmountCallback.readData(productArray)
     }
 }

@@ -329,7 +329,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 R.id.id_product->{
 
                     // это вызов ответ придет в liveProductAmount
-                    viewModel.getProductAmount("")
+                    val time=UtilsHelper.getCurrentDate()
+                    viewModel.getProductAmount("",time)
                     mainContent.llMainContent.visibility=View.GONE
                     productAmountFragment=ProductAmountFragment(object: IFragmentCloseInterface {
                         override fun onFragClose(list: ArrayList<PurchaseItem>) {

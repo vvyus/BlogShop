@@ -1,6 +1,5 @@
 package com.vk.vsvans.BlogShop.view.adapter
 
-import android.app.AlertDialog
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -8,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.vk.vsvans.BlogShop.R
-import com.vk.vsvans.BlogShop.model.data.BaseList
 import com.vk.vsvans.BlogShop.model.data.ProductAmount
 import com.vk.vsvans.BlogShop.util.FilterForActivity
 import com.vk.vsvans.BlogShop.util.UtilsString
@@ -144,85 +142,59 @@ class ProductAmountRcAdapter(val callBack:ICallBackAmountAdapter,val filterForAc
 
         mainList.clear()
         mainList.addAll(list)
-        fillParentAmount()
+        fillNodesAmount()
         notifyDataSetChanged()
     }
 
-    fun fillParentAmount(){
+    fun fillNodesAmount(){
         var i=mainList.size-1
-        var yAmount=0.0
-        var mAmount=0.0
-        var wAmount=0.0
-        //var y_Amount=0.0;//копилка для simpleparent + листья in superparent
-        val nodeAmount=HashMap<Int,Array<Double>>()
+        val nodesHeap=HashMap<Int,Array<Double>>()
         var idparent=0
         idparent=mainList[i].idparent
         while(i>0){
             while(mainList[i].id!=mainList[i].idparent && mainList[i].count==0){
                 // сменился вдруг новый владелец leaves
                 if(idparent!=mainList[i].idparent && mainList[i].count==0){
-                    // in old parent save yAmount
                     idparent=mainList[i].idparent
-                    // пошло в копилку superparent
-                    //y_Amount+=yAmount
-                    yAmount=0.0
-                    mAmount=0.0
-                    wAmount=0.0
                 }
-                yAmount+=mainList[i].yearAmount
-                mAmount+=mainList[i].monthAmount
-                wAmount+=mainList[i].weekAmount
                 --i
             }
 
-            // its super parent for leaves and simpleparent
+            // its super(root) node for leaves and simplenodes
             if(mainList[i].id==mainList[i].idparent && mainList[i].count>0){
-//                mainList[i].yearAmount=y_Amount+yAmount
-                if(nodeAmount.get(mainList[i].id)!=null){
-                    mainList[i].yearAmount+= nodeAmount.get(mainList[i].id)!![0]
-                    mainList[i].monthAmount+= nodeAmount.get(mainList[i].id)!![1]
-                    mainList[i].weekAmount+= nodeAmount.get(mainList[i].id)!![2]
+                if(nodesHeap.get(mainList[i].id)!=null){
+                    mainList[i].yearAmount+= nodesHeap.get(mainList[i].id)!![0]
+                    mainList[i].monthAmount+= nodesHeap.get(mainList[i].id)!![1]
+                    mainList[i].weekAmount+= nodesHeap.get(mainList[i].id)!![2]
                 }
                 idparent=mainList[i].idparent
-                yAmount=0.0
-                mAmount=0.0
-                wAmount=0.0
-                //y_Amount=0.0
 
-                // its simple parent for leaves
+                // its simple(in root node) node for leaves
             }else if(mainList[i].id!=mainList[i].idparent && mainList[i].count>0 && mainList[i].id==idparent) {
-                //mainList[i].yearAmount fill in query for simple parent
+                //!mainList[i].yearAmount fill in query for simple and root node
                 val id=mainList[i].id
-                if(nodeAmount.get(id)!=null) {
-                    mainList[i].yearAmount += nodeAmount.get(id)!![0]
-                    yAmount+=nodeAmount.get(id)!![0]
-                    mainList[i].monthAmount += nodeAmount.get(id)!![1]
-                    mAmount+=nodeAmount.get(id)!![1]
-                    mainList[i].weekAmount += nodeAmount.get(id)!![2]
-                    wAmount+=nodeAmount.get(id)!![2]
+                if(nodesHeap.get(id)!=null) {
+                    mainList[i].yearAmount += nodesHeap.get(id)!![0]
+                    mainList[i].monthAmount += nodesHeap.get(id)!![1]
+                    mainList[i].weekAmount += nodesHeap.get(id)!![2]
                 }
                 idparent = mainList[i].idparent
-                val arrayNode=nodeAmount.get(idparent)
+                val arrayNode=nodesHeap.get(idparent)
                 if(arrayNode==null) {
-                    nodeAmount.put(idparent, arrayOf(yAmount,mAmount,wAmount))
+                    nodesHeap.put(idparent, arrayOf(mainList[i].yearAmount,mainList[i].monthAmount,mainList[i].weekAmount))//yAmount,mAmount,wAmount))
                     //println("${mainList[i].name} ${yAmount}")
                 }
                 else {
-                    nodeAmount.put(idparent, arrayOf(arrayNode[0]+yAmount,arrayNode[1]+mAmount,arrayNode[2]+wAmount))
+                    nodesHeap.put(idparent, arrayOf(arrayNode[0]+mainList[i].yearAmount,arrayNode[1]+mainList[i].monthAmount,arrayNode[2]+mainList[i].weekAmount))
                 }
-                //y_Amount += yAmount
-                yAmount = 0.0
-                mAmount = 0.0
-                wAmount = 0.0
             }
             --i
         }
         if(mainList[i].id==mainList[i].idparent && mainList[i].count>0){
-//            mainList[i].yearAmount=y_Amount+yAmount
-            if(nodeAmount.get(mainList[i].id)!=null){
-                mainList[i].yearAmount+= nodeAmount.get(mainList[i].id)!![0]
-                mainList[i].monthAmount+= nodeAmount.get(mainList[i].id)!![1]
-                mainList[i].weekAmount+= nodeAmount.get(mainList[i].id)!![2]
+            if(nodesHeap.get(mainList[i].id)!=null){
+                mainList[i].yearAmount+= nodesHeap.get(mainList[i].id)!![0]
+                mainList[i].monthAmount+= nodesHeap.get(mainList[i].id)!![1]
+                mainList[i].weekAmount+= nodesHeap.get(mainList[i].id)!![2]
             }
         }
 

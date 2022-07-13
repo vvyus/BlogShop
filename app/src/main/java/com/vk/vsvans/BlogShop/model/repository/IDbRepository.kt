@@ -35,7 +35,7 @@ interface IDbRepository {
     fun removePurchaseItems(idpurchase: Int)
     //
     // PRODUCT
-    fun getProductAmount(searchText:String): ArrayList<ProductAmount>
+    fun getProductAmount(searchText:String,time:Long): ArrayList<ProductAmount>
     //ADD
     fun getAllPurchases(filter: FilterForActivity,readDataCallback: ReadDataCallback?)
     interface ReadDataCallback {
@@ -56,7 +56,7 @@ interface IDbRepository {
         fun readData(list: ArrayList<PurchaseItem>)
     }
 
-    fun getAllProductAmount(filterString:String,readProductCallback: ReadProductAmountCallback?)
+    fun getAllProductAmount(filterString:String,readProductCallback: ReadProductAmountCallback?,time:Long)
     interface ReadProductAmountCallback {
         fun readData(list: ArrayList<ProductAmount>)
     }
