@@ -500,10 +500,11 @@ class DbRepositoryImpl(context: Context):IDbRepository {
 //            DbName.TABLE_NAME_PRODUCTS,null,selection,arrayOf("%$searchText%"),//, arrayOf("_id","idparent","name","id_fns","level","count","fullpath"), selection, arrayOf("%$searchText%"),
 //            null, null, "fullpath ASC"
 //        )
-        val datey=UtilsHelper.getFirstDayOfYear(time)
-        val datem=UtilsHelper.getFirstDayOfMonth(time)
-        val datew=UtilsHelper.getFirstDayOfWeek(time)
-        val selectionArgs = arrayOf(datey.toString(),datem.toString(),datew.toString(),datey.toString(),datem.toString(),datew.toString())
+        val datec=UtilsHelper.correct_date_end(time).toString()
+        val datey=UtilsHelper.getFirstDayOfYear(time).toString()
+        val datem=UtilsHelper.getFirstDayOfMonth(time).toString()
+        val datew=UtilsHelper.getFirstDayOfWeek(time).toString()
+        val selectionArgs = arrayOf(datey,datec,datem,datec,datew,datec,datey,datec,datem,datec,datew,datec)
         val selectQuery: String = DbName.PRODUCT_AMOUNT_QUERY
         val cursor = db?.rawQuery(selectQuery, selectionArgs)
         while (cursor?.moveToNext()!!) {

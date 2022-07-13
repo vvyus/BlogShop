@@ -109,23 +109,23 @@ object DbName {
             "FROM products as p LEFT JOIN "+
             "( SELECT idproduct,SUM(yearamount) as yearamount,SUM(monthamount) as monthamount,SUM(weekamount) as weekamount FROM (" +
             "SELECT PurchaseItems.idproduct,PurchaseItems.summa as yearamount,0 as monthamount,0 as weekamount FROM PurchaseItems " +
-            "LEFT JOIN Purchases ON PurchaseItems.idpurchase=Purchases._id WHERE Purchases.time>=? " +
+            "LEFT JOIN Purchases ON PurchaseItems.idpurchase=Purchases._id WHERE Purchases.time>=? and Purchases.time<=? " +
             "UNION ALL SELECT PurchaseItems.idproduct,0,PurchaseItems.summa,0 FROM PurchaseItems "+
-            "LEFT JOIN Purchases ON PurchaseItems.idpurchase=Purchases._id WHERE Purchases.time>=? "+
+            "LEFT JOIN Purchases ON PurchaseItems.idpurchase=Purchases._id WHERE Purchases.time>=? and Purchases.time<=? "+
             "UNION ALL SELECT PurchaseItems.idproduct,0,0,PurchaseItems.summa FROM PurchaseItems "+
-            "LEFT JOIN Purchases ON PurchaseItems.idpurchase=Purchases._id WHERE Purchases.time>=? " +
+            "LEFT JOIN Purchases ON PurchaseItems.idpurchase=Purchases._id WHERE Purchases.time>=? and Purchases.time<=? " +
             //
             "UNION ALL SELECT PR.idparent,PurchaseItems.summa,0,0 FROM PurchaseItems "+
             "LEFT JOIN Purchases ON PurchaseItems.idpurchase=Purchases._id " +
-            "LEFT JOIN Products as PR ON PurchaseItems.idproduct=PR._id WHERE PR._id!=PR.idparent and Purchases.time>=? " +
+            "LEFT JOIN Products as PR ON PurchaseItems.idproduct=PR._id WHERE PR._id!=PR.idparent and Purchases.time>=? and Purchases.time<=? " +
             //
             "UNION ALL SELECT PR.idparent,0,PurchaseItems.summa,0 FROM PurchaseItems "+
             "LEFT JOIN Purchases ON PurchaseItems.idpurchase=Purchases._id " +
-            "LEFT JOIN Products as PR ON PurchaseItems.idproduct=PR._id WHERE PR._id!=PR.idparent and Purchases.time>=? " +
+            "LEFT JOIN Products as PR ON PurchaseItems.idproduct=PR._id WHERE PR._id!=PR.idparent and Purchases.time>=? and Purchases.time<=? " +
             //
             "UNION ALL SELECT PR.idparent,0,0,PurchaseItems.summa FROM PurchaseItems "+
             "LEFT JOIN Purchases ON PurchaseItems.idpurchase=Purchases._id " +
-            "LEFT JOIN Products as PR ON PurchaseItems.idproduct=PR._id WHERE PR._id!=PR.idparent and Purchases.time>=? " +
+            "LEFT JOIN Products as PR ON PurchaseItems.idproduct=PR._id WHERE PR._id!=PR.idparent and Purchases.time>=? and Purchases.time<=? " +
             //
             ") GROUP BY idproduct ) t ON p._id = t.idproduct ORDER BY p.fullpath ASC"
 
