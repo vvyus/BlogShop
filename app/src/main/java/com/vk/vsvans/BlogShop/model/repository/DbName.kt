@@ -132,25 +132,23 @@ object DbName {
     val SELLER_AMOUNT_QUERY="SELECT s._id,s.name,s.id_fns,s.idparent,s.level,s.fullpath,s.count,t.yearamount,t.monthamount,t.weekamount " +
             "FROM sellers as s LEFT JOIN "+
             "( SELECT idseller,SUM(yearamount) as yearamount,SUM(monthamount) as monthamount,SUM(weekamount) as weekamount FROM (" +
-            "SELECT Purchases.idseller,PurchaseItems.summa as yearamount,0 as monthamount,0 as weekamount FROM PurchaseItems " +
-            "LEFT JOIN Purchases ON PurchaseItems.idpurchase=Purchases._id WHERE Purchases.time>=? and Purchases.time<=? " +
-            "UNION ALL SELECT Purchases.idseller,0,PurchaseItems.summa,0 FROM PurchaseItems "+
-            "LEFT JOIN Purchases ON PurchaseItems.idpurchase=Purchases._id WHERE Purchases.time>=? and Purchases.time<=? "+
-            "UNION ALL SELECT Purchases.idseller,0,0,PurchaseItems.summa FROM PurchaseItems "+
-            "LEFT JOIN Purchases ON PurchaseItems.idpurchase=Purchases._id WHERE Purchases.time>=? and Purchases.time<=? " +
+            "SELECT Purchases.idseller,PurchaseItems.summa as yearamount,0 as monthamount,0 as weekamount FROM Purchases " +
+            "LEFT JOIN PurchaseItems ON PurchaseItems.idpurchase=Purchases._id WHERE Purchases.time>=? and Purchases.time<=? " +
+            "UNION ALL SELECT Purchases.idseller,0,PurchaseItems.summa,0 FROM Purchases "+
+            "LEFT JOIN PurchaseItems ON PurchaseItems.idpurchase=Purchases._id WHERE Purchases.time>=? and Purchases.time<=? "+
+            "UNION ALL SELECT Purchases.idseller,0,0,PurchaseItems.summa FROM Purchases "+
+            "LEFT JOIN PurchaseItems ON PurchaseItems.idpurchase=Purchases._id WHERE Purchases.time>=? and Purchases.time<=? " +
             //
-            "UNION ALL SELECT Purchases.idseller,PurchaseItems.summa,0,0 FROM PurchaseItems "+
+            "UNION ALL SELECT SEL.idparent,PurchaseItems.summa,0,0 FROM PurchaseItems "+
             "LEFT JOIN Purchases ON PurchaseItems.idpurchase=Purchases._id " +
             "LEFT JOIN Sellers as SEL ON Purchases.idseller=SEL._id WHERE SEL._id!=SEL.idparent and Purchases.time>=? and Purchases.time<=? " +
             //
-            "UNION ALL SELECT Purchases.idseller,0,PurchaseItems.summa,0 FROM PurchaseItems "+
+            "UNION ALL SELECT SEL.idparent,0,PurchaseItems.summa,0 FROM PurchaseItems "+
             "LEFT JOIN Purchases ON PurchaseItems.idpurchase=Purchases._id " +
-//            "LEFT JOIN Products as PR ON PurchaseItems.idproduct=PR._id WHERE PR._id!=PR.idparent and Purchases.time>=? and Purchases.time<=? " +
             "LEFT JOIN Sellers as SEL ON Purchases.idseller=SEL._id WHERE SEL._id!=SEL.idparent and Purchases.time>=? and Purchases.time<=? " +
             //
-            "UNION ALL SELECT Purchases.idseller,0,0,PurchaseItems.summa FROM PurchaseItems "+
+            "UNION ALL SELECT SEL.idparent,0,0,PurchaseItems.summa FROM PurchaseItems "+
             "LEFT JOIN Purchases ON PurchaseItems.idpurchase=Purchases._id " +
-//            "LEFT JOIN Products as PR ON PurchaseItems.idproduct=PR._id WHERE PR._id!=PR.idparent and Purchases.time>=? and Purchases.time<=? " +
             "LEFT JOIN Sellers as SEL ON Purchases.idseller=SEL._id WHERE SEL._id!=SEL.idparent and Purchases.time>=? and Purchases.time<=? " +
             //
             ") GROUP BY idseller ) t ON s._id = t.idseller ORDER BY s.fullpath ASC"

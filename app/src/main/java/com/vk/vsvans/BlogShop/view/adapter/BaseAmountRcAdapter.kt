@@ -152,6 +152,7 @@ class BaseAmountRcAdapter(val callBack:ICallBackAmountAdapter, val filterForActi
 
         mainList.clear()
         mainList.addAll(list)
+        //if(baseAmountType==BaseAmountType.PRODUCT)
         fillNodesAmount()
         notifyDataSetChanged()
     }
