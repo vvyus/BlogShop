@@ -48,7 +48,7 @@ class BaseAmountRcAdapter(val callBack:ICallBackAmountAdapter, val filterForActi
                     filterForActivity.dates_begin = null
                     filterForActivity.dates_end = null
                     filterForActivity.idSeller = null
-                }else if(baseAmountType==BaseAmountType.PRODUCT) {
+                }else if(baseAmountType==BaseAmountType.SELLER) {
                     filterForActivity.content = null
                     filterForActivity.dates_begin = null
                     filterForActivity.dates_end = null
