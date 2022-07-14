@@ -36,8 +36,7 @@ import com.vk.vsvans.BlogShop.util.UtilsHelper
 import com.vk.vsvans.BlogShop.util.UtilsString
 import com.vk.vsvans.BlogShop.util.isPermissinGrant
 import com.vk.vsvans.BlogShop.view.dialog.ProgressDialog
-import com.vk.vsvans.BlogShop.view.fragment.ProductAmountFragment
-import com.vk.vsvans.BlogShop.view.fragment.PurchaseItemListFragment
+import com.vk.vsvans.BlogShop.view.fragment.BaseAmountFragment
 import com.vk.vsvans.BlogShop.viewmodel.ActivityViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -72,8 +71,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     var liveAmount=0.0
     var liveCalendarEvents=HashMap<String, Int>()
     var liveProductAmount=ArrayList<BaseAmount>()
-
-    private var productAmountFragment: ProductAmountFragment?=null
+    var liveSellerAmount=ArrayList<BaseAmount>()
+    private var baseAmountFragment: BaseAmountFragment?=null
 
     val adapter= PurchaseRcAdapter(object:OnClickItemCallback{
         override fun onClickItem(id:Int) {
@@ -183,6 +182,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             liveProductAmount.clear()
             liveProductAmount.addAll(it)
         })
+// seller amount
+        viewModel.liveSellerAmountList.observe(this,{
+            liveSellerAmount.clear()
+            liveSellerAmount.addAll(it)
+        })
+
     }
 
      @RequiresApi(Build.VERSION_CODES.N)
@@ -305,7 +310,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 startActivity(intent)
             }
             R.id.id_sellers->{
-                Toast.makeText(this,"Pressed drug", Toast.LENGTH_LONG).show()
+                val intent= Intent(this@MainActivity, SellerActivity::class.java)
+                intent.putExtra(R.string.PURCHASE_ID.toString(),0)
+                // сообщаем системе о запуске активити
+                startActivity(intent)
+                //Toast.makeText(this@MainActivity,"Pressed sellers", Toast.LENGTH_LONG).show()
+
             }else-> rootElement.drawerLayout.closeDrawer(GravityCompat.START)
 
         }
@@ -329,7 +339,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     val time=UtilsHelper.getCurrentDate()
                     viewModel.getProductAmount("",time)
                     mainContent.llMainContent.visibility=View.GONE
-                    productAmountFragment=ProductAmountFragment(object: IFragmentCloseInterface {
+                    baseAmountFragment=BaseAmountFragment(object: IFragmentCloseInterface {
                         override fun onFragClose(list: ArrayList<PurchaseItem>) {
                         }
 
@@ -339,18 +349,32 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                             fillAdapter()
                         }
 
-                    },liveProductAmount,filter_fact)
+                    },liveProductAmount,filter_fact,BaseAmountType.PRODUCT)
 
                     val fm=supportFragmentManager.beginTransaction()
-                    fm.replace(R.id.drawerLayout, productAmountFragment!!)
+                    fm.replace(R.id.drawerLayout, baseAmountFragment!!)
                     fm.commit()
                 }
                 R.id.id_seller->{
-                    val intent= Intent(this@MainActivity, SellerActivity::class.java)
-                    intent.putExtra(R.string.PURCHASE_ID.toString(),0)
-                    // сообщаем системе о запуске активити
-                    startActivity(intent)
-                    //Toast.makeText(this@MainActivity,"Pressed new purchase", Toast.LENGTH_LONG).show()
+                    val time=UtilsHelper.getCurrentDate()
+                    viewModel.getSellerAmount("",time)
+                    mainContent.llMainContent.visibility=View.GONE
+                    baseAmountFragment=BaseAmountFragment(object: IFragmentCloseInterface {
+                        override fun onFragClose(list: ArrayList<PurchaseItem>) {
+                        }
+
+                        // при закрытии фрагмента
+                        override fun onFragClose() {
+                            mainContent.llMainContent.visibility=View.VISIBLE
+                            fillAdapter()
+                        }
+
+                    },liveSellerAmount,filter_fact,BaseAmountType.SELLER)
+
+                    val fm=supportFragmentManager.beginTransaction()
+                    fm.replace(R.id.drawerLayout, baseAmountFragment!!)
+                    fm.commit()
+
                 }
                 R.id.id_import_checks->{
                     importPurchase()

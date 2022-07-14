@@ -9,7 +9,7 @@
     >
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/tbProductAmount"
+        android:id="@+id/tbBaseAmount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
@@ -102,7 +102,7 @@
 
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rcViewProductAmount"
+            android:id="@+id/rcViewBaseAmount"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/white" />

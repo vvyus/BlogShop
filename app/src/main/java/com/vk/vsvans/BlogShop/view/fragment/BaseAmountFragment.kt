@@ -8,8 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.DatePicker
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.vk.vsvans.BlogShop.databinding.FragmentProductAmountBinding
+import com.vk.vsvans.BlogShop.databinding.FragmentBaseAmountBinding
 import com.vk.vsvans.BlogShop.model.data.BaseAmount
+import com.vk.vsvans.BlogShop.model.data.BaseAmountType
 import com.vk.vsvans.BlogShop.model.data.ProductAmount
 import com.vk.vsvans.BlogShop.util.FilterForActivity
 import com.vk.vsvans.BlogShop.util.UtilsHelper
@@ -21,13 +22,14 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class ProductAmountFragment(val fragCloseInterface: IFragmentCloseInterface, val newList:ArrayList<BaseAmount>?,val filterForActivity: FilterForActivity) : Fragment() {
-    lateinit var binding:FragmentProductAmountBinding
+class BaseAmountFragment(val fragCloseInterface: IFragmentCloseInterface, val newList:ArrayList<BaseAmount>?,
+                         val filterForActivity: FilterForActivity,val baseAmountType: BaseAmountType) : Fragment() {
+    lateinit var binding:FragmentBaseAmountBinding
     lateinit var adapter: BaseAmountRcAdapter
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         //return inflater.inflate(R.layout.fragment_product_amount, container, false)
-        binding= FragmentProductAmountBinding.inflate(layoutInflater,container,false)
+        binding= FragmentBaseAmountBinding.inflate(layoutInflater,container,false)
         return binding.root
     }
 
@@ -36,15 +38,15 @@ class ProductAmountFragment(val fragCloseInterface: IFragmentCloseInterface, val
         adapter= BaseAmountRcAdapter(object : ICallBackAmountAdapter {
             override fun onClickItem() {
                 //binding.tbProductAmount.
-                activity?.supportFragmentManager?.beginTransaction()?.remove(this@ProductAmountFragment)?.commit()
+                activity?.supportFragmentManager?.beginTransaction()?.remove(this@BaseAmountFragment)?.commit()
 
             }
 
-        },filterForActivity)
+        },filterForActivity,baseAmountType)
         setupToolbar()
         var time=UtilsHelper.getCurrentDate()
         binding.apply {
-             val rcView = rcViewProductAmount
+             val rcView = rcViewBaseAmount
             rcView.layoutManager = LinearLayoutManager(activity)
             rcView.adapter = adapter
             if (newList != null) {
@@ -61,9 +63,17 @@ class ProductAmountFragment(val fragCloseInterface: IFragmentCloseInterface, val
                         calendar1.set(year, monthOfYear, dayOfMonth)
                         time=calendar1.getTimeInMillis()
                         initDateTimeButtons(time)
-                        (activity as MainActivity)!!.viewModel.getProductAmount("",time)
-                        //refresh adapter
-                        adapter.updateAdapter((activity as MainActivity)!!.liveProductAmount)
+                        if(baseAmountType==BaseAmountType.PRODUCT){
+                            (activity as MainActivity)!!.viewModel.getProductAmount("",time)
+                            //refresh adapter
+                            adapter.updateAdapter((activity as MainActivity)!!.liveProductAmount)
+                        }else if(baseAmountType==BaseAmountType.SELLER){
+                            (activity as MainActivity)!!.viewModel.getSellerAmount("",time)
+                            //refresh adapter
+                            adapter.updateAdapter((activity as MainActivity)!!.liveSellerAmount)
+
+                        }
+
                     },
                     calendar.get(Calendar.YEAR),
                     calendar.get(Calendar.MONTH),
@@ -89,8 +99,8 @@ class ProductAmountFragment(val fragCloseInterface: IFragmentCloseInterface, val
     }
     private fun setupToolbar(){
         // кнопка home <- слушатель
-        binding.tbProductAmount.setNavigationOnClickListener {
-            activity?.supportFragmentManager?.beginTransaction()?.remove(this@ProductAmountFragment)?.commit()
+        binding.tbBaseAmount.setNavigationOnClickListener {
+            activity?.supportFragmentManager?.beginTransaction()?.remove(this@BaseAmountFragment)?.commit()
         }
 
     }

@@ -8,12 +8,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.vk.vsvans.BlogShop.R
 import com.vk.vsvans.BlogShop.model.data.BaseAmount
+import com.vk.vsvans.BlogShop.model.data.BaseAmountType
 import com.vk.vsvans.BlogShop.model.data.ProductAmount
 import com.vk.vsvans.BlogShop.util.FilterForActivity
 import com.vk.vsvans.BlogShop.util.UtilsString
 import com.vk.vsvans.BlogShop.view.`interface`.ICallBackAmountAdapter
 
-class BaseAmountRcAdapter(val callBack:ICallBackAmountAdapter, val filterForActivity: FilterForActivity) : RecyclerView.Adapter<BaseAmountRcAdapter.SpViewHolder>() {
+class BaseAmountRcAdapter(val callBack:ICallBackAmountAdapter, val filterForActivity: FilterForActivity,val baseAmountType: BaseAmountType) : RecyclerView.Adapter<BaseAmountRcAdapter.SpViewHolder>() {
 
     private val mainList=ArrayList<BaseAmount>()
     //private val context=context
@@ -40,12 +41,20 @@ class BaseAmountRcAdapter(val callBack:ICallBackAmountAdapter, val filterForActi
             if (selected_position != holder.getAdapterPosition()) {
                 selectItem(holder.adapterPosition)
             }else{
-                val tvProdNameAmount=holder.itemView.findViewById<TextView>(R.id.tvProdNameAmount)
-                filterForActivity.content=tvProdNameAmount!!.text.toString()
-                filterForActivity.dates_begin=null
-                filterForActivity.dates_end=null
-                filterForActivity.idSeller=null
 
+                if(baseAmountType==BaseAmountType.PRODUCT) {
+                    val tvProdNameAmount=holder.itemView.findViewById<TextView>(R.id.tvProdNameAmount)
+                    filterForActivity.content = tvProdNameAmount!!.text.toString()
+                    filterForActivity.dates_begin = null
+                    filterForActivity.dates_end = null
+                    filterForActivity.idSeller = null
+                }else if(baseAmountType==BaseAmountType.PRODUCT) {
+                    filterForActivity.content = null
+                    filterForActivity.dates_begin = null
+                    filterForActivity.dates_end = null
+                    filterForActivity.idSeller = mainList[position].id
+
+                }
                 unSelectItem()
 
             }
@@ -148,6 +157,7 @@ class BaseAmountRcAdapter(val callBack:ICallBackAmountAdapter, val filterForActi
     }
 
     fun fillNodesAmount(){
+        if(mainList.size==0) return
         var i=mainList.size-1
         val nodesHeap=HashMap<Int,Array<Double>>()
         var idparent=0

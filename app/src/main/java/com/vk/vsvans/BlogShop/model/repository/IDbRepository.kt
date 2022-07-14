@@ -36,6 +36,7 @@ interface IDbRepository {
     //
     // PRODUCT
     fun getProductAmount(searchText:String,time:Long): ArrayList<ProductAmount>
+    fun getSellerAmount(searchText:String,time:Long): ArrayList<SellerAmount>
     //ADD
     fun getAllPurchases(filter: FilterForActivity,readDataCallback: ReadDataCallback?)
     interface ReadDataCallback {
@@ -59,6 +60,11 @@ interface IDbRepository {
     fun getAllProductAmount(filterString:String,readProductCallback: ReadProductAmountCallback?,time:Long)
     interface ReadProductAmountCallback {
         fun readData(list: ArrayList<ProductAmount>)
+    }
+
+    fun getAllSellerAmount(filterString:String,readSellerCallback: ReadSellerAmountCallback?,time:Long)
+    interface ReadSellerAmountCallback {
+        fun readData(list: ArrayList<SellerAmount>)
     }
 
 }

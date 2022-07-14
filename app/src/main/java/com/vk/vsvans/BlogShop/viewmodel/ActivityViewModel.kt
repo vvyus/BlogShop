@@ -35,6 +35,15 @@ class ActivityViewModel(): ViewModel() {
 
         })
     }
+    // for list selleramount
+    val liveSellerAmountList= MutableLiveData<ArrayList<SellerAmount>>()
+    fun getSellerAmount(filter: String,time:Long){
+        mDbRepositoryImpl.getAllSellerAmount(filter,object:IDbRepository.ReadSellerAmountCallback{
+            override fun readData(list: ArrayList<SellerAmount>) {
+                liveSellerAmountList.value=list
+            }
+        },time)
+    }
 
     // for list productamount
     val liveProductAmountList= MutableLiveData<ArrayList<ProductAmount>>()

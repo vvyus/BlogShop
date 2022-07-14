@@ -514,6 +514,45 @@ class DbRepositoryImpl(context: Context):IDbRepository {
         cursor.close()
         return dataList
     }
+// seller amount
+    private fun getSellerAmountFromCursor(cursor: Cursor): SellerAmount {
+        val dataId = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
+        val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_ID_FNS_SELLERS))
+        val dataName = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_NAME_SELLERS))
+        val idparent = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_IDPARENT_SELLERS))
+        val level = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_LEVEL_SELLERS))
+        val fullpath = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_FULLPATH_SELLERS))
+        val count = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_COUNT_SELLERS))
+        val sellerAmount = SellerAmount()
+        sellerAmount.id = dataId
+        sellerAmount.name = dataName
+        sellerAmount.id_fns=dataTitle
+        sellerAmount.level = level?:0
+        sellerAmount.idparent = idparent?:0
+        sellerAmount.fullpath = fullpath?:""
+        sellerAmount.count = count?:0
+        sellerAmount.monthAmount=cursor.getDouble(cursor.getColumnIndex("monthamount"))
+        sellerAmount.yearAmount=cursor.getDouble(cursor.getColumnIndex("yearamount"))
+        sellerAmount.weekAmount=cursor.getDouble(cursor.getColumnIndex("weekamount"))
+        return sellerAmount
+    }
+
+    override fun getSellerAmount(searchText: String,time:Long): ArrayList<SellerAmount> {
+        val dataList = ArrayList<SellerAmount>()
+        val datec=UtilsHelper.correct_date_end(time).toString()
+        val datey=UtilsHelper.getFirstDayOfYear(time).toString()
+        val datem=UtilsHelper.getFirstDayOfMonth(time).toString()
+        val datew=UtilsHelper.getFirstDayOfWeek(time).toString()
+        val selectionArgs = arrayOf(datey,datec,datem,datec,datew,datec,datey,datec,datem,datec,datew,datec)
+        val selectQuery: String = DbName.SELLER_AMOUNT_QUERY
+        val cursor = db?.rawQuery(selectQuery, selectionArgs)
+        while (cursor?.moveToNext()!!) {
+            val seller=getSellerAmountFromCursor(cursor)
+            dataList.add(seller)
+        }
+        cursor.close()
+        return dataList
+    }
 
 
     // ADD
@@ -547,5 +586,10 @@ class DbRepositoryImpl(context: Context):IDbRepository {
 
         val productArray=getProductAmount(filterString,time)
         if(readProductAmountCallback!=null)readProductAmountCallback.readData(productArray)
+    }
+
+    override fun getAllSellerAmount(filterString: String, readSellerCallback: IDbRepository.ReadSellerAmountCallback?, time: Long) {
+        val sellerArray=getSellerAmount(filterString,time)
+        if(readSellerCallback!=null)readSellerCallback.readData(sellerArray)
     }
 }
