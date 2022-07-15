@@ -22,6 +22,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.core.view.MenuItemCompat
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.navigation.NavigationView
 import com.vk.vsvans.BlogShop.R
@@ -569,10 +570,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }//setupToolbar
 
     override fun onBackPressed() {
-        if(baseAmountFragment!=null) {
-            supportFragmentManager?.beginTransaction()?.remove(baseAmountFragment!!)?.commit()
-            return
+        //remove all fragments
+        val frags=ArrayList<Fragment>(getSupportFragmentManager().getFragments())
+        for (frag in frags ){
+            getSupportFragmentManager().beginTransaction().remove(frag).commit()
+            return;
         }
+//        if(baseAmountFragment!=null) {
+//            supportFragmentManager?.beginTransaction()?.remove(baseAmountFragment!!)?.commit()
+//            return
+//        }
         val drawer =rootElement.drawerLayout //findViewById<DrawerLayout>(R.id.drawerLayout)
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START)
