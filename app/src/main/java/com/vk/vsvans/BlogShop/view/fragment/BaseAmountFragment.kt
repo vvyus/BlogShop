@@ -1,16 +1,26 @@
 package com.vk.vsvans.BlogShop.view.fragment
 
 import android.app.DatePickerDialog
+import android.app.SearchManager
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.DatePicker
+import android.widget.EditText
+import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.view.MenuItemCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.vk.vsvans.BlogShop.R
 import com.vk.vsvans.BlogShop.databinding.FragmentBaseAmountBinding
 import com.vk.vsvans.BlogShop.model.data.BaseAmount
 import com.vk.vsvans.BlogShop.model.data.BaseAmountType
+import com.vk.vsvans.BlogShop.model.data.BaseList
 import com.vk.vsvans.BlogShop.model.data.ProductAmount
 import com.vk.vsvans.BlogShop.util.FilterForActivity
 import com.vk.vsvans.BlogShop.util.UtilsHelper
@@ -26,6 +36,8 @@ class BaseAmountFragment(val fragCloseInterface: IFragmentCloseInterface, val ne
                          val filterForActivity: FilterForActivity,val baseAmountType: BaseAmountType) : Fragment() {
     lateinit var binding:FragmentBaseAmountBinding
     lateinit var adapter: BaseAmountRcAdapter
+    private lateinit var searchView: SearchView
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         //return inflater.inflate(R.layout.fragment_product_amount, container, false)
@@ -113,10 +125,81 @@ class BaseAmountFragment(val fragCloseInterface: IFragmentCloseInterface, val ne
     }
 
     private fun setupToolbar(){
-        // кнопка home <- слушатель
-        binding.tbBaseAmount.setNavigationOnClickListener {
-            activity?.supportFragmentManager?.beginTransaction()?.remove(this@BaseAmountFragment)?.commit()
+        binding.apply {
+
+            tbBaseAmount.inflateMenu(R.menu.menu_choose_baselist_item)
+
+            val searchItem: MenuItem =tbBaseAmount.menu.findItem(R.id.action_search)
+            searchView = MenuItemCompat.getActionView(searchItem) as SearchView
+            searchView.setOnCloseListener(object : SearchView.OnCloseListener {
+                override fun onClose(): Boolean {
+                    return true
+                }
+            })
+
+            val searchPlate =        searchView.findViewById(androidx.appcompat.R.id.search_src_text) as EditText
+            searchPlate.hint = getString(R.string.search_hint)
+            val searchPlateView: View =
+                searchView.findViewById(androidx.appcompat.R.id.search_plate)
+            searchPlateView.setBackgroundColor(
+                ContextCompat.getColor(
+                    activity!!,
+                    android.R.color.transparent
+                )
+            )
+
+            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    return false
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    val tempList= filterListDataBaseList(newList!!,newText)
+                    adapter.updateAdapter(tempList)
+//                    if (newText != null) {
+//                        if(newText.isEmpty()){
+//                            //isSetFilter=false
+//                            (activity as MainActivity).filter_fact.content=null
+//                        } else {
+//                            (activity as MainActivity).filter_fact.content=newText
+//                            //isSetFilter=true
+//                        }
+//
+//                        (activity as MainActivity).fillAdapter()
+//                    }
+                    return true
+                }
+            })
+
+            val searchManager = activity!!.getSystemService(Context.SEARCH_SERVICE) as SearchManager
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(activity!!.componentName))
+            //search_item
+
+            // кнопка home <- слушатель
+            tbBaseAmount.setNavigationOnClickListener {
+                activity?.supportFragmentManager?.beginTransaction()?.remove(this@BaseAmountFragment)?.commit()
+            }
+
+            // GO BACK
+//            tbBaseAmount.setNavigationOnClickListener {
+//                onBackPressed()
+//            }
         }
 
+    }//settoolbar
+
+    fun filterListDataBaseList(list:ArrayList<BaseAmount>, searchText:String?):ArrayList<BaseAmount>{
+        val tempList=ArrayList<BaseAmount>()
+        tempList.clear()
+        if(searchText==null || searchText.isEmpty()){
+            //tempList.add("No Result")
+            return list //tempList
+        }
+        for(selection: BaseAmount in list){
+            if(selection.name.lowercase().contains(searchText.lowercase())){
+                tempList.add(selection)
+            }
+        }
+        return tempList
     }
 }

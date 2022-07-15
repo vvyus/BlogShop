@@ -189,7 +189,7 @@ class BaseAmountRcAdapter(val callBack:ICallBackAmountAdapter, val filterForActi
                 if(idparent!=mainList[i].idparent && mainList[i].count==0){
                     idparent=mainList[i].idparent
                 }
-                --i
+                if(i>0) --i else break
             }
 
             // its super(root) node for leaves and simplenodes
@@ -220,7 +220,7 @@ class BaseAmountRcAdapter(val callBack:ICallBackAmountAdapter, val filterForActi
                     nodesHeap.put(idparent, arrayOf(arrayNode[0]+mainList[i].yearAmount,arrayNode[1]+mainList[i].monthAmount,arrayNode[2]+mainList[i].weekAmount))
                 }
             }
-            --i
+            if(i>0) --i else break
         }
         if(mainList[i].id==mainList[i].idparent && mainList[i].count>0){
             if(nodesHeap.get(mainList[i].id)!=null){

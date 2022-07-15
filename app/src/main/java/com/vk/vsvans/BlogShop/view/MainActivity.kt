@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var toolbar: Toolbar
     private lateinit var searchView:SearchView
 
-    private val filter_fact=FilterForActivity("main")
+    val filter_fact=FilterForActivity("main")
     // for count purchases
     val calendar_events=HashMap<String, Int>()
 
