@@ -569,6 +569,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }//setupToolbar
 
     override fun onBackPressed() {
+        if(baseAmountFragment!=null) {
+            supportFragmentManager?.beginTransaction()?.remove(baseAmountFragment!!)?.commit()
+            return
+        }
         val drawer =rootElement.drawerLayout //findViewById<DrawerLayout>(R.id.drawerLayout)
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START)

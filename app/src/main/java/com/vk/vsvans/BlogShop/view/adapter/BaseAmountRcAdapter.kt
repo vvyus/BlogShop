@@ -148,6 +148,26 @@ class BaseAmountRcAdapter(val callBack:ICallBackAmountAdapter, val filterForActi
         }
     }
 
+    fun setSelectedPositionById(id:Int?):Int{
+        for(i in 0 until mainList.size){
+            if(mainList[i].id==id){
+                selected_position=i
+                return i
+            }
+        }
+        return -1
+    }
+
+    fun setSelectedPositionByContent(content:String?):Int{
+        for(i in 0 until mainList.size){
+            if(mainList[i].name==content){
+                selected_position=i
+                return i
+            }
+        }
+        return -1
+    }
+
     fun updateAdapter(list: ArrayList<BaseAmount>){
 
         mainList.clear()

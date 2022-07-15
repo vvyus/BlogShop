@@ -49,8 +49,21 @@ class BaseAmountFragment(val fragCloseInterface: IFragmentCloseInterface, val ne
              val rcView = rcViewBaseAmount
             rcView.layoutManager = LinearLayoutManager(activity)
             rcView.adapter = adapter
+            var pos=0
             if (newList != null) {
                 adapter.updateAdapter(newList)
+                // return from activity to fragment
+                if(filterForActivity.idSeller!=null && filterForActivity.idSeller!!>0 && baseAmountType==BaseAmountType.SELLER){
+                    pos=adapter.setSelectedPositionById(filterForActivity.idSeller)
+                    if(pos>0) {
+                        rcView.scrollToPosition(pos)
+                    }
+                }else if(filterForActivity.content!=null && baseAmountType==BaseAmountType.PRODUCT){
+                    pos=adapter.setSelectedPositionByContent(filterForActivity.content)
+                    if(pos>0) {
+                        rcView.scrollToPosition(pos)
+                    }
+                }
             }
             tvDateAmount.setOnClickListener{
                 val calendar: Calendar = Calendar.getInstance()
@@ -91,12 +104,14 @@ class BaseAmountFragment(val fragCloseInterface: IFragmentCloseInterface, val ne
         fragCloseInterface.onFragClose()
     }
 
+
     private fun initDateTimeButtons(time:Long){
         //val mDateMediumFormat = SimpleDateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault())
         //
         val mDateMediumFormat = SimpleDateFormat("dd MMMM yyyy",Locale.getDefault())
         binding.tvDateAmount.setText(mDateMediumFormat.format(Date(time)))
     }
+
     private fun setupToolbar(){
         // кнопка home <- слушатель
         binding.tbBaseAmount.setNavigationOnClickListener {
