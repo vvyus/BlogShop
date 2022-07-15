@@ -133,6 +133,7 @@ class BaseAmountFragment(val fragCloseInterface: IFragmentCloseInterface, val ne
             searchView = MenuItemCompat.getActionView(searchItem) as SearchView
             searchView.setOnCloseListener(object : SearchView.OnCloseListener {
                 override fun onClose(): Boolean {
+                    if (!searchView.isIconified()) searchView.onActionViewCollapsed()
                     return true
                 }
             })
