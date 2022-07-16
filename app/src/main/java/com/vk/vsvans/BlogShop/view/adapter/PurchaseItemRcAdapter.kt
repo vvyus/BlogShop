@@ -44,7 +44,7 @@ var title_color=0
                 selectItem(holder.adapterPosition)
             }else{
                 if (clickItemCallback != null) clickItemCallback!!.onEditItem()
-                unSelectItem()
+                //unSelectItem()
             }
             notifyItemChanged(selected_position)
         }

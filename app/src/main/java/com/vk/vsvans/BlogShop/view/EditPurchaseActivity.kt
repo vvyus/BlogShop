@@ -386,7 +386,8 @@ class EditPurchaseActivity : AppCompatActivity() {
                 launcherProduct,
                 object: IUpdatePurchaseItemList {
                     override fun onUpdatePurchaseItemList(pit: PurchaseItem) {
-                        purchaseItemFragment!!.adapter.updateAdapterInsert(pit)
+                        if(pit.id==0)purchaseItemFragment!!.adapter.updateAdapterInsert(pit)
+                        else purchaseItemFragment!!.adapter.updateAdapterEdit(pit)
                     }
 
                 }
