@@ -48,7 +48,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@color/blue_color"
+                android:background="@color/blue_cadet_color"
                 android:text="01-January-2022"
                 android:textAlignment="center"
                 android:textColor="@color/white"
