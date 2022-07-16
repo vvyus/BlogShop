@@ -2,7 +2,7 @@ package com.vk.vsvans.BlogShop.model.repository
 import android.provider.BaseColumns
 
 object DbName {
-        const val DATABASE_VERSION = 23
+        const val DATABASE_VERSION = 24
         const val DATABASE_NAME = "BlogShopDb.db"
   // Table Purchase
         const val TABLE_NAME = "Purchases"
@@ -11,6 +11,7 @@ object DbName {
         const val COLUMN_NAME_CONTENT_HTML = "content_html"
         const val COLUMN_NAME_SUMMA_PURCHASES = "summa"
         const val COLUMN_NAME_TIME = "time"
+    const val COLUMN_NAME_TIME_DAY = "time_day"
         const val COLUMN_NAME_ID_FNS = "id_fns"
         const val COLUMN_NAME_SELLER_ID = "idseller"
         const val COLUMN_NAME_SELLER_NAME = "sellername"
@@ -22,6 +23,7 @@ object DbName {
                 "$COLUMN_NAME_CONTENT_HTML TEXT,"+
                 "$COLUMN_NAME_SUMMA_PURCHASES DOUBLE,"+
                 "$COLUMN_NAME_TIME LONG," +
+                "$COLUMN_NAME_TIME_DAY LONG," +
                 "$COLUMN_NAME_ID_FNS TEXT," +
                 "$COLUMN_NAME_SELLER_ID INTEGER," +
                 "$COLUMN_NAME_SELLER_NAME TEXT"+
@@ -96,7 +98,7 @@ object DbName {
     val PURCHASE_QUERY = "SELECT $TABLE_NAME.${BaseColumns._ID} as ${BaseColumns._ID}," +
             "$TABLE_NAME.$COLUMN_NAME_TITLE as $COLUMN_NAME_TITLE," +
             "$COLUMN_NAME_CONTENT,$COLUMN_NAME_CONTENT_HTML," +
-            "$TABLE_NAME.$COLUMN_NAME_ID_FNS,$COLUMN_NAME_TIME,$COLUMN_NAME_SUMMA_PURCHASES," +
+            "$TABLE_NAME.$COLUMN_NAME_ID_FNS,$COLUMN_NAME_TIME,$COLUMN_NAME_TIME_DAY,$COLUMN_NAME_SUMMA_PURCHASES," +
             "$TABLE_NAME_SELLERS.$COLUMN_NAME_NAME_SELLERS AS $COLUMN_NAME_SELLER_NAME," +
             "$TABLE_NAME_SELLERS.${BaseColumns._ID} AS $COLUMN_NAME_SELLER_ID" +
             " FROM $TABLE_NAME " + "LEFT JOIN $TABLE_NAME_SELLERS "+

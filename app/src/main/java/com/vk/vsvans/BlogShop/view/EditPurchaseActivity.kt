@@ -131,6 +131,7 @@ class EditPurchaseActivity : AppCompatActivity() {
             purchase= Purchase()
             if(purchase!=null){
                 purchase!!.time=UtilsHelper.getCurrentDate()
+                purchase!!.time_day=UtilsHelper.correct_date_begin(purchase!!.time)
                 initDateTime()
             }
         }
@@ -183,6 +184,7 @@ class EditPurchaseActivity : AppCompatActivity() {
                     calendar1.setTime(Date(purchase!!.time))
                     calendar1.set(year, monthOfYear, dayOfMonth)
                     purchase!!.time=calendar1.getTimeInMillis()
+                    purchase!!.time_day=UtilsHelper.correct_date_begin(purchase!!.time)
                     initDateTimeButtons()
                 },
                 calendar.get(Calendar.YEAR),
@@ -202,6 +204,7 @@ class EditPurchaseActivity : AppCompatActivity() {
                     calendar1[calendar1[Calendar.YEAR], calendar1[Calendar.MONTH], calendar1[Calendar.DAY_OF_MONTH], hourOfDay] =
                         minute
                     purchase!!.time=calendar1.getTimeInMillis()
+                    purchase!!.time_day=UtilsHelper.correct_date_begin(purchase!!.time)
                     initDateTimeButtons()
                 },
                 calendar[Calendar.HOUR_OF_DAY],
@@ -265,6 +268,7 @@ class EditPurchaseActivity : AppCompatActivity() {
                 }
                 var old_time=purchase!!.time
                 purchase!!.time= ImportUtils.parseDateTimeString(rootElement.edDatePart.text.toString()+" "+rootElement.edTimePart.text.toString())!!
+                purchase!!.time_day=UtilsHelper.correct_date_begin(purchase!!.time)
                 if(idPurchase>0){
                     //dbManager.updatePurchase(idPurchase,edTitle.text.toString(),edDescription.text.toString())
                     viewModel.updatePurchase(purchase!!)

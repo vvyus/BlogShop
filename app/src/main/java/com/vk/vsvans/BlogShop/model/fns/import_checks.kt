@@ -84,7 +84,8 @@ object import_checks {
                                         purchase!!.idfns=idFns
 
                                         if (dateTimeLong != null) {
-                                            purchase!!.time= dateTimeLong as Long
+                                            purchase!!.time= dateTimeLong!!// as Long
+                                            purchase!!.time_day=UtilsHelper.correct_date_begin(purchase!!.time)
                                         }
                                         purchase!!.summa=totalSum
                                         var sellername=user

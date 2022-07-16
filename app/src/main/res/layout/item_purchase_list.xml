@@ -32,7 +32,7 @@
                 android:layout_marginStart="@dimen/default_margin"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="@dimen/default_margin"
-                android:background="@color/color_red"
+                android:background="@color/blue_color"
                 android:fontFamily="sans-serif-condensed"
                 android:paddingStart="10dp"
                 android:paddingTop="5dp"
@@ -87,11 +87,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
+                        android:background="@color/blue_color"
                         android:clickable="true"
                         android:fontFamily="sans-serif-condensed"
                         android:text="1200"
                         android:textAlignment="textStart"
-                        android:textColor="@color/black"
+                        android:textColor="@color/white"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
@@ -117,7 +118,7 @@
                             android:id="@+id/tvSummaDesc"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@color/yellow"
+                            android:background="@color/white"
                             android:fontFamily="sans-serif-condensed"
                             android:gravity="center_horizontal"
                             android:paddingStart="10dp"
@@ -125,7 +126,7 @@
                             android:paddingEnd="10dp"
                             android:paddingBottom="5dp"
                             android:text="@string/summa"
-                            android:textColor="@color/black"
+                            android:textColor="@color/green_main"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -133,7 +134,7 @@
                             android:id="@+id/tvSummaPuchase"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@color/yellow"
+                            android:background="@color/white"
                             android:fontFamily="sans-serif-condensed"
                             android:gravity="center_horizontal"
                             android:paddingStart="10dp"
@@ -141,7 +142,7 @@
                             android:paddingEnd="10dp"
                             android:paddingBottom="5dp"
                             android:text="3200р"
-                            android:textColor="@color/color_red"
+                            android:textColor="@color/black"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 

@@ -198,6 +198,7 @@ class DbRepositoryImpl(context: Context):IDbRepository {
 
         val dataId = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
         val time = cursor.getLong(cursor.getColumnIndex(DbName.COLUMN_NAME_TIME))
+        val time_day = cursor.getLong(cursor.getColumnIndex(DbName.COLUMN_NAME_TIME_DAY))
         val dataSumma = cursor.getDouble(cursor.getColumnIndex(DbName.COLUMN_NAME_SUMMA_PURCHASES))
         val sellername=cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_SELLER_NAME))
         val sellerid=cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_SELLER_ID))
@@ -208,6 +209,7 @@ class DbRepositoryImpl(context: Context):IDbRepository {
         purchase.content_html= dataContentHtml
         purchase.id = dataId
         purchase.time = time
+        purchase.time_day = time_day
         purchase.summa=dataSumma
         purchase.idfns=dataIdFns
         purchase.idseller=sellerid
@@ -261,7 +263,7 @@ class DbRepositoryImpl(context: Context):IDbRepository {
         if(filter.dates_begin!=null && filter.dates_end!=null) {
             for (i in filter.dates_begin!!.indices) {
                 if(i==0)selection+="("
-                selection += "${DbName.COLUMN_NAME_TIME} >= " + filter.dates_begin!![i] + " AND ${DbName.COLUMN_NAME_TIME}<=" + filter.dates_end!![i]
+                selection += "${DbName.COLUMN_NAME_TIME_DAY} = " + filter.dates_begin!![i] //+ " AND ${DbName.COLUMN_NAME_TIME}<=" + filter.dates_end!![i]
                 if (i < filter.dates_begin!!.size - 1) selection += " OR " else selection +=")" //" AND "
             }
         }
@@ -299,7 +301,7 @@ class DbRepositoryImpl(context: Context):IDbRepository {
         }
         if(filter.dates_begin!=null && filter.dates_end!=null) {
             for (i in filter.dates_begin!!.indices) {
-                selection += "${DbName.COLUMN_NAME_TIME} >= " + filter.dates_begin!![i] + " AND ${DbName.COLUMN_NAME_TIME}<=" + filter.dates_end!![i]
+                selection += "${DbName.COLUMN_NAME_TIME_DAY} = " + filter.dates_begin!![i] //+" AND ${DbName.COLUMN_NAME_TIME}<=" + filter.dates_end!![i]
                 if (i < filter.dates_begin!!.size - 1) selection += " OR " else selection += " AND "
             }
         }
@@ -369,6 +371,7 @@ class DbRepositoryImpl(context: Context):IDbRepository {
             put(DbName.COLUMN_NAME_CONTENT_HTML,purchase.content_html)
             put(DbName.COLUMN_NAME_ID_FNS, purchase.idfns)
             put(DbName.COLUMN_NAME_TIME, purchase.time)
+            put(DbName.COLUMN_NAME_TIME_DAY, purchase.time_day)
             put(DbName.COLUMN_NAME_SELLER_ID, purchase.idseller)
         }
         return values

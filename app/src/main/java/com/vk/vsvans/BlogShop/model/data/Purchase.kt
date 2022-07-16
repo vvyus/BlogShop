@@ -7,6 +7,7 @@ class Purchase: Serializable,Comparable<Purchase> {
     var content = ""
     var summa:Double= 0.0
     var time:Long = 0
+    var time_day:Long = 0
     var id = 0
     var content_html=""
     var idfns=""
