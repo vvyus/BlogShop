@@ -1,0 +1,31 @@
+package com.vk.vsvans.BlogShop.model.fns
+
+data class Receipt(
+    val appliedTaxationType: Int,
+    val cashTotalSum: Int,
+    val code: Int,
+    val creditSum: Int,
+    val dateTime: String,
+    val ecashTotalSum: Int,
+    val fiscalDocumentFormatVer: Int,
+    val fiscalDocumentNumber: Int,
+    val fiscalDriveNumber: String,
+    val fiscalSign: Float,
+    val fnsUrl: String,
+    val items: List<Item>,
+    val kktRegId: String,
+    val nds18: Int,
+    val operationType: Int,
+    val operator: String,
+    val operatorInn: String,
+    val prepaidSum: Int,
+    val provisionSum: Int,
+    val requestNumber: Int,
+    val retailPlace: String,
+    val retailPlaceAddress: String,
+    val shiftNumber: Int,
+    val taxationType: Int,
+    val totalSum: Int,
+    val user: String,
+    val userInn: String
+)

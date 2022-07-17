@@ -29,6 +29,8 @@ import com.vk.vsvans.BlogShop.R
 import com.vk.vsvans.BlogShop.view.adapter.PurchaseRcAdapter
 import com.vk.vsvans.BlogShop.databinding.ActivityMainBinding
 import com.vk.vsvans.BlogShop.model.data.*
+import com.vk.vsvans.BlogShop.model.fns.ChecksModelItem
+import com.vk.vsvans.BlogShop.model.fns.RetrofitCommon
 import com.vk.vsvans.BlogShop.view.dialog.DialogHelper
 import com.vk.vsvans.BlogShop.model.fns.import_checks
 import com.vk.vsvans.BlogShop.view.`interface`.*
@@ -43,6 +45,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.lang.String.valueOf
 import java.util.*
 import kotlin.collections.ArrayList
@@ -317,7 +322,23 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 startActivity(intent)
                 //Toast.makeText(this@MainActivity,"Pressed sellers", Toast.LENGTH_LONG).show()
 
-            }else-> rootElement.drawerLayout.closeDrawer(GravityCompat.START)
+            }
+            R.id.id_demo_retrofit->{
+                val service= RetrofitCommon.retrofitService
+                service.getChecksModelItem()?.enqueue(object : Callback<MutableList<ChecksModelItem>> {
+                    override fun onFailure(call: Call<MutableList<ChecksModelItem>>, t: Throwable) {
+                        println("Retrofit fail!!! "+t)
+                    }
+
+                    override fun onResponse(call: Call<MutableList<ChecksModelItem>>, response: Response<MutableList<ChecksModelItem>>) {
+                        if (response.isSuccessful()) {
+                            //((response.body as java.util.ArrayList<*>)[0] as ChecksModelItem).ticket.document.receipt.dateTime
+                            println("Retrofit response " + response.body()?.size);
+                        }
+                    }
+                })
+            }
+            else-> rootElement.drawerLayout.closeDrawer(GravityCompat.START)
 
         }
         return true
