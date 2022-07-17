@@ -22,6 +22,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_weight="20"
         >
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcViewProductList"
@@ -46,4 +47,12 @@
             app:tint="@color/green_main"
              />
     </FrameLayout>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bNavView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:itemIconTint="@drawable/bottom_nav_selector"
+        app:labelVisibilityMode="unlabeled"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/bottom_baselist_menu" />
 </LinearLayout>

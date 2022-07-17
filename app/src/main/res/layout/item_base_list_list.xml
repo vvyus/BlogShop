@@ -46,6 +46,7 @@
                 android:background="@android:drawable/screen_background_light_transparent"
                 android:gravity="center_horizontal"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@+id/tvBaseListName"
                 app:layout_constraintEnd_toStartOf="@+id/expandableIndicator"
                 app:layout_constraintTop_toTopOf="parent">

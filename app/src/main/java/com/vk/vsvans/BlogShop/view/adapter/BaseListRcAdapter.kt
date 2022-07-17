@@ -42,6 +42,8 @@ class BaseListRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
             if (selected_position != holder.getAdapterPosition()) {
                 selectItem(holder.adapterPosition)
             }else{
+
+                if(clickItemCallback!=null) clickItemCallback.onClickItem(getBaseList()!!)
                 unSelectItem()
             }
             notifyItemChanged(selected_position)
@@ -53,8 +55,9 @@ class BaseListRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
 
         //
         holder.itemView.setBackgroundColor(if (selected_position == position) selected_color else Color.TRANSPARENT)
-        val llButtons=holder.itemView.findViewById<LinearLayout>(R.id.llButtons)
-        llButtons.visibility=if (selected_position == position) View.VISIBLE else View.GONE
+        // вся функциональность llbuttons теперь в bottommenu на активити
+//        val llButtons=holder.itemView.findViewById<LinearLayout>(R.id.llButtons)
+//        llButtons.visibility=if (selected_position == position) View.VISIBLE else View.GONE
         //!
 
         val parentid=BaseList.idparent
@@ -109,6 +112,23 @@ class BaseListRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
             } else break
         }
         return true
+    }
+
+    fun setSelectedPositionById(id:Int):Int{
+         for(i in 0 until BaseListArray.size){
+            if(BaseListArray[i].count>0)BaseListArray[i].expanded=true
+            if(BaseListArray[i].id==id){
+                selected_position=i
+                return i
+            }
+        }
+        return -1
+    }
+
+    fun expandAll(expand:Boolean) {
+        for(i in 0 until BaseListArray.size){
+            if(BaseListArray[i].count>0)BaseListArray[i].expanded=expand
+        }
     }
 
     fun getBaseListId():Int{
@@ -257,4 +277,6 @@ class BaseListRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
     fun refreshItem() {
         notifyDataSetChanged()
     }
+
+
 }

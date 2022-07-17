@@ -8,10 +8,7 @@ import android.provider.BaseColumns
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.vk.vsvans.BlogShop.model.MyDbHelper
-import com.vk.vsvans.BlogShop.model.data.Product
-import com.vk.vsvans.BlogShop.model.data.Purchase
-import com.vk.vsvans.BlogShop.model.data.PurchaseItem
-import com.vk.vsvans.BlogShop.model.data.Seller
+import com.vk.vsvans.BlogShop.model.data.*
 import com.vk.vsvans.BlogShop.util.FilterForActivity
 import com.vk.vsvans.BlogShop.util.UtilsHelper
 
@@ -201,6 +198,7 @@ class DbRepositoryImpl(context: Context):IDbRepository {
 
         val dataId = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
         val time = cursor.getLong(cursor.getColumnIndex(DbName.COLUMN_NAME_TIME))
+        val time_day = cursor.getLong(cursor.getColumnIndex(DbName.COLUMN_NAME_TIME_DAY))
         val dataSumma = cursor.getDouble(cursor.getColumnIndex(DbName.COLUMN_NAME_SUMMA_PURCHASES))
         val sellername=cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_SELLER_NAME))
         val sellerid=cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_SELLER_ID))
@@ -211,6 +209,7 @@ class DbRepositoryImpl(context: Context):IDbRepository {
         purchase.content_html= dataContentHtml
         purchase.id = dataId
         purchase.time = time
+        purchase.time_day = time_day
         purchase.summa=dataSumma
         purchase.idfns=dataIdFns
         purchase.idseller=sellerid
@@ -263,12 +262,14 @@ class DbRepositoryImpl(context: Context):IDbRepository {
         }
         if(filter.dates_begin!=null && filter.dates_end!=null) {
             for (i in filter.dates_begin!!.indices) {
-                selection += "${DbName.COLUMN_NAME_TIME} >= " + filter.dates_begin!![i] + " AND ${DbName.COLUMN_NAME_TIME}<=" + filter.dates_end!![i]
-                if (i < filter.dates_begin!!.size - 1) selection += " OR " else selection += " AND "
+                if(i==0)selection+="("
+                selection += "${DbName.COLUMN_NAME_TIME_DAY} = " + filter.dates_begin!![i] //+ " AND ${DbName.COLUMN_NAME_TIME}<=" + filter.dates_end!![i]
+                if (i < filter.dates_begin!!.size - 1) selection += " OR " else selection +=")" //" AND "
             }
         }
         if(selection.endsWith(" AND "))selection=selection.substring(0, selection.length - 5)
         val selectionArgs: Array<String> = args.toTypedArray()
+        println(" !!! "+selection)
         //selectionArgs = arrayOf(idSeller.toString())
 
         val temp: String = DbName.PURCHASE_QUERY
@@ -300,7 +301,7 @@ class DbRepositoryImpl(context: Context):IDbRepository {
         }
         if(filter.dates_begin!=null && filter.dates_end!=null) {
             for (i in filter.dates_begin!!.indices) {
-                selection += "${DbName.COLUMN_NAME_TIME} >= " + filter.dates_begin!![i] + " AND ${DbName.COLUMN_NAME_TIME}<=" + filter.dates_end!![i]
+                selection += "${DbName.COLUMN_NAME_TIME_DAY} = " + filter.dates_begin!![i] //+" AND ${DbName.COLUMN_NAME_TIME}<=" + filter.dates_end!![i]
                 if (i < filter.dates_begin!!.size - 1) selection += " OR " else selection += " AND "
             }
         }
@@ -370,6 +371,7 @@ class DbRepositoryImpl(context: Context):IDbRepository {
             put(DbName.COLUMN_NAME_CONTENT_HTML,purchase.content_html)
             put(DbName.COLUMN_NAME_ID_FNS, purchase.idfns)
             put(DbName.COLUMN_NAME_TIME, purchase.time)
+            put(DbName.COLUMN_NAME_TIME_DAY, purchase.time_day)
             put(DbName.COLUMN_NAME_SELLER_ID, purchase.idseller)
         }
         return values
@@ -470,6 +472,92 @@ class DbRepositoryImpl(context: Context):IDbRepository {
         db?.delete(DbName.TABLE_NAME_PURCHASE_ITEMS,selection, null)
     }
 
+// PRODUCT AMOUNT
+
+    private fun getProductAmountFromCursor(cursor: Cursor): ProductAmount {
+        val dataId = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
+        val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_ID_FNS_PRODUCTS))
+        val dataName = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_NAME_PRODUCTS))
+        val idparent = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_IDPARENT_PRODUCTS))
+        val level = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_LEVEL_PRODUCTS))
+        val fullpath = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_FULLPATH_PRODUCTS))
+        val count = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_COUNT_PRODUCTS))
+        val productAmount = ProductAmount()
+        productAmount.id = dataId
+        productAmount.name = dataName
+        productAmount.id_fns=dataTitle
+        productAmount.level = level?:0
+        productAmount.idparent = idparent?:0
+        productAmount.fullpath = fullpath?:""
+        productAmount.count = count?:0
+        productAmount.monthAmount=cursor.getDouble(cursor.getColumnIndex("monthamount"))
+        productAmount.yearAmount=cursor.getDouble(cursor.getColumnIndex("yearamount"))
+        productAmount.weekAmount=cursor.getDouble(cursor.getColumnIndex("weekamount"))
+        return productAmount
+    }
+
+    override fun getProductAmount(searchText: String,time:Long): ArrayList<ProductAmount> {
+        val dataList = ArrayList<ProductAmount>()
+//        val selection = "${DbName.COLUMN_NAME_NAME_PRODUCTS} like ?"
+//        val cursor = db?.query(
+//            DbName.TABLE_NAME_PRODUCTS,null,selection,arrayOf("%$searchText%"),//, arrayOf("_id","idparent","name","id_fns","level","count","fullpath"), selection, arrayOf("%$searchText%"),
+//            null, null, "fullpath ASC"
+//        )
+        val datec=UtilsHelper.correct_date_end(time).toString()
+        val datey=UtilsHelper.getFirstDayOfYear(time).toString()
+        val datem=UtilsHelper.getFirstDayOfMonth(time).toString()
+        val datew=UtilsHelper.getFirstDayOfWeek(time).toString()
+        val selectionArgs = arrayOf(datey,datec,datem,datec,datew,datec,datey,datec,datem,datec,datew,datec)
+        val selectQuery: String = DbName.PRODUCT_AMOUNT_QUERY
+        val cursor = db?.rawQuery(selectQuery, selectionArgs)
+        while (cursor?.moveToNext()!!) {
+            val product=getProductAmountFromCursor(cursor)
+            dataList.add(product)
+        }
+        cursor.close()
+        return dataList
+    }
+// seller amount
+    private fun getSellerAmountFromCursor(cursor: Cursor): SellerAmount {
+        val dataId = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
+        val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_ID_FNS_SELLERS))
+        val dataName = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_NAME_SELLERS))
+        val idparent = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_IDPARENT_SELLERS))
+        val level = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_LEVEL_SELLERS))
+        val fullpath = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_FULLPATH_SELLERS))
+        val count = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_COUNT_SELLERS))
+        val sellerAmount = SellerAmount()
+        sellerAmount.id = dataId
+        sellerAmount.name = dataName
+        sellerAmount.id_fns=dataTitle
+        sellerAmount.level = level?:0
+        sellerAmount.idparent = idparent?:0
+        sellerAmount.fullpath = fullpath?:""
+        sellerAmount.count = count?:0
+        sellerAmount.monthAmount=cursor.getDouble(cursor.getColumnIndex("monthamount"))
+        sellerAmount.yearAmount=cursor.getDouble(cursor.getColumnIndex("yearamount"))
+        sellerAmount.weekAmount=cursor.getDouble(cursor.getColumnIndex("weekamount"))
+        return sellerAmount
+    }
+
+    override fun getSellerAmount(searchText: String,time:Long): ArrayList<SellerAmount> {
+        val dataList = ArrayList<SellerAmount>()
+        val datec=UtilsHelper.correct_date_end(time).toString()
+        val datey=UtilsHelper.getFirstDayOfYear(time).toString()
+        val datem=UtilsHelper.getFirstDayOfMonth(time).toString()
+        val datew=UtilsHelper.getFirstDayOfWeek(time).toString()
+        val selectionArgs = arrayOf(datey,datec,datem,datec,datew,datec,datey,datec,datem,datec,datew,datec)
+        val selectQuery: String = DbName.SELLER_AMOUNT_QUERY
+        val cursor = db?.rawQuery(selectQuery, selectionArgs)
+        while (cursor?.moveToNext()!!) {
+            val seller=getSellerAmountFromCursor(cursor)
+            dataList.add(seller)
+        }
+        cursor.close()
+        return dataList
+    }
+
+
     // ADD
     override fun getAllPurchases(filter: FilterForActivity,readDataCallback: IDbRepository.ReadDataCallback?){
         val purchaseArray=ArrayList<Purchase>()
@@ -495,5 +583,16 @@ class DbRepositoryImpl(context: Context):IDbRepository {
     override fun getAllPurchaseItems(idPurchase: Int, readPurchaseItemCallback: IDbRepository.ReadPurchaseItemCallback?) {
         val purchaseItemArray= getPurchaseItems(idPurchase)
         if(readPurchaseItemCallback!=null)readPurchaseItemCallback.readData(purchaseItemArray)
+    }
+
+    override fun getAllProductAmount(filterString:String,readProductAmountCallback: IDbRepository.ReadProductAmountCallback?,time:Long){
+
+        val productArray=getProductAmount(filterString,time)
+        if(readProductAmountCallback!=null)readProductAmountCallback.readData(productArray)
+    }
+
+    override fun getAllSellerAmount(filterString: String, readSellerCallback: IDbRepository.ReadSellerAmountCallback?, time: Long) {
+        val sellerArray=getSellerAmount(filterString,time)
+        if(readSellerCallback!=null)readSellerCallback.readData(sellerArray)
     }
 }

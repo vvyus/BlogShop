@@ -19,10 +19,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="?attr/homeAsUpIndicator" />
+
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="wrap_content"
+        android:layout_weight="20">
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rcViewSellerList"
             android:layout_width="match_parent"
@@ -37,13 +39,20 @@
             android:id="@+id/fabAdd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center"
             android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom|center"
             android:layout_margin="@dimen/fab_margin"
             android:onClick="onClickAddSeller"
-            app:srcCompat="@drawable/ic_add"
             app:backgroundTint="@color/white"
-            app:tint="@color/green_main"
-            />
+            app:srcCompat="@drawable/ic_add"
+            app:tint="@color/green_main" />
     </FrameLayout>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bNavView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:itemIconTint="@drawable/bottom_nav_selector"
+        app:labelVisibilityMode="unlabeled"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/bottom_baselist_menu" />
 </LinearLayout>

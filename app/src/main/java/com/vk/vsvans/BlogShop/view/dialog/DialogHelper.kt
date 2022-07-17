@@ -4,33 +4,44 @@ import android.R
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.WindowManager
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import com.vk.vsvans.BlogShop.view.MainActivity
-import com.vk.vsvans.BlogShop.view.EditPurchaseActivity
-import com.vk.vsvans.BlogShop.view.ProductActivity
-import com.vk.vsvans.BlogShop.view.SellerActivity
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.vk.vsvans.BlogShop.calendar.CalendarAlertDialog
 import com.vk.vsvans.BlogShop.calendar.CalendarDialogAdapter
-import com.vk.vsvans.BlogShop.view.`interface`.*
 import com.vk.vsvans.BlogShop.model.data.BaseList
 import com.vk.vsvans.BlogShop.model.data.Product
 import com.vk.vsvans.BlogShop.model.data.PurchaseItem
+import com.vk.vsvans.BlogShop.model.data.Seller
 import com.vk.vsvans.BlogShop.util.FilterForActivity
 import com.vk.vsvans.BlogShop.util.UtilsHelper
+import com.vk.vsvans.BlogShop.view.EditPurchaseActivity
+import com.vk.vsvans.BlogShop.view.MainActivity
+import com.vk.vsvans.BlogShop.view.ProductActivity
+import com.vk.vsvans.BlogShop.view.SellerActivity
+import com.vk.vsvans.BlogShop.view.`interface`.*
+import com.vk.vsvans.BlogShop.view.adapter.StringRcAdapter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.lang.String.valueOf
 import java.util.*
-import kotlin.collections.ArrayList
 import com.vk.vsvans.BlogShop.R as R1
 
 
@@ -61,35 +72,11 @@ object DialogHelper {
 
     }
 
-    fun showLoadChecksDialog(context: Context,idialog_import:IDialogImportChecks) {
-        val alertDialog = AlertDialog.Builder(context)
-
-        alertDialog.apply {
-            setIcon(R1.drawable.ic_import)
-            setTitle(R1.string.import_fns)
-            setMessage(R1.string.import_checks)
-
-            setNegativeButton(R1.string.no_dialog) { _, _ ->
-            }
-
-            setPositiveButton(R1.string.yes_dialog) { _, _ ->
-                idialog_import.import_checks()
-             }
-        }.create()//.show()
-        // select negative button
-        val negative=alertDialog.show().getButton(AlertDialog.BUTTON_NEGATIVE)
-        negative.apply {
-            setFocusable(true)
-            setFocusableInTouchMode(true)
-            requestFocus()
-        }
-
-    }
-
-    fun showPurchaseItemInputDialog(context: Context, pit: PurchaseItem,listProduct:ArrayList<BaseList> ,iupdatePurchaseItemList: IUpdatePurchaseItemList) {
+    fun showPurchaseItemInputDialog(context: Context, pit: PurchaseItem,
+                                    launcherProduct: ActivityResultLauncher<Intent> ,
+                                    iupdatePurchaseItemList: IUpdatePurchaseItemList):AlertDialog {
         val customDialog = AlertDialog.Builder(context, 0).create()
         val inflater: LayoutInflater =(context as EditPurchaseActivity).layoutInflater
-
         val view: View = inflater.inflate(R1.layout.input_purchase_item, null)
         customDialog.setView(view)
         val rootView=view.rootView
@@ -105,17 +92,24 @@ object DialogHelper {
         if(!pit.productName.isEmpty()){
             tvProduct.setText(pit.productName)
         }
+
+
         tvProduct.setOnClickListener {
             val dialog= DialogSpinnerHelper()
             job?.cancel()
             job = CoroutineScope(Dispatchers.Main).launch {
-                //val listProduct = dialog.getAllProduct(context)
+                var idproduct=0
+                if(tvProduct.tag==null ) idproduct=pit!!.idProduct
+                else idproduct=(tvProduct.tag as Product).id
+                val intent= Intent(context as EditPurchaseActivity, ProductActivity::class.java)
+                intent.putExtra(com.vk.vsvans.BlogShop.R.string.PRODUCT_ID.toString(),idproduct)
+                launcherProduct.launch(intent) //getLauncher().launch(intent)
 
-                var idProduct=0
-                if(tvProduct.tag==null || (tvProduct.tag as Product)==null) idProduct=pit!!.idProduct
-                else idProduct=(tvProduct.tag as Product).id
-                tvProduct.setTag(idProduct)
-                dialog.showSpinnerDialog(context, listProduct, tvProduct)
+//                var idProduct=0
+//                if(tvProduct.tag==null || (tvProduct.tag as Product)==null) idProduct=pit!!.idProduct
+//                else idProduct=(tvProduct.tag as Product).id
+//                tvProduct.setTag(idProduct)
+//                dialog.showSpinnerDialog(context, listProduct, tvProduct)
             }
         }
 
@@ -142,7 +136,7 @@ object DialogHelper {
 
         customDialog.show()
 
-
+        return customDialog
     }
 
     fun showBaseListInputDialog(context: Context, product: BaseList, iupdateBaseListItemList: IUpdateBaseListItemList) {
@@ -280,6 +274,11 @@ private fun createTreeArrayAdapter(
             }
         })
         mCalendar.show()
+        mCalendar.getWindow()?.setLayout(
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.MATCH_PARENT
+        )
+
         selected_date.clear()
         mCalendar.clearSelectedDate()
         // set prev selected stored date from filter
@@ -310,6 +309,85 @@ private fun createTreeArrayAdapter(
             }
         }
 println("Ok")
+    }
+
+    fun showLoadChecksDialog(context: Context,idialog_import:IDialogImportChecks) {
+        //val arrayAdapter = RecyclerView.Adapter<String>(context as MainActivity, R.layout.simple_list_item_1)
+        val adapter:StringRcAdapter=StringRcAdapter()
+        val load_selected_date=HashMap<String, Date?>()
+        val filter_fact=FilterForActivity("")
+
+        val alertDialog = AlertDialog.Builder(context).create()
+        val inflater: LayoutInflater =(context as MainActivity).layoutInflater
+        val view: View = inflater.inflate(R1.layout.import_checks_dialog, null)
+        alertDialog.setView(view)
+        val rootView=view.rootView
+
+        val btnCancelCheckDialog=rootView.findViewById<Button>(R1.id.btnCancelCheckDialog)
+        btnCancelCheckDialog.setOnClickListener {
+            alertDialog.dismiss()
+        }
+
+        val btnOkCheckDialog=rootView.findViewById<Button>(R1.id.btnOkCheckDialog)
+        btnOkCheckDialog.setOnClickListener {
+            idialog_import.import_checks(load_selected_date)
+            alertDialog.dismiss()
+        }
+
+        val fabCheckDialogAdd=rootView.findViewById<FloatingActionButton>(R1.id.fabCheckDialogAdd)
+        fabCheckDialogAdd.setOnClickListener {
+            DialogHelper.getCalendarDialog(context,object: IDialogDateFiterCallback {
+                override fun confirmFilter(selected_date: HashMap<String, Date?>) {
+                    if (selected_date.size != 0) {
+                        // выгружаем хэш в другой хэш для передачи в import_checks
+                        load_selected_date.putAll(selected_date)
+                        val dates = ArrayList(selected_date.values)
+                        Collections.sort(dates, object : Comparator<Date?> {
+
+                            override fun compare(o1: Date?, o2: Date?): Int {
+                                if (o1 != null) {
+                                    return o1.compareTo(o2)
+                                }else return 0
+                            }
+                        })
+                        println("Dates size is :"+dates.size+" selected date size is "+selected_date.size)
+                        // для показа в rc
+                        adapter.clear()
+                        //filter_fact.dates_begin используется для показа дат при повторном заходе в календарь
+                        filter_fact.dates_begin = ArrayList<String>()
+                        var str: String?
+                        for (i in 0 until dates.size) {
+                            println("To filter Date is :"+dates[i])
+                            str = valueOf(UtilsHelper.correct_date_begin(dates[i]!!.time))
+                            filter_fact.dates_begin!!.add(str)
+                            //to do
+                            str = UtilsHelper.getDate(dates[i]!!.time)
+                            adapter.add(str)
+                        }
+
+                        //fillAdapter()
+                    }
+                }
+
+                override fun cancelFilter() {
+                    filter_fact.dates_begin=null
+                    adapter.clear()
+                }
+            },filter_fact,UtilsHelper.getCurrentDate())
+        }
+        val rvCheckDialog=rootView.findViewById<RecyclerView>(R1.id.rvCheckDialog)
+        rvCheckDialog.layoutManager= LinearLayoutManager(context)
+        rvCheckDialog.setHasFixedSize(false);
+        rvCheckDialog.setNestedScrollingEnabled(false);
+        rvCheckDialog.adapter=adapter
+        //adapter.add("test")
+
+        alertDialog.show()
+        alertDialog.getWindow()?.setLayout(
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.WRAP_CONTENT
+        )
+
     }
 
 }

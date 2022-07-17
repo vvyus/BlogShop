@@ -24,6 +24,42 @@ public class UtilsHelper {
         return 0;
     }
 
+    public static long getFirstDayOfMonth(Long time){
+        Calendar c = Calendar.getInstance();   // this takes current date
+        c.setTime( new Date(time) );
+        //c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
+        c.set(Calendar.DAY_OF_MONTH, 1);
+        return c.getTimeInMillis();
+    }
+
+    public static long getFirstDayOfYear(Long time){
+        Calendar c = Calendar.getInstance();   // this takes current date
+        //set given time
+        c.setTime( new Date(time) );
+        //c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
+        c.set(Calendar.DAY_OF_YEAR, 1);
+        return c.getTimeInMillis();
+    }
+
+    public static long getFirstDayOfWeek(Long time){
+
+//        int dayOfWeek = 2; // Monday
+//        Calendar now = Calendar.getInstance();
+//        int weekday = now.get(Calendar.DAY_OF_WEEK);
+//
+//        // calculate how much to add
+//        int days = dayOfWeek - weekday;
+//        if (days < 0) days += 7;
+//        now.add(Calendar.DAY_OF_YEAR, days);
+        Calendar now = Calendar.getInstance();
+        now.setTime(  new Date(time) );
+        //now.set(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
+        int dayOfWeek = now.get(Calendar.DAY_OF_WEEK)-1;// нмер дня недели(для 1-го число) -1(с 0-го)
+        dayOfWeek=(dayOfWeek==0) ? 7: dayOfWeek;
+        now.add(Calendar.DATE, -dayOfWeek);
+        return now.getTimeInMillis();
+    }
+
     public static String getDate(long time) {
         Date date = new Date(time);
         DateFormat format = new SimpleDateFormat(DATE_FORMAT_1, Locale.getDefault());
@@ -83,5 +119,13 @@ public class UtilsHelper {
         long date = calendar.getTimeInMillis();
         //date=System.currentTimeMillis()
         return date;
+    }
+
+    public static Date addDays(Date date, int days)
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DATE, days); //minus number would decrement the days
+        return cal.getTime();
     }
 }

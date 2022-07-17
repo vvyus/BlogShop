@@ -1,19 +1,15 @@
 package com.vk.vsvans.BlogShop.model.fns
 
-import android.app.Activity
-import android.content.Context
 import android.os.Build
 import android.os.Environment
 import android.text.Html
 import androidx.annotation.RequiresApi
-import com.vk.vsvans.BlogShop.view.MainActivity
-import com.vk.vsvans.BlogShop.R
-import com.vk.vsvans.BlogShop.view.dialog.ProgressDialog
 import com.vk.vsvans.BlogShop.model.data.Product
 import com.vk.vsvans.BlogShop.model.data.Purchase
 import com.vk.vsvans.BlogShop.model.data.PurchaseItem
 import com.vk.vsvans.BlogShop.model.data.Seller
-import com.vk.vsvans.BlogShop.util.DateTimeUtils
+import com.vk.vsvans.BlogShop.util.ImportUtils
+import com.vk.vsvans.BlogShop.util.UtilsHelper
 import com.vk.vsvans.BlogShop.util.makeSpannableString
 import com.vk.vsvans.BlogShop.util.plus
 import com.vk.vsvans.BlogShop.viewmodel.ActivityViewModel
@@ -21,13 +17,13 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.File
+import java.io.FilenameFilter
 import java.io.IOException
+import java.util.*
 
 object import_checks {
    @RequiresApi(Build.VERSION_CODES.N)
-   suspend fun doImport(viewModel:ActivityViewModel){
-       val separator=(viewModel.context).resources.getString(R.string.SEPARATOR)
-       val title_color=(viewModel.context).getColor(R.color.green_main)
+   suspend fun doImport(viewModel:ActivityViewModel,separator:String,title_color:Int,selected_date: HashMap<String, Date?>){
        var fn=""
        var fd=""
        var fp=""
@@ -40,30 +36,39 @@ object import_checks {
        var idFns=""
        var dateTimeLong:Long?=0
         val path= Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath
-        val files= File(path).listFiles()
 
-        files?.forEach{ itf ->
+       val files= File(path).listFiles(object : FilenameFilter {
+           override fun accept(dir: File?, name: String): Boolean {
+               return name.lowercase(Locale.getDefault()).endsWith(".json")
+           }
+       })
+  //      val files= File(path).listFiles()
+
+        files.forEach{ itf ->
             println(itf.name)
 
             try {
-                if(itf.name.endsWith(".json")) {
-                    val bufferedReader: BufferedReader = File(itf.absolutePath).bufferedReader()
-                    val inputString = bufferedReader.readText()
-                    //val post= JSONObject(inputString)
+                //if(itf.name.endsWith(".json")) {
+                val bufferedReader: BufferedReader = File(itf.absolutePath).bufferedReader()
+                val inputString = bufferedReader.readText()
+                //val post= JSONObject(inputString)
+                if(ImportUtils.isJsonArray(inputString)){
                     val post = JSONArray(inputString)
-                    for (i in 0 until post.length()) {
-//                  // get docs header
-                        val jsonObject = JSONObject(post[i].toString())
-                        if(jsonObject!=null) {
-                            val ticket = jsonObject.getJSONObject("ticket")
-                            if (ticket != null) {
-                                val document = ticket.getJSONObject("document")
-                                if (document != null) {
-                                    val receipt = document.getJSONObject("receipt")
-                                    if(receipt!=null) {
 
+                    for (i in 0 until post.length()) {
+                        if(ImportUtils.isJsonObject(post[i].toString())) {
+                            val jsonObject = JSONObject(post[i].toString())
+                            if (ImportUtils.isJsonObject(jsonObject,"ticket")) {
+                                val ticket = jsonObject.getJSONObject("ticket")
+                                if (ImportUtils.isJsonObject(ticket,"document")) {
+                                    val document = ticket.getJSONObject("document")
+                                    if(ImportUtils.isJsonObject(document,"receipt")) {
+                                        val receipt = document.getJSONObject("receipt")
                                         user = receipt.getString("user")
                                         dateTime = receipt.getString("dateTime")
+                                        dateTimeLong=ImportUtils.parseDateTimeQrString(dateTime)
+                                        val key: String = UtilsHelper.getDate(dateTimeLong!!)
+                                        if(selected_date.size>0 && selected_date.get(key)==null) continue
                                         totalSum = receipt.getLong("totalSum") / 100.0
                                         fn = receipt.getString("fiscalDriveNumber")//fn
                                         fd = receipt.getString("fiscalDocumentNumber") //fd
@@ -71,15 +76,16 @@ object import_checks {
                                         println("Result is ${user} ${dateTime} ${totalSum} fd=${fd} fn=${fn} fp=${fp}")
                                         idFns=fn+separator+fd+separator+fp+separator+dateTime
                                         purchase= Purchase()
-                                        idPurchase=viewModel!!.getPurchaseFns(idFns)
+                                        idPurchase=viewModel.getPurchaseFns(idFns)
                                         if(idPurchase==0){
-                                           idPurchase= viewModel!!.insertPurchase(purchase!!)!!
+                                            idPurchase= viewModel.insertPurchase(purchase!!)!!
                                         }
                                         purchase!!.id=idPurchase
                                         purchase!!.idfns=idFns
-                                        dateTimeLong=DateTimeUtils.parseDateTimeQrString(dateTime)
+
                                         if (dateTimeLong != null) {
-                                            purchase!!.time= dateTimeLong as Long
+                                            purchase!!.time= dateTimeLong!!// as Long
+                                            purchase!!.time_day=UtilsHelper.correct_date_begin(purchase!!.time)
                                         }
                                         purchase!!.summa=totalSum
                                         var sellername=user
@@ -87,13 +93,13 @@ object import_checks {
 
                                         //!
                                         var seller: Seller?=null
-                                        val list=viewModel!!.getSellersFns(user)
+                                        val list=viewModel.getSellersFns(user)
                                         var idseller=0
                                         if(list.size==0){
                                             seller= Seller()
                                             seller.name=sellername
                                             seller.id_fns=sellername
-                                            idseller= viewModel!!.insertSeller(seller)!!
+                                            idseller= viewModel.insertSeller(seller)!!
                                             seller.id=idseller
                                             seller.idparent=idseller
                                             seller.fullpath=idseller.toString()
@@ -104,13 +110,13 @@ object import_checks {
                                             sellername=seller.name
                                         }
 
-                                        viewModel!!.updateSeller(seller)
+                                        viewModel.updateSeller(seller)
                                         purchase!!.sellername=sellername
                                         purchase!!.idseller=idseller
                                         //!
                                         // print chek items
                                         var content_temp="".makeSpannableString()
-                                        viewModel!!.removePurchaseItems(idPurchase)
+                                        viewModel.removePurchaseItems(idPurchase)
                                         val items = receipt.getJSONArray("items")
                                         if(items!=null){
                                             for (j in 0 until items.length()) {
@@ -125,13 +131,13 @@ object import_checks {
                                                     content_temp+= pit!!.getContentShort(title_color)+"\n\n"
                                                     println("${pit!!.productName}  ${pit!!.quantity}  ${pit!!.summa}")
                                                     var product: Product?=null
-                                                    val list=viewModel!!.getProductsFns(pit!!.productName)
+                                                    val list=viewModel.getProductsFns(pit!!.productName)
                                                     var idproduct=0
                                                     if(list.size==0){
                                                         product= Product()
                                                         product.name=pit!!.productName
                                                         product.id_fns=pit!!.productName
-                                                        idproduct= viewModel!!.insertProduct(product)!!
+                                                        idproduct= viewModel.insertProduct(product)!!
                                                         product.id=idproduct
                                                         product.idparent=idproduct
                                                         product.fullpath=idproduct.toString()
@@ -140,22 +146,22 @@ object import_checks {
                                                         product= list[0] as Product
                                                         idproduct=product.id
                                                     }
-                                                    viewModel!!.updateProduct(product)
+                                                    viewModel.updateProduct(product)
                                                     pit!!.idProduct=idproduct
-                                                    viewModel!!.insertPurchaseItem(pit!!)
+                                                    viewModel.insertPurchaseItem(pit!!)
                                                 }
                                             }
                                         }
                                         purchase!!.content= content_temp.toString()
                                         purchase!!.content_html= Html.toHtml(content_temp,0)
-                                        viewModel!!.updatePurchase(purchase!!)
+                                        viewModel.updatePurchase(purchase!!)
 
                                     }// if receipt
                                 } // if ticket
                             }// if document
                         }//if jsonobj
                     }
-                } // if json
+                } // if jsonarray
             }catch (e: IOException){
             }
 

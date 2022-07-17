@@ -25,7 +25,7 @@ class PurchaseItemRcAdapter(val clickItemCallback: OnClickItemCallback?): Recycl
 var title_color=0
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PurchaseItemHolder {
         selected_color=ContextCompat.getColor(parent.context,R.color.color_red)
-        title_color=ContextCompat.getColor(parent.context,R.color.green_main)
+        title_color=ContextCompat.getColor(parent.context,R.color.light_gray_text)
 
 //        val view=LayoutInflater.from(parent.context).inflate(R.layout.item_purchase_list_frag,parent,false)
 //        return PurchaseItemHolder(view,clickItemCallback)
@@ -43,7 +43,8 @@ var title_color=0
             if (selected_position != holder.getAdapterPosition()) {
                 selectItem(holder.adapterPosition)
             }else{
-                unSelectItem()
+                if (clickItemCallback != null) clickItemCallback!!.onEditItem()
+                //unSelectItem()
             }
             notifyItemChanged(selected_position)
         }
@@ -119,9 +120,9 @@ var title_color=0
                 //val tvContent = view.findViewById<TextView>(R.id.tvContentPurchaseItem)
                 tvContentPurchaseItem.text = purchaseItem.getContent(title_color)
                 tvTitlePurchaseItem.text = "Позиция- ${adapterPosition + 1}"
-                imEditPurchaseItem.setOnClickListener {
-                    if (clickItemCallback != null) clickItemCallback!!.onEditItem()
-                }
+//                imEditPurchaseItem.setOnClickListener {
+//                    if (clickItemCallback != null) clickItemCallback!!.onEditItem()
+//                }
                 imDeletePurchaseItem.setOnClickListener {
                     if (clickItemCallback != null) clickItemCallback!!.onDeleteItem()
                 }

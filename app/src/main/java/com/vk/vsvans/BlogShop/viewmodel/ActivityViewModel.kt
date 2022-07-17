@@ -5,26 +5,26 @@ import android.app.Application
 import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import com.vk.vsvans.BlogShop.model.data.Product
-import com.vk.vsvans.BlogShop.model.data.Purchase
-import com.vk.vsvans.BlogShop.model.data.PurchaseItem
-import com.vk.vsvans.BlogShop.model.data.Seller
+import androidx.lifecycle.ViewModel
+import com.vk.vsvans.BlogShop.AppStart
+import com.vk.vsvans.BlogShop.model.data.*
 import com.vk.vsvans.BlogShop.model.repository.DbRepositoryImpl
 import com.vk.vsvans.BlogShop.model.repository.IDbRepository
 import com.vk.vsvans.BlogShop.util.FilterForActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-//class ActivityViewModel(context: Context): ViewModel() {
-class ActivityViewModel(application: Application): AndroidViewModel(application) {
+class ActivityViewModel(): ViewModel() {
+//class ActivityViewModel(application: Application): AndroidViewModel(application) {
     //private val mDbRepositoryImpl:IDbRepository=DbRepositoryImpl(context)
     @SuppressLint("StaticFieldLeak")
-    val context:Context=application//application.applicationContext
-    private val mDbRepositoryImpl:IDbRepository=DbRepositoryImpl(context)
+    //val context:Context=application//application.applicationContext
+    private val mDbRepositoryImpl:IDbRepository=AppStart.instance!!.getDatabase()!!//DbRepositoryImpl(context)
     //add
     val livePurchaseList= MutableLiveData<ArrayList<Purchase>>()
     val liveCalendarEvents= MutableLiveData<HashMap<String, Int>>()
     val liveAmount=MutableLiveData<Double>(0.0)
+
     fun getPurchases(filter: FilterForActivity){
         mDbRepositoryImpl.getAllPurchases(filter,object:IDbRepository.ReadDataCallback{
             override fun readData(list: ArrayList<Purchase>,hm:HashMap<String, Int>,amount:Double) {
@@ -35,6 +35,27 @@ class ActivityViewModel(application: Application): AndroidViewModel(application)
 
         })
     }
+    // for list selleramount
+    val liveSellerAmountList= MutableLiveData<ArrayList<SellerAmount>>()
+    fun getSellerAmount(filter: String,time:Long){
+        mDbRepositoryImpl.getAllSellerAmount(filter,object:IDbRepository.ReadSellerAmountCallback{
+            override fun readData(list: ArrayList<SellerAmount>) {
+                liveSellerAmountList.value=list
+            }
+        },time)
+    }
+
+    // for list productamount
+    val liveProductAmountList= MutableLiveData<ArrayList<ProductAmount>>()
+
+    fun getProductAmount(filter: String,time:Long){
+        mDbRepositoryImpl.getAllProductAmount(filter,object:IDbRepository.ReadProductAmountCallback{
+            override fun readData(list: ArrayList<ProductAmount>) {
+                liveProductAmountList.value=list
+            }
+        },time)
+    }
+
     //for list product
     val liveProductList= MutableLiveData<ArrayList<Product>>()
     fun getProducts(filterString:String){

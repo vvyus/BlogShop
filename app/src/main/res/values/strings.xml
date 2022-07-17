@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BlogShop</string>
+    <string name="app_name">Книга покупок</string>
     <string name="ad_Id">ca-app-pub-3940256099942544/6300978111</string>
     <string name="ad_inter_Id">ca-app-pub-3940256099942544/1033173712</string>
 
@@ -52,4 +52,17 @@
     <string name="caption_filter_count">Покупок</string>
     <string name="ProgressJsonLoading">Загрузка чеков...</string>
     <string name="import_checks">Загрузить чеки?</string>
+    <string name="confirm_load_check">Загрузка</string>
+    <string name="bottom_menu_new">New</string>
+    <string name="bottom_menu_delete">Delete</string>
+    <string name="bottom_menu_update">Update</string>
+    <string name="bottom_menu_edit">Edit</string>
+    <string name="bottom_menu_parent">Родитель</string>
+    <string name="bottom_menu_expand_more">Развернуть</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="base_list">Справочники</string>
+    <string name="baselist_product">Товары</string>
+    <string name="baselist_seller">Продавцы</string>
+
 </resources>

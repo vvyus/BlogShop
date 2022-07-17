@@ -22,27 +22,30 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.core.view.MenuItemCompat
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.navigation.NavigationView
 import com.vk.vsvans.BlogShop.R
 import com.vk.vsvans.BlogShop.view.adapter.PurchaseRcAdapter
 import com.vk.vsvans.BlogShop.databinding.ActivityMainBinding
+import com.vk.vsvans.BlogShop.model.data.*
 import com.vk.vsvans.BlogShop.view.dialog.DialogHelper
 import com.vk.vsvans.BlogShop.model.fns.import_checks
 import com.vk.vsvans.BlogShop.view.`interface`.*
-import com.vk.vsvans.BlogShop.model.data.BaseList
-import com.vk.vsvans.BlogShop.model.data.Purchase
 import com.vk.vsvans.BlogShop.util.FilterForActivity
 import com.vk.vsvans.BlogShop.util.UtilsHelper
 import com.vk.vsvans.BlogShop.util.UtilsString
 import com.vk.vsvans.BlogShop.util.isPermissinGrant
 import com.vk.vsvans.BlogShop.view.dialog.ProgressDialog
+import com.vk.vsvans.BlogShop.view.fragment.BaseAmountFragment
 import com.vk.vsvans.BlogShop.viewmodel.ActivityViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.lang.String.valueOf
 import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -51,13 +54,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     //val viewModel:ActivityViewModel by viewModels()
 
     //val viewModel= ActivityViewModel(this)
-    var viewModel:ActivityViewModel?=null
+    var viewModel:ActivityViewModel=ActivityViewModel()//?=null
     private val purchaseArray=ArrayList<Purchase>()
     private var job: Job? = null
     private lateinit var toolbar: Toolbar
     private lateinit var searchView:SearchView
 
-    private val filter_fact=FilterForActivity("main")
+    val filter_fact=FilterForActivity("main")
     // for count purchases
     val calendar_events=HashMap<String, Int>()
 
@@ -68,6 +71,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     var livePurchaseList_size=0
     var liveAmount=0.0
     var liveCalendarEvents=HashMap<String, Int>()
+    var liveProductAmount=ArrayList<BaseAmount>()
+    var liveSellerAmount=ArrayList<BaseAmount>()
+    private var baseAmountFragment: BaseAmountFragment?=null
 
     val adapter= PurchaseRcAdapter(object:OnClickItemCallback{
         override fun onClickItem(id:Int) {
@@ -77,6 +83,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 //                launcher?.launch(intent)
                 launchEditPurchaseActivity(id)
             }
+        }
+
+        override fun onClickItem(baseList: BaseList) {
         }
 
         override fun onEditItem() {}
@@ -93,7 +102,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onCreate(savedInstanceState)
 
         checkPermission()
-        viewModel= ActivityViewModel(application)
+       // viewModel= ActivityViewModel(application)
         mainActivity=this
         rootElement= ActivityMainBinding.inflate(layoutInflater)
         val view=rootElement.root
@@ -123,9 +132,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                             var str: String?
                             for (i in 0 until dates.size) {
                                 println("To filter Date is :"+dates[i])
-                                str = java.lang.String.valueOf(UtilsHelper.correct_date_begin(dates[i]!!.time))
+                                str = valueOf(UtilsHelper.correct_date_begin(dates[i]!!.time))
                                 filter_fact.dates_begin!!.add(str)
-                                str = java.lang.String.valueOf(UtilsHelper.correct_date_end(dates[i]!!.time))
+                                str = valueOf(UtilsHelper.correct_date_end(dates[i]!!.time))
                                 filter_fact.dates_end!!.add(str)
                             }
 
@@ -153,21 +162,31 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun initViewModel(){
         //{} это слушатель
         //если наше activity доступно не разрушено или ждет когда можно обновить слушателт сработает
-        viewModel?.livePurchaseList?.observe(this,{
+        viewModel.livePurchaseList.observe(this,{
             adapter.updateAdapter(it)
             livePurchaseList_size=it.size
 
         })
 
-        viewModel?.liveAmount?.observe(this,{
+        viewModel.liveAmount.observe(this,{
             liveAmount=it
         })
 
-        viewModel?.liveCalendarEvents?.observe(this, {
+        viewModel.liveCalendarEvents.observe(this, {
             if(!isSetFilter()) {
                 calendar_events.clear()
                 calendar_events.putAll(it)
             }
+        })
+// product amount
+        viewModel.liveProductAmountList.observe(this,{
+            liveProductAmount.clear()
+            liveProductAmount.addAll(it)
+        })
+// seller amount
+        viewModel.liveSellerAmountList.observe(this,{
+            liveSellerAmount.clear()
+            liveSellerAmount.addAll(it)
         })
 
     }
@@ -190,21 +209,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onResume() {
         super.onResume()
         //dbManager.openDb()
-        viewModel!!.openDb()
+        viewModel.openDb()
         fillAdapter()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         //dbManager.closeDb()
-        viewModel!!.closeDb()
+        viewModel.closeDb()
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
     fun fillAdapter() {
         job?.cancel()
         job = CoroutineScope(Dispatchers.Main).launch{
-            viewModel!!.getPurchases(filter_fact)
+            viewModel.getPurchases(filter_fact)
 
             if(isSetFilter()) {
                 setFilterPanel(liveAmount,livePurchaseList_size)
@@ -285,11 +304,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
-            R.id.id_purchase_food->{
-                Toast.makeText(this,"Pressed food", Toast.LENGTH_LONG).show()
+            R.id.id_products->{
+                val intent= Intent(this@MainActivity, ProductActivity::class.java)
+                intent.putExtra(R.string.PURCHASE_ID.toString(),0)
+                // сообщаем системе о запуске активити
+                startActivity(intent)
             }
-            R.id.id_purchase_drug->{
-                Toast.makeText(this,"Pressed drug", Toast.LENGTH_LONG).show()
+            R.id.id_sellers->{
+                val intent= Intent(this@MainActivity, SellerActivity::class.java)
+                intent.putExtra(R.string.PURCHASE_ID.toString(),0)
+                // сообщаем системе о запуске активити
+                startActivity(intent)
+                //Toast.makeText(this@MainActivity,"Pressed sellers", Toast.LENGTH_LONG).show()
+
             }else-> rootElement.drawerLayout.closeDrawer(GravityCompat.START)
 
         }
@@ -308,18 +335,47 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     deletePurchase()
                 }
                 R.id.id_product->{
-                    val intent= Intent(this@MainActivity, ProductActivity::class.java)
-                    intent.putExtra(R.string.PURCHASE_ID.toString(),0)
-                    // сообщаем системе о запуске активити
-                    startActivity(intent)
-                    //Toast.makeText(this@MainActivity,"Pressed new purchase", Toast.LENGTH_LONG).show()
+
+                    // это вызов ответ придет в liveProductAmount
+                    val time=UtilsHelper.getCurrentDate()
+                    viewModel.getProductAmount("",time)
+                    mainContent.llMainContent.visibility=View.GONE
+                    baseAmountFragment=BaseAmountFragment(object: IFragmentCloseInterface {
+                        override fun onFragClose(list: ArrayList<PurchaseItem>) {
+                        }
+
+                        // при закрытии фрагмента
+                        override fun onFragClose() {
+                            mainContent.llMainContent.visibility=View.VISIBLE
+                            fillAdapter()
+                        }
+
+                    },liveProductAmount,filter_fact,BaseAmountType.PRODUCT)
+
+                    val fm=supportFragmentManager.beginTransaction()
+                    fm.replace(R.id.drawerLayout, baseAmountFragment!!)
+                    fm.commit()
                 }
                 R.id.id_seller->{
-                    val intent= Intent(this@MainActivity, SellerActivity::class.java)
-                    intent.putExtra(R.string.PURCHASE_ID.toString(),0)
-                    // сообщаем системе о запуске активити
-                    startActivity(intent)
-                    //Toast.makeText(this@MainActivity,"Pressed new purchase", Toast.LENGTH_LONG).show()
+                    val time=UtilsHelper.getCurrentDate()
+                    viewModel.getSellerAmount("",time)
+                    mainContent.llMainContent.visibility=View.GONE
+                    baseAmountFragment=BaseAmountFragment(object: IFragmentCloseInterface {
+                        override fun onFragClose(list: ArrayList<PurchaseItem>) {
+                        }
+
+                        // при закрытии фрагмента
+                        override fun onFragClose() {
+                            mainContent.llMainContent.visibility=View.VISIBLE
+                            fillAdapter()
+                        }
+
+                    },liveSellerAmount,filter_fact,BaseAmountType.SELLER)
+
+                    val fm=supportFragmentManager.beginTransaction()
+                    fm.replace(R.id.drawerLayout, baseAmountFragment!!)
+                    fm.commit()
+
                 }
                 R.id.id_import_checks->{
                     importPurchase()
@@ -338,7 +394,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     fun launchEditPurchaseActivity(id:Int){
         val intent= Intent(this@MainActivity, EditPurchaseActivity::class.java)
         intent.putExtra(R.string.PURCHASE_ID.toString(),id)
-        launcherEPA?.launch(intent) //getLauncher().launch(intent)
+        launcherEPA.launch(intent) //getLauncher().launch(intent)
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -350,12 +406,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     //result.data is intent
                     val intent=result.data
                     val new_purchase_time=intent!!.getLongExtra(getString(R.string.new_purchase_time),0L)
-                    val old_purchase_time=intent!!.getLongExtra(getString(R.string.old_purchase_time),0L)
-                    val idpurchase=intent!!.getIntExtra(getString(R.string.PURCHASE_ID),0)
+                    val old_purchase_time=
+                        intent.getLongExtra(getString(R.string.old_purchase_time),0L)
+                    val idpurchase= intent.getIntExtra(getString(R.string.PURCHASE_ID),0)
                     //
                     if(old_purchase_time!=new_purchase_time) removePurchaseEvent(old_purchase_time)
                     addPurchaseEvent(new_purchase_time)
-                    val purchase=intent!!.getSerializableExtra(Purchase::class.java.getSimpleName()) as Purchase
+                    val purchase= intent.getSerializableExtra(Purchase::class.java.getSimpleName()) as Purchase
                     // если новая запись
                     if(idpurchase==0) adapter.addPurchase(purchase)
                     else adapter.setPurchase(purchase)
@@ -382,14 +439,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun importPurchase(){
         DialogHelper.showLoadChecksDialog(this@MainActivity,object: IDialogImportChecks{
-            @RequiresApi(Build.VERSION_CODES.N)
             override fun import_checks() {
+            }
+
+            @RequiresApi(Build.VERSION_CODES.N)
+            override fun import_checks(selected_date: HashMap<String, Date?>) {
 
                 job?.cancel()
                 job = CoroutineScope(Dispatchers.Main).launch{
                     if(viewModel!=null) {
                         val dialog = ProgressDialog.createProgressDialog(this@MainActivity )
-                        import_checks.doImport(viewModel!!)
+                        val separator=resources.getString(R.string.SEPARATOR)
+                        val title_color=getColor(R.color.light_gray_text)
+
+                        import_checks.doImport(viewModel!!,separator, title_color,selected_date)
                         fillAdapter()
                         dialog.dismiss()
                     }
@@ -413,7 +476,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     removePurchaseEvent(purchase.time)
                     //2 remove purchase from database
                     //dbManager.removePurchase(id)
-                    viewModel!!.removePurchase(id)
+                    viewModel.removePurchase(id)
                     fillAdapter()
                 }
 
@@ -507,6 +570,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }//setupToolbar
 
     override fun onBackPressed() {
+        //remove all fragments
+        val frags=ArrayList<Fragment>(getSupportFragmentManager().getFragments())
+        for (frag in frags ){
+            getSupportFragmentManager().beginTransaction().remove(frag).commit()
+            return;
+        }
+//        if(baseAmountFragment!=null) {
+//            supportFragmentManager?.beginTransaction()?.remove(baseAmountFragment!!)?.commit()
+//            return
+//        }
         val drawer =rootElement.drawerLayout //findViewById<DrawerLayout>(R.id.drawerLayout)
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START)
