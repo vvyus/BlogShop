@@ -332,6 +332,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
                     override fun onResponse(call: Call<MutableList<ChecksModelItem>>, response: Response<MutableList<ChecksModelItem>>) {
                         if (response.isSuccessful()) {
+                            //response.body() as MutableList<ChecksModelItem>
                             //((response.body as java.util.ArrayList<*>)[0] as ChecksModelItem).ticket.document.receipt.dateTime
                             println("Retrofit response " + response.body()?.size);
                         }
