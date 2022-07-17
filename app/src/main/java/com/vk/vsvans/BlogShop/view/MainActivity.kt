@@ -450,7 +450,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     if(viewModel!=null) {
                         val dialog = ProgressDialog.createProgressDialog(this@MainActivity )
                         val separator=resources.getString(R.string.SEPARATOR)
-                        val title_color=getColor(R.color.green_main)
+                        val title_color=getColor(R.color.light_gray_text)
 
                         import_checks.doImport(viewModel!!,separator, title_color,selected_date)
                         fillAdapter()

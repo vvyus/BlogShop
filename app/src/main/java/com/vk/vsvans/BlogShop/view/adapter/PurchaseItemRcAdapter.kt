@@ -25,7 +25,7 @@ class PurchaseItemRcAdapter(val clickItemCallback: OnClickItemCallback?): Recycl
 var title_color=0
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PurchaseItemHolder {
         selected_color=ContextCompat.getColor(parent.context,R.color.color_red)
-        title_color=ContextCompat.getColor(parent.context,R.color.green_main)
+        title_color=ContextCompat.getColor(parent.context,R.color.light_gray_text)
 
 //        val view=LayoutInflater.from(parent.context).inflate(R.layout.item_purchase_list_frag,parent,false)
 //        return PurchaseItemHolder(view,clickItemCallback)

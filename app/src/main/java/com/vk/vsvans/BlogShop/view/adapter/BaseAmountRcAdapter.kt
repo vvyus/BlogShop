@@ -160,7 +160,7 @@ class BaseAmountRcAdapter(val callBack:ICallBackAmountAdapter, val filterForActi
 
     fun setSelectedPositionByContent(content:String?):Int{
         for(i in 0 until mainList.size){
-            if(mainList[i].name.startsWith(content!!)){
+            if(mainList[i].name.lowercase().startsWith(content!!.lowercase())){
                 selected_position=i
                 return i
             }

@@ -23,5 +23,6 @@
     <color name="blue_color_pressed">#0d8abf</color>
     <color name="color_light_sea_green">#20b2aa</color>
     <color name="blue_color">#00CED1</color>
+    <color name="blue_steel_color">#B0C4DE</color>
     <color name="daycaptionColor">#a0a0a0</color>
 </resources>

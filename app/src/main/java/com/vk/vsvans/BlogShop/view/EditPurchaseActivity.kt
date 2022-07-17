@@ -337,7 +337,7 @@ class EditPurchaseActivity : AppCompatActivity() {
                 rootElement.scrollViewMain.visibility=View.VISIBLE
                 cardItemPurchaseAdapter.update(list)
                 var summa=0.0
-                val title_color=getColor(R.color.green_main)
+                val title_color=getColor(R.color.light_gray_text)//green_main)
                 var content_temp="".makeSpannableString()
                 for(pit: PurchaseItem in list){
                     content_temp+=pit.getContentShort(title_color)+"\n\n"
