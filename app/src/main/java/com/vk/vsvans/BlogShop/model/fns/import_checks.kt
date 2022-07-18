@@ -168,4 +168,111 @@ object import_checks {
         }//files
 
     }//func
+
+    suspend fun receiptToDb(receipt: Receipt, viewModel:ActivityViewModel, separator:String,title_color:Int){
+        var fn=""
+        var fd=0
+        var fp=0.0f
+        var totalSum =0.0
+        var user=""
+        var dateTime=""
+        var idPurchase=0
+        var purchase: Purchase?=null
+        var pit: PurchaseItem?=null
+        var idFns=""
+        var dateTimeLong:Long?=0
+
+        user = receipt.user
+        dateTime = receipt.dateTime
+        dateTimeLong=ImportUtils.parseDateTimeQrString(dateTime)
+        val key: String = UtilsHelper.getDate(dateTimeLong!!)
+        //if(selected_date.size>0 && selected_date.get(key)==null) continue
+        totalSum = receipt.totalSum / 100.0
+        fn = receipt.fiscalDriveNumber
+        fd = receipt.fiscalDocumentNumber
+        fp = receipt.fiscalSign
+        println("Result is ${user} ${dateTime} ${totalSum} fd=${fd} fn=${fn} fp=${fp}")
+        idFns="${fn}${separator}${fd}${separator}${fp}${separator}${dateTime}"
+        purchase= Purchase()
+        idPurchase=viewModel.getPurchaseFns(idFns)
+        if(idPurchase==0){
+            idPurchase= viewModel.insertPurchase(purchase!!)!!
+        }
+        purchase!!.id=idPurchase
+        purchase!!.idfns=idFns
+
+        if (dateTimeLong != null) {
+            purchase!!.time= dateTimeLong!!// as Long
+            purchase!!.time_day=UtilsHelper.correct_date_begin(purchase!!.time)
+        }
+        purchase!!.summa=totalSum
+        var sellername=user
+        purchase!!.title=sellername //user==sellername
+
+        //!
+        var seller: Seller?=null
+        val list=viewModel.getSellersFns(user)
+        var idseller=0
+        if(list.size==0){
+            seller= Seller()
+            seller.name=sellername
+            seller.id_fns=sellername
+            idseller= viewModel.insertSeller(seller)!!
+            seller.id=idseller
+            seller.idparent=idseller
+            seller.fullpath=idseller.toString()
+
+        }else{
+            seller= list[0] as Seller
+            idseller=seller.id
+            sellername=seller.name
+        }
+
+        viewModel.updateSeller(seller)
+        purchase!!.sellername=sellername
+        purchase!!.idseller=idseller
+        //!
+        // print chek items
+        var content_temp="".makeSpannableString()
+        viewModel.removePurchaseItems(idPurchase)
+        val items = receipt.items
+        if(items!=null){
+            for (j in 0 until items.size) {
+                val item = items[j] //JSONObject(items[j].toString())
+                if(item!=null){
+                    pit= PurchaseItem()
+                    pit!!.idPurchase=idPurchase
+                    pit!!.price=item.price/100.0
+                    pit!!.quantity= item.quantity.toDouble()
+                    pit!!.summa=item.sum / 100.0
+                    pit!!.productName=item.name
+                    content_temp+= pit!!.getContentShort(title_color)+"\n\n"
+                    println("${pit!!.productName}  ${pit!!.quantity}  ${pit!!.summa}")
+                    var product: Product?=null
+                    val list=viewModel.getProductsFns(pit!!.productName)
+                    var idproduct=0
+                    if(list.size==0){
+                        product= Product()
+                        product.name=pit!!.productName
+                        product.id_fns=pit!!.productName
+                        idproduct= viewModel.insertProduct(product)!!
+                        product.id=idproduct
+                        product.idparent=idproduct
+                        product.fullpath=idproduct.toString()
+
+                    }else{
+                        product= list[0] as Product
+                        idproduct=product.id
+                    }
+                    viewModel.updateProduct(product)
+                    pit!!.idProduct=idproduct
+                    viewModel.insertPurchaseItem(pit!!)
+                }
+            }
+        }
+        purchase!!.content= content_temp.toString()
+        purchase!!.content_html= Html.toHtml(content_temp,0)
+        viewModel.updatePurchase(purchase!!)
+
+    } // receipt to db
 }

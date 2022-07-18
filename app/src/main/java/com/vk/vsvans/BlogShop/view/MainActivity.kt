@@ -29,10 +29,8 @@ import com.vk.vsvans.BlogShop.R
 import com.vk.vsvans.BlogShop.view.adapter.PurchaseRcAdapter
 import com.vk.vsvans.BlogShop.databinding.ActivityMainBinding
 import com.vk.vsvans.BlogShop.model.data.*
-import com.vk.vsvans.BlogShop.model.fns.ChecksModelItem
-import com.vk.vsvans.BlogShop.model.fns.RetrofitCommon
+import com.vk.vsvans.BlogShop.model.fns.*
 import com.vk.vsvans.BlogShop.view.dialog.DialogHelper
-import com.vk.vsvans.BlogShop.model.fns.import_checks
 import com.vk.vsvans.BlogShop.view.`interface`.*
 import com.vk.vsvans.BlogShop.util.FilterForActivity
 import com.vk.vsvans.BlogShop.util.UtilsHelper
@@ -50,6 +48,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.lang.String.valueOf
 import java.util.*
+import java.util.Collections.list
 import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -325,7 +324,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             R.id.id_demo_retrofit->{
                 val service= RetrofitCommon.retrofitService
-                service.getChecksModelItem()?.enqueue(object : Callback<MutableList<ChecksModelItem>> {
+                //listOf("6294837fcfb1f1a16860eda9.json","629483daffd38dd204df6c19.json")
+                service.getChecksModelItem("6294837fcfb1f1a16860eda9.json")?.enqueue(object : Callback<MutableList<ChecksModelItem>> {
                     override fun onFailure(call: Call<MutableList<ChecksModelItem>>, t: Throwable) {
                         println("Retrofit fail!!! "+t)
                     }
@@ -334,6 +334,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         if (response.isSuccessful()) {
                             //response.body() as MutableList<ChecksModelItem>
                             //((response.body as java.util.ArrayList<*>)[0] as ChecksModelItem).ticket.document.receipt.dateTime
+                            val separator=resources.getString(R.string.SEPARATOR)
+                            val title_color=getColor(R.color.light_gray_text)
+                            val arrayOfChecksModelItem=response.body() as ArrayList<*>
+                            var receipt: Receipt?=null
+                            job?.cancel()
+                            job = CoroutineScope(Dispatchers.Main).launch{
+                                for(i in 0 until arrayOfChecksModelItem.size){
+                                    receipt=(arrayOfChecksModelItem[i] as ChecksModelItem).ticket.document.receipt
+                                    import_checks.receiptToDb(receipt!!,viewModel, separator,title_color)
+                                    println("dateTime for ticket is "+receipt!!.dateTime)
+                                }
+                            }
                             println("Retrofit response " + response.body()?.size);
                         }
                     }
