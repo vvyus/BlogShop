@@ -21,6 +21,7 @@ import java.io.FilenameFilter
 import java.io.IOException
 import java.util.*
 import kotlin.math.roundToInt
+import kotlin.math.roundToLong
 
 object import_checks {
    @RequiresApi(Build.VERSION_CODES.N)
@@ -173,7 +174,7 @@ object import_checks {
     suspend fun receiptToDb(receipt: Receipt, viewModel:ActivityViewModel, separator:String,title_color:Int){
         var fn=""
         var fd=0
-        var fp=0.0f
+        var fp=0.0
         var totalSum =0.0
         var user=""
         var dateTime=""
@@ -192,8 +193,8 @@ object import_checks {
         fn = receipt.fiscalDriveNumber
         fd = receipt.fiscalDocumentNumber
         fp = receipt.fiscalSign
-        println("Result is ${user} ${dateTime} ${totalSum} fd=${fd} fn=${fn} fp=${fp}")
-        idFns="${fn}${separator}${fd}${separator}${fp}${separator}${dateTime}"
+        println("Result is ${user} ${dateTime} ${totalSum} fd=${fd} fn=${fn} fp=${fp.roundToLong()}")
+        idFns="${fn}${separator}${fd}${separator}${fp.roundToLong()}${separator}${dateTime}"
         purchase= Purchase()
         idPurchase=viewModel.getPurchaseFns(idFns)
         if(idPurchase==0){

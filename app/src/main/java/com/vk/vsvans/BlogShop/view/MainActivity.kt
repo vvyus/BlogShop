@@ -77,6 +77,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     var liveCalendarEvents=HashMap<String, Int>()
     var liveProductAmount=ArrayList<BaseAmount>()
     var liveSellerAmount=ArrayList<BaseAmount>()
+
+    var demoList=ArrayList<Receipt>()
+
     private var baseAmountFragment: BaseAmountFragment?=null
 
     val adapter= PurchaseRcAdapter(object:OnClickItemCallback{
@@ -347,15 +350,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     //((response.body as java.util.ArrayList<*>)[0] as ChecksModelItem).ticket.document.receipt.dateTime
                     val separator=resources.getString(R.string.SEPARATOR)
                     val title_color=getColor(R.color.light_gray_text)
+
                     val arrayOfChecksModelItem=response.body() as ArrayList<*>
                     var receipt: Receipt?=null
                     job?.cancel()
                     job = CoroutineScope(Dispatchers.Main).launch{
+
                         for(i in 0 until arrayOfChecksModelItem.size){
                             receipt=(arrayOfChecksModelItem[i] as ChecksModelItem).ticket.document.receipt
+                            //demoList.add(receipt)
                             import_checks.receiptToDb(receipt!!,viewModel, separator,title_color)
-                            println("dateTime for ticket is "+receipt!!.dateTime)
                         }
+                        //println("dateTime for ticket is "+receipt!!.dateTime)
+
                     }
                     println("Retrofit response " + response.body()?.size);
                 }

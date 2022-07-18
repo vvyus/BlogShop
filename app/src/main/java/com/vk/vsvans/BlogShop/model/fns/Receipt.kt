@@ -10,7 +10,7 @@ data class Receipt(
     val fiscalDocumentFormatVer: Int,
     val fiscalDocumentNumber: Int,
     val fiscalDriveNumber: String,
-    val fiscalSign: Float,
+    val fiscalSign: Double,
     val fnsUrl: String,
     val items: List<Item>,
     val kktRegId: String,
