@@ -65,5 +65,7 @@
     <string name="baselist_product">Товары</string>
     <string name="baselist_seller">Продавцы</string>
     <string name="demo_base">Загрузить демо данные</string>
+    <string name="demo_is_loaded">Данные загружены</string>
+    <string name="demo_load_data">Данные загружаются</string>
 
 </resources>

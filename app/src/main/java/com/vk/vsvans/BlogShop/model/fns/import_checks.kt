@@ -20,6 +20,7 @@ import java.io.File
 import java.io.FilenameFilter
 import java.io.IOException
 import java.util.*
+import kotlin.math.roundToInt
 
 object import_checks {
    @RequiresApi(Build.VERSION_CODES.N)
@@ -243,7 +244,7 @@ object import_checks {
                     pit= PurchaseItem()
                     pit!!.idPurchase=idPurchase
                     pit!!.price=item.price/100.0
-                    pit!!.quantity= item.quantity.toDouble()
+                    pit!!.quantity= (item.quantity*1000).roundToInt()/1000.0
                     pit!!.summa=item.sum / 100.0
                     pit!!.productName=item.name
                     content_temp+= pit!!.getContentShort(title_color)+"\n\n"

@@ -323,39 +323,45 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             }
             R.id.id_demo_retrofit->{
-                val service= RetrofitCommon.retrofitService
-                //listOf("6294837fcfb1f1a16860eda9.json","629483daffd38dd204df6c19.json")
-                service.getChecksModelItem("6294837fcfb1f1a16860eda9.json")?.enqueue(object : Callback<MutableList<ChecksModelItem>> {
-                    override fun onFailure(call: Call<MutableList<ChecksModelItem>>, t: Throwable) {
-                        println("Retrofit fail!!! "+t)
-                    }
-
-                    override fun onResponse(call: Call<MutableList<ChecksModelItem>>, response: Response<MutableList<ChecksModelItem>>) {
-                        if (response.isSuccessful()) {
-                            //response.body() as MutableList<ChecksModelItem>
-                            //((response.body as java.util.ArrayList<*>)[0] as ChecksModelItem).ticket.document.receipt.dateTime
-                            val separator=resources.getString(R.string.SEPARATOR)
-                            val title_color=getColor(R.color.light_gray_text)
-                            val arrayOfChecksModelItem=response.body() as ArrayList<*>
-                            var receipt: Receipt?=null
-                            job?.cancel()
-                            job = CoroutineScope(Dispatchers.Main).launch{
-                                for(i in 0 until arrayOfChecksModelItem.size){
-                                    receipt=(arrayOfChecksModelItem[i] as ChecksModelItem).ticket.document.receipt
-                                    import_checks.receiptToDb(receipt!!,viewModel, separator,title_color)
-                                    println("dateTime for ticket is "+receipt!!.dateTime)
-                                }
-                            }
-                            println("Retrofit response " + response.body()?.size);
-                        }
-                    }
-                })
-            }
-            else-> rootElement.drawerLayout.closeDrawer(GravityCompat.START)
-
+                Toast.makeText(this,R.string.demo_load_data,Toast.LENGTH_LONG).show()
+                getDemoJsonByName("6294837fcfb1f1a16860eda9.json")
+                getDemoJsonByName("629483daffd38dd204df6c19.json")
+                getDemoJsonByName("629c0cf6f5913801646dd150.json")
+                Toast.makeText(this,R.string.demo_is_loaded,Toast.LENGTH_LONG).show()
+            } else-> rootElement.drawerLayout.closeDrawer(GravityCompat.START)
         }
         return true
     }
+
+    private fun getDemoJsonByName(name:String){
+        val service= RetrofitCommon.retrofitService
+        //listOf("6294837fcfb1f1a16860eda9.json","629483daffd38dd204df6c19.json")
+        service.getChecksModelItem(name)?.enqueue(object : Callback<MutableList<ChecksModelItem>> {
+            override fun onFailure(call: Call<MutableList<ChecksModelItem>>, t: Throwable) {
+                println("Retrofit fail!!! "+t)
+            }
+
+            override fun onResponse(call: Call<MutableList<ChecksModelItem>>, response: Response<MutableList<ChecksModelItem>>) {
+                if (response.isSuccessful()) {
+                    //response.body() as MutableList<ChecksModelItem>
+                    //((response.body as java.util.ArrayList<*>)[0] as ChecksModelItem).ticket.document.receipt.dateTime
+                    val separator=resources.getString(R.string.SEPARATOR)
+                    val title_color=getColor(R.color.light_gray_text)
+                    val arrayOfChecksModelItem=response.body() as ArrayList<*>
+                    var receipt: Receipt?=null
+                    job?.cancel()
+                    job = CoroutineScope(Dispatchers.Main).launch{
+                        for(i in 0 until arrayOfChecksModelItem.size){
+                            receipt=(arrayOfChecksModelItem[i] as ChecksModelItem).ticket.document.receipt
+                            import_checks.receiptToDb(receipt!!,viewModel, separator,title_color)
+                            println("dateTime for ticket is "+receipt!!.dateTime)
+                        }
+                    }
+                    println("Retrofit response " + response.body()?.size);
+                }
+            }
+        })
+    } // fun get demo json
 
     @RequiresApi(Build.VERSION_CODES.N)
     private fun bottomMenuOnClick()=with(rootElement){
