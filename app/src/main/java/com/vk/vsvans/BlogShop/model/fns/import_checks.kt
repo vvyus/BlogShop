@@ -126,7 +126,7 @@ object import_checks {
                                                     pit= PurchaseItem()
                                                     pit!!.idPurchase=idPurchase
                                                     pit!!.price=item.getLong("price")/100.0
-                                                    pit!!.quantity= item.getLong("quantity").toDouble()
+                                                    pit!!.quantity= (item.getDouble("quantity")*1000).roundToInt()/1000.0 //item.getLong("quantity").toDouble()//
                                                     pit!!.summa=item.getLong("sum") / 100.0
                                                     pit!!.productName=item.getString("name")
                                                     content_temp+= pit!!.getContentShort(title_color)+"\n\n"
