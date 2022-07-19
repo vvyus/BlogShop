@@ -25,7 +25,7 @@
             android:orientation="vertical"
             android:paddingBottom="5dp">
 
-            <LinearLayout
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -54,12 +54,13 @@
 
                 <ImageButton
                     android:id="@+id/btnSelectPurchase"
-                    android:layout_width="match_parent"
+                    android:layout_width="60dp"
                     android:layout_height="match_parent"
+                    android:layout_gravity="bottom|end"
                     android:layout_weight="6"
                     android:background="@android:color/transparent" />
 
-            </LinearLayout>
+            </FrameLayout>
 
             <TextView
                 android:id="@+id/tvDescription"
