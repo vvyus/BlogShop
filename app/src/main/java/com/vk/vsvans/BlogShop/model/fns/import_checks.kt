@@ -74,19 +74,19 @@ object import_checks {
                                         fp = receipt.getString("fiscalSign").toDouble()//fp
 
                                         val items = receipt.getJSONArray("items")
-                                        var itemsList:List<Item>?=null
+                                        var itemList=ArrayList<Item>()//listOf<Item>()
                                         for (j in 0 until items.length()) {
                                             val item = JSONObject(items[j].toString())
                                             val price=item.getLong("price")/100.0
-                                            val quantity= (item.getDouble("quantity")*1000).roundToInt()/1000.0 //item.getLong("quantity").toDouble()//
+                                            val quantity= item.getDouble("quantity") //item.getLong("quantity").toDouble()//
                                             val sum=item.getLong("sum") / 100.0
                                             val name=item.getString("name")
                                             val item_instance=Item(name,0,0,0,price,0,quantity,sum)
-                                            if(itemsList==null)itemsList= listOf(item_instance)
-                                            else itemsList.plus(item_instance)
+                                            //itemList+=item_instance
+                                            itemList.add(item_instance)
                                         }
                                         val receipt_instance=Receipt(0,0,0,0,dateTime,0,0,
-                                            fd,fn,fp,"", itemsList!!,"",0,0,"","",0,
+                                            fd,fn,fp,"", itemList,"",0,0,"","",0,
                                             0,0,"","",0,0, totalSum,user,"")
                                         //receiptToDb(receipt_,viewModel,separator,title_color)
                                         receiptList.add(receipt_instance)
@@ -102,8 +102,8 @@ object import_checks {
         }//files
 
     }//func
-
-    suspend fun receiptToDb(receipt: Receipt, viewModel:ActivityViewModel, separator:String,title_color:Int){
+// if from retrofit.demobase divider=100 else =1
+    suspend fun receiptToDb(receipt: Receipt, viewModel:ActivityViewModel, separator:String,title_color:Int,divider:Int){
         var fn=""
         var fd=0
         var fp=0.0
@@ -121,7 +121,7 @@ object import_checks {
         dateTimeLong=ImportUtils.parseDateTimeQrString(dateTime)
         val key: String = UtilsHelper.getDate(dateTimeLong!!)
         //if(selected_date.size>0 && selected_date.get(key)==null) continue
-        totalSum = (receipt.totalSum*1000).roundToInt() / 1000.0
+        totalSum = (receipt.totalSum*1000).roundToInt() / 1000.0/divider
         fn = receipt.fiscalDriveNumber
         fd = receipt.fiscalDocumentNumber
         fp = receipt.fiscalSign
@@ -176,9 +176,9 @@ object import_checks {
                 if(item!=null){
                     pit= PurchaseItem()
                     pit!!.idPurchase=idPurchase
-                    pit!!.price=(item.price*1000).roundToInt()/1000.0
+                    pit!!.price=(item.price*1000).roundToInt()/1000.0/divider
                     pit!!.quantity= (item.quantity*1000).roundToInt()/1000.0
-                    pit!!.summa=(item.sum*1000).roundToInt() / 1000.0
+                    pit!!.summa=(item.sum*1000).roundToInt() / 1000.0/divider
                     pit!!.productName=item.name
                     content_temp+= pit!!.getContentShort(title_color)+"\n\n"
                     println("${pit!!.productName}  ${pit!!.quantity}  ${pit!!.summa}")

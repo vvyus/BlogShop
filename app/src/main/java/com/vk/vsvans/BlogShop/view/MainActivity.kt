@@ -361,7 +361,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         job?.cancel()
                         job = CoroutineScope(Dispatchers.Main).launch {
                             for(i in 0 until demoList.size){
-                                import_checks.receiptToDb(demoList[i],viewModel, separator,title_color)
+                                import_checks.receiptToDb(demoList[i],viewModel, separator,title_color,100)
                             }
                         }
                         Toast.makeText(this@MainActivity,message,Toast.LENGTH_LONG).show()
@@ -495,7 +495,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     val separator=resources.getString(R.string.SEPARATOR)
                     val title_color=getColor(R.color.light_gray_text)
                     for(i in 0 until receiptList.size){
-                        import_checks.receiptToDb(receiptList[i],viewModel,separator,title_color)
+                        import_checks.receiptToDb(receiptList[i],viewModel,separator,title_color,1)
                     }
                     fillAdapter()
                     dialog.dismiss()
