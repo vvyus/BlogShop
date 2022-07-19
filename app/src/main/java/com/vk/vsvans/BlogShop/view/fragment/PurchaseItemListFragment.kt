@@ -82,9 +82,11 @@ class PurchaseItemListFragment(private val fragCloseInterface:IFragmentCloseInte
 
             override fun onDeleteItem() {
                 if(selectedId>=0){
-                    DialogHelper.showPurchaseDeleteItemDialog(activity as EditPurchaseActivity,selectedId,
+                    val ids=ArrayList<Int>()
+                    ids.add(selectedId)
+                    DialogHelper.showPurchaseDeleteItemDialog(activity as EditPurchaseActivity,ids,
                         object: IDeleteItem {
-                            override fun onDeleteItem(id: Int) {
+                            override fun onDeleteItem(ids: ArrayList<Int>) {
                                 fragCallBack.onFragmentCallBack(adapter.getPurchaseItem()!!)
                                 adapter.deletePurchaseItem()
                             }

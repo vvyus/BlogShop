@@ -244,15 +244,17 @@ class SellerActivity : AppCompatActivity() {
                 R.id.id_delete_baselist->{
                     // selectedId устанавливается в onItemClick
                     if(selectedId>0){
-                        DialogHelper.showPurchaseDeleteItemDialog(this@SellerActivity,selectedId,
+                        val ids=ArrayList<Int>()
+                        ids.add(selectedId)
+                        DialogHelper.showPurchaseDeleteItemDialog(this@SellerActivity,ids,
                             object: IDeleteItem {
-                                override fun onDeleteItem(id:Int) {
+                                override fun onDeleteItem(ids:ArrayList<Int>) {
                                     adapter.deleteBaseListItem()
                                     val parent=adapter.getParent()
                                     if(parent!=null) viewModel.updateSeller(parent as Seller)
                                     //reset selectedId
                                     //selectedId=0
-                                    viewModel.removeSeller(id)
+                                    if(ids.size>0) viewModel.removeSeller(ids[0])
                                 }
 
                             })

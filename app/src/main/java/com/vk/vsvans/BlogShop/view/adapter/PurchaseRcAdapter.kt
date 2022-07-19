@@ -26,7 +26,8 @@ class PurchaseRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
     var selected_color =0
     private var filterCallback:IFilterCallBack?=null
     private var marked_image: Drawable?=null
-    val marked_position=HashMap<Int,Int>()
+    val marked_position=HashMap<Int,Purchase>()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PurchaseHolder {
 
         selected_color=parent.context.resources.getColor(R.color.color_red)
@@ -94,11 +95,19 @@ class PurchaseRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
         this.filterCallback=filterCallback
     }
 
+    fun getMarkedIds():ArrayList<Int>{
+        return ArrayList(marked_position.keys)
+    }
+
+    fun getMarkedObjects():ArrayList<Purchase>{
+        return ArrayList(marked_position.values)
+    }
+
     class PurchaseHolder(val binding:ItemPurchaseListBinding,val clickItemCallback: OnClickItemCallback?,
                          val filterCallback: IFilterCallBack?): RecyclerView.ViewHolder(binding.root) {
 
         @RequiresApi(Build.VERSION_CODES.N)
-        fun setData(purchase: Purchase,marked_position:HashMap<Int,Int>,selected_image:Drawable){
+        fun setData(purchase: Purchase,marked_position:HashMap<Int,Purchase>,selected_image:Drawable){
             binding.apply {
                 tvDescription.text= Html.fromHtml(purchase.content_html,0)
 //                tvDescription.setMovementMethod(LinkMovementMethod.getInstance())
@@ -118,7 +127,7 @@ class PurchaseRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
                 btnSelectPurchase.setOnClickListener{
                     if(btnSelectPurchase.drawable==null){
                         btnSelectPurchase.setImageDrawable(selected_image)
-                        if(marked_position.get(purchase.id)==null)marked_position.put(purchase.id,purchase.id)
+                        if(marked_position.get(purchase.id)==null)marked_position.put(purchase.id,purchase)
                     }else{
                         btnSelectPurchase.setImageDrawable(null)
                         if(marked_position.get(purchase.id)!=null)marked_position.remove(purchase.id)

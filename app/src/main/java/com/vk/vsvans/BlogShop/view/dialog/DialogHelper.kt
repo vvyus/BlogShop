@@ -42,25 +42,26 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.lang.String.valueOf
 import java.util.*
+import kotlin.collections.ArrayList
 import com.vk.vsvans.BlogShop.R as R1
 
 
 object DialogHelper {
     var job: Job? = null
-    fun showPurchaseDeleteItemDialog(context: Context, id:Int, ideleteItem:IDeleteItem) {
+    fun showPurchaseDeleteItemDialog(context: Context, ids:ArrayList<Int>, ideleteItem:IDeleteItem) {
         val alertDialog = AlertDialog.Builder(context)
 
         alertDialog.apply {
             setIcon(R1.drawable.ic_delete_purchase)
             setTitle(R1.string.delete_item)
-            setMessage(R1.string.delete_item_message)
+            setMessage(R1.string.delete_items_message)
 
             setNegativeButton(R1.string.no_dialog) { _, _ ->
             }
 
             setPositiveButton(R1.string.yes_dialog) { _, _ ->
                 //db.removePurchase(id)
-                if(ideleteItem!=null)ideleteItem.onDeleteItem(id)
+                if(ideleteItem!=null)ideleteItem.onDeleteItem(ids)
             }
         }.create()//.show()
         val negative=alertDialog.show().getButton(AlertDialog.BUTTON_NEGATIVE)

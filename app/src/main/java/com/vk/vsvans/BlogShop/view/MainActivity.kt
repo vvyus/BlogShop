@@ -507,19 +507,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun deletePurchase(){
-        val purchase=adapter.getPurchase()
-        //val id=adapter.getPurchaseId()
-        if(purchase!=null && purchase.id>0) {
+        //val purchase=adapter.getPurchase()
+//        if(purchase!=null && purchase.id>0 || adapter.getMarkedPosition().size>0) {
+        if(  adapter.getMarkedIds().size>0 ) {
             //dbManager.removePurchaseItemFromDb(id)
-            DialogHelper.showPurchaseDeleteItemDialog(this@MainActivity,purchase.id,object:
+            DialogHelper.showPurchaseDeleteItemDialog(this@MainActivity,adapter.getMarkedIds(),object:
                 IDeleteItem {
                 @RequiresApi(Build.VERSION_CODES.N)
-                override fun onDeleteItem(id: Int) {
-                    //1 remove purchase from events
-                    removePurchaseEvent(purchase.time)
-                    //2 remove purchase from database
-                    //dbManager.removePurchase(id)
-                    viewModel.removePurchase(id)
+                override fun onDeleteItem(ids:ArrayList<Int>) {
+                    val purchases=adapter.getMarkedObjects()
+                    for(i in 0 until ids.size){
+                        //1 remove purchase from events
+                        removePurchaseEvent(purchases[i].time)
+                        //2 remove purchase from database
+                        viewModel.removePurchase(ids[i])
+                    }
                     fillAdapter()
                 }
 

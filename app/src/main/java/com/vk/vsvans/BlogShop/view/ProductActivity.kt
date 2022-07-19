@@ -246,15 +246,17 @@ class ProductActivity : AppCompatActivity() {
                 }
                 R.id.id_delete_baselist->{
                     if(selectedId>0){
-                        DialogHelper.showPurchaseDeleteItemDialog(this@ProductActivity,selectedId,
+                        val ids=ArrayList<Int>()
+                        ids.add(selectedId)
+                        DialogHelper.showPurchaseDeleteItemDialog(this@ProductActivity,ids,
                             object: IDeleteItem {
-                                override fun onDeleteItem(id:Int) {
+                                override fun onDeleteItem(ids:ArrayList<Int>) {
                                     adapter.deleteBaseListItem()
                                     val parent=adapter.getParent()
                                     if(parent!=null) viewModel.updateProduct(parent as Product)
                                     //reset selectedId
                                     //selectedId=0
-                                    viewModel.removeProduct(id)
+                                    if(ids.size>0) viewModel.removeProduct(ids[0])
                                 }
 
                             })
