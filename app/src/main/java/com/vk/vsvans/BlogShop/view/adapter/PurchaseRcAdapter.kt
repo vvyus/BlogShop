@@ -1,6 +1,7 @@
 package com.vk.vsvans.BlogShop.view.adapter
 
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.text.Html
 import android.view.LayoutInflater
@@ -16,6 +17,7 @@ import com.vk.vsvans.BlogShop.model.data.Purchase
 import com.vk.vsvans.BlogShop.util.UtilsHelper
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class PurchaseRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerView.Adapter<PurchaseRcAdapter.PurchaseHolder>() {
 
@@ -23,10 +25,12 @@ class PurchaseRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
     var focused_position =RecyclerView.NO_POSITION;
     var selected_color =0
     private var filterCallback:IFilterCallBack?=null
+    private var marked_image: Drawable?=null
+    val marked_position=HashMap<Int,Int>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PurchaseHolder {
 
         selected_color=parent.context.resources.getColor(R.color.color_red)
-
+        marked_image=parent.resources.getDrawable(R.drawable.ic_check)
         val binding=
             ItemPurchaseListBinding.inflate(LayoutInflater.from(parent.context),parent,false)
         return PurchaseHolder(binding,clickItemCallback,filterCallback)
@@ -34,7 +38,7 @@ class PurchaseRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
     //fill and show holder in position
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onBindViewHolder(holder: PurchaseHolder, position: Int) {
-        holder.setData(purchaseArray[position])
+        holder.setData(purchaseArray[position],marked_position,marked_image!!)
         holder.itemView.setOnClickListener{
             if (focused_position != holder.getAdapterPosition()) {
                 notifyItemChanged(focused_position)
@@ -90,10 +94,11 @@ class PurchaseRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
         this.filterCallback=filterCallback
     }
 
-    class PurchaseHolder(val binding:ItemPurchaseListBinding,val clickItemCallback: OnClickItemCallback?,val filterCallback: IFilterCallBack?): RecyclerView.ViewHolder(binding.root) {
+    class PurchaseHolder(val binding:ItemPurchaseListBinding,val clickItemCallback: OnClickItemCallback?,
+                         val filterCallback: IFilterCallBack?): RecyclerView.ViewHolder(binding.root) {
 
         @RequiresApi(Build.VERSION_CODES.N)
-        fun setData(purchase: Purchase){
+        fun setData(purchase: Purchase,marked_position:HashMap<Int,Int>,selected_image:Drawable){
             binding.apply {
                 tvDescription.text= Html.fromHtml(purchase.content_html,0)
 //                tvDescription.setMovementMethod(LinkMovementMethod.getInstance())
@@ -109,6 +114,16 @@ class PurchaseRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
                 tvSeller.setOnClickListener{
                     //mainActivity!!.onSellerClick(purchase)
                     if(filterCallback!=null) filterCallback.onSellerClick(purchase)
+                }
+                btnSelectPurchase.setOnClickListener{
+                    if(btnSelectPurchase.drawable==null){
+                        btnSelectPurchase.setImageDrawable(selected_image)
+                        if(marked_position.get(purchase.id)==null)marked_position.put(purchase.id,purchase.id)
+                    }else{
+                        btnSelectPurchase.setImageDrawable(null)
+                        if(marked_position.get(purchase.id)!=null)marked_position.remove(purchase.id)
+                    }
+                    btnSelectPurchase.refreshDrawableState()
                 }
                 //tvTitle.tag= com.vk.vsvans.BlogShop.helper.Tag(purchase.id,se)
             }
