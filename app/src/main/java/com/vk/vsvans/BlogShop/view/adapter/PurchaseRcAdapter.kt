@@ -20,7 +20,7 @@ import kotlin.collections.ArrayList
 class PurchaseRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerView.Adapter<PurchaseRcAdapter.PurchaseHolder>() {
 
     val purchaseArray=ArrayList<Purchase>()
-    var selected_position =RecyclerView.NO_POSITION;
+    var focused_position =RecyclerView.NO_POSITION;
     var selected_color =0
     private var filterCallback:IFilterCallBack?=null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PurchaseHolder {
@@ -36,16 +36,16 @@ class PurchaseRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
     override fun onBindViewHolder(holder: PurchaseHolder, position: Int) {
         holder.setData(purchaseArray[position])
         holder.itemView.setOnClickListener{
-            if (selected_position != holder.getAdapterPosition()) {
-                notifyItemChanged(selected_position)
+            if (focused_position != holder.getAdapterPosition()) {
+                notifyItemChanged(focused_position)
             }else{
                 if(clickItemCallback!=null) clickItemCallback!!.onClickItem(getPurchaseId())
             }
-            selected_position = holder.adapterPosition
-            notifyItemChanged(selected_position)
+            focused_position = holder.adapterPosition
+            notifyItemChanged(focused_position)
 
         }
-        holder.itemView.setBackgroundColor(if (selected_position == position) selected_color else Color.TRANSPARENT)
+        holder.itemView.setBackgroundColor(if (focused_position == position) selected_color else Color.TRANSPARENT)
 
     }
 
@@ -54,24 +54,24 @@ class PurchaseRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
     }
 
     fun getPurchaseId():Int{
-        if(purchaseArray.size!=0 && selected_position!=RecyclerView.NO_POSITION && selected_position<purchaseArray.size){
-            return purchaseArray[selected_position].id
+        if(purchaseArray.size!=0 && focused_position!=RecyclerView.NO_POSITION && focused_position<purchaseArray.size){
+            return purchaseArray[focused_position].id
         }else{
             return 0
         }
     }
 
     fun getPurchase(): Purchase?{
-        if(purchaseArray.size!=0 && selected_position!=RecyclerView.NO_POSITION && selected_position<purchaseArray.size){
-            return purchaseArray[selected_position]
+        if(purchaseArray.size!=0 && focused_position!=RecyclerView.NO_POSITION && focused_position<purchaseArray.size){
+            return purchaseArray[focused_position]
         }else{
             return null
         }
     }
 
     fun setPurchase(purchase: Purchase){
-        if(purchaseArray.size!=0 && selected_position!=RecyclerView.NO_POSITION && selected_position<purchaseArray.size){
-            purchaseArray[selected_position]=purchase
+        if(purchaseArray.size!=0 && focused_position!=RecyclerView.NO_POSITION && focused_position<purchaseArray.size){
+            purchaseArray[focused_position]=purchase
         }
     }
 
