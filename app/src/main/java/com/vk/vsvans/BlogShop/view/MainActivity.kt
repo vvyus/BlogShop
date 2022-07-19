@@ -522,6 +522,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         //2 remove purchase from database
                         viewModel.removePurchase(ids[i])
                     }
+                    adapter.marked_position.clear()
                     fillAdapter()
                 }
 
