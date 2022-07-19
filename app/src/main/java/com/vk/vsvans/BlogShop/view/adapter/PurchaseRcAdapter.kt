@@ -27,13 +27,13 @@ class PurchaseRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
     private var filterCallback:IFilterCallBack?=null
     private var marked_image: Drawable?=null
     val marked_position=HashMap<Int,Purchase>()
+    lateinit var binding:ItemPurchaseListBinding
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PurchaseHolder {
 
         selected_color=parent.context.resources.getColor(R.color.color_red)
         marked_image=parent.resources.getDrawable(R.drawable.ic_check)
-        val binding=
-            ItemPurchaseListBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        binding= ItemPurchaseListBinding.inflate(LayoutInflater.from(parent.context),parent,false)
         return PurchaseHolder(binding,clickItemCallback,filterCallback)
     }
     //fill and show holder in position
@@ -50,6 +50,13 @@ class PurchaseRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
             notifyItemChanged(focused_position)
 
         }
+
+//        if(marked_position.get(purchaseArray[position].id)==null)
+//            binding.btnSelectPurchase.setImageDrawable(null)
+//        else
+//            binding.btnSelectPurchase.setImageDrawable(marked_image)
+        //binding.btnSelectPurchase.refreshDrawableState()
+
         holder.itemView.setBackgroundColor(if (focused_position == position) selected_color else Color.TRANSPARENT)
 
     }
@@ -103,6 +110,11 @@ class PurchaseRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
         return ArrayList(marked_position.values)
     }
 
+    fun resetMarkedPosition(){
+        //binding.btnSelectPurchase.setImageDrawable(null)
+        marked_position.clear()
+    }
+
     class PurchaseHolder(val binding:ItemPurchaseListBinding,val clickItemCallback: OnClickItemCallback?,
                          val filterCallback: IFilterCallBack?): RecyclerView.ViewHolder(binding.root) {
 
@@ -110,20 +122,16 @@ class PurchaseRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
         fun setData(purchase: Purchase,marked_position:HashMap<Int,Purchase>,selected_image:Drawable){
             binding.apply {
                 tvDescription.text= Html.fromHtml(purchase.content_html,0)
-//                tvDescription.setMovementMethod(LinkMovementMethod.getInstance())
-//                Linkify.addLinks(tvDescription, Linkify.ALL);
                 tvSummaPuchase.text= purchase.summa.toString()
                 tvSeller.text=purchase.sellername
                 tvPurchaseTime.setText(UtilsHelper.getDate(purchase.time))
                 tvPurchaseTime.setOnClickListener{
-                    //println(tvPurchaseTime.text)
-                    //if(clickItemCallback!=null) clickItemCallback!!.onTimeClick()
                     if(filterCallback!=null) filterCallback.onTimeClick(purchase.time)
                 }
                 tvSeller.setOnClickListener{
-                    //mainActivity!!.onSellerClick(purchase)
                     if(filterCallback!=null) filterCallback.onSellerClick(purchase)
                 }
+
                 btnSelectPurchase.setOnClickListener{
                     if(btnSelectPurchase.drawable==null){
                         btnSelectPurchase.setImageDrawable(selected_image)
@@ -132,9 +140,10 @@ class PurchaseRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
                         btnSelectPurchase.setImageDrawable(null)
                         if(marked_position.get(purchase.id)!=null)marked_position.remove(purchase.id)
                     }
-                    btnSelectPurchase.refreshDrawableState()
                 }
                 //tvTitle.tag= com.vk.vsvans.BlogShop.helper.Tag(purchase.id,se)
+                //btnSelectPurchase.refreshDrawableState()
+                if(marked_position.get(purchase.id)==null) btnSelectPurchase.setImageDrawable(null)
             }
             showEditPanel(true)
         }
