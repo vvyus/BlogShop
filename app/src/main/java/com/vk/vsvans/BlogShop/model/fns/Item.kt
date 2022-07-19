@@ -5,8 +5,8 @@ data class Item(
     val nds: Int,
     val ndsSum: Int,
     val paymentType: Int,
-    val price: Int,
+    val price: Double,
     val productType: Int,
-    val quantity: Float,
-    val sum: Int
+    val quantity: Double,
+    val sum: Double
 )

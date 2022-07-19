@@ -48,7 +48,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.lang.String.valueOf
 import java.util.*
-import java.util.Collections.list
 import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -331,6 +330,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 getDemoJsonByName("6294837fcfb1f1a16860eda9.json","")
                 getDemoJsonByName("629483daffd38dd204df6c19.json","")
                 getDemoJsonByName("629c0cf6f5913801646dd150.json",getString(R.string.demo_is_loaded))
+                fillAdapter()
                 //Toast.makeText(this,R.string.demo_is_loaded,Toast.LENGTH_LONG).show()
             } else-> rootElement.drawerLayout.closeDrawer(GravityCompat.START)
         }
@@ -342,13 +342,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         //listOf("6294837fcfb1f1a16860eda9.json","629483daffd38dd204df6c19.json")
         service.getChecksModelItem(name)?.enqueue(object : Callback<MutableList<ChecksModelItem>> {
             override fun onFailure(call: Call<MutableList<ChecksModelItem>>, t: Throwable) {
+                Toast.makeText(this@MainActivity,getString(R.string.demo_fail),Toast.LENGTH_LONG).show()
                 println("Retrofit fail!!! "+t)
             }
 
             override fun onResponse(call: Call<MutableList<ChecksModelItem>>, response: Response<MutableList<ChecksModelItem>>) {
                 if (response.isSuccessful()) {
-                    //response.body() as MutableList<ChecksModelItem>
-                    //((response.body as java.util.ArrayList<*>)[0] as ChecksModelItem).ticket.document.receipt.dateTime
                     val separator=resources.getString(R.string.SEPARATOR)
                     val title_color=getColor(R.color.light_gray_text)
 
@@ -358,14 +357,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         receipt=(arrayOfChecksModelItem[i] as ChecksModelItem).ticket.document.receipt
                         demoList.add(receipt)
                     }
-//
-//
-//                        for(i in 0 until arrayOfChecksModelItem.size){
-//                            receipt=(arrayOfChecksModelItem[i] as ChecksModelItem).ticket.document.receipt
-//                            //demoList.add(receipt)
-//                            import_checks.receiptToDb(receipt!!,viewModel, separator,title_color)
-//                        }
-                        //println("dateTime for ticket is "+receipt!!.dateTime)
                     if(!message.isEmpty()){
                         job?.cancel()
                         job = CoroutineScope(Dispatchers.Main).launch {
@@ -375,8 +366,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         }
                         Toast.makeText(this@MainActivity,message,Toast.LENGTH_LONG).show()
                     }
-                   // }
-                    println("Retrofit response " + response.body()?.size);
+                    //println("Retrofit response " + response.body()?.size);
                 }
             }
         })
@@ -481,13 +471,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    private fun addPurchase(){
-        val i= Intent(this@MainActivity, EditPurchaseActivity::class.java)
-        i.putExtra(R.string.PURCHASE_ID.toString(),0)
-        // сообщаем системе о запуске активити
-        startActivity(i)
-    }
-
     fun addPurchaseEvent(time:Long){
         val event_key = UtilsHelper.getDate(time)
         var event_int = calendar_events[event_key]
@@ -503,18 +486,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             @RequiresApi(Build.VERSION_CODES.N)
             override fun import_checks(selected_date: HashMap<String, Date?>) {
+                val receiptList=ArrayList<Receipt>()
+                import_checks.getReceiptList(selected_date, receiptList)
 
                 job?.cancel()
                 job = CoroutineScope(Dispatchers.Main).launch{
-                    if(viewModel!=null) {
-                        val dialog = ProgressDialog.createProgressDialog(this@MainActivity )
-                        val separator=resources.getString(R.string.SEPARATOR)
-                        val title_color=getColor(R.color.light_gray_text)
-
-                        import_checks.doImport(viewModel!!,separator, title_color,selected_date)
-                        fillAdapter()
-                        dialog.dismiss()
+                    val dialog = ProgressDialog.createProgressDialog(this@MainActivity )
+                    val separator=resources.getString(R.string.SEPARATOR)
+                    val title_color=getColor(R.color.light_gray_text)
+                    for(i in 0 until receiptList.size){
+                        import_checks.receiptToDb(receiptList[i],viewModel,separator,title_color)
                     }
+                    fillAdapter()
+                    dialog.dismiss()
                 }
 
             }

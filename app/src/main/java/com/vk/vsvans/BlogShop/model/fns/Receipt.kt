@@ -25,7 +25,7 @@ data class Receipt(
     val retailPlaceAddress: String,
     val shiftNumber: Int,
     val taxationType: Int,
-    val totalSum: Int,
+    val totalSum: Double,
     val user: String,
     val userInn: String
 )

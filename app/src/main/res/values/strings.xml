@@ -67,5 +67,6 @@
     <string name="demo_base">Загрузить демо данные</string>
     <string name="demo_is_loaded">Данные загружены</string>
     <string name="demo_load_data">Данные загружаются</string>
+    <string name="demo_fail">Ошибка получения данных</string>
 
 </resources>
