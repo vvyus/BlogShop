@@ -112,36 +112,38 @@ class ActivityViewModel(): ViewModel() {
         mDbRepositoryImpl.removePurchase(id)
     }
 
-    suspend fun getPurchaseFns(idFns: String): Int= withContext(Dispatchers.IO) {
-        return@withContext mDbRepositoryImpl.getPurchaseFns(idFns)
+    //suspend fun getPurchaseFns(idFns: String): Int= withContext(Dispatchers.IO) {
+    fun getPurchaseFns(idFns: String): Int{
+        //return@withContext mDbRepositoryImpl.getPurchaseFns(idFns)
+        return mDbRepositoryImpl.getPurchaseFns(idFns)
     }
 
-    suspend fun insertPurchase(purchase: Purchase): Int? = withContext(Dispatchers.IO){
-        return@withContext mDbRepositoryImpl.insertPurchase(purchase)
+    fun insertPurchase(purchase: Purchase): Int?{
+        return mDbRepositoryImpl.insertPurchase(purchase)
     }
 
-    suspend fun updatePurchase(purchase: Purchase) = withContext(Dispatchers.IO) {
+    fun updatePurchase(purchase: Purchase) {
         mDbRepositoryImpl.updatePurchase(purchase)
     }
 
-    suspend fun getSellersFns(key: String): ArrayList<Seller> = withContext(Dispatchers.IO) {
-        return@withContext mDbRepositoryImpl.getSellersFns(key)
+    fun getSellersFns(key: String): ArrayList<Seller> {
+        return mDbRepositoryImpl.getSellersFns(key)
     }
 
-    suspend fun removePurchaseItems(idPurchase: Int) = withContext(Dispatchers.IO) {
+    fun removePurchaseItems(idPurchase: Int) {
         mDbRepositoryImpl.removePurchaseItems(idPurchase)
     }
 
-    suspend fun insertPurchaseItem(pit: PurchaseItem) = withContext(Dispatchers.IO) {
-        return@withContext mDbRepositoryImpl.insertPurchaseItem(pit)
+    fun insertPurchaseItem(pit: PurchaseItem) :Int?{
+        return mDbRepositoryImpl.insertPurchaseItem(pit)
     }
 
     suspend fun getPurchase(idPurchase: Int): Purchase? = withContext(Dispatchers.IO) {
         return@withContext mDbRepositoryImpl.getPurchase(idPurchase)
     }
 
-    suspend fun getProductsFns(key: String): ArrayList<Product> = withContext(Dispatchers.IO) {
-        return@withContext mDbRepositoryImpl.getProductsFns(key)
+    fun getProductsFns(key: String): ArrayList<Product>  {
+        return mDbRepositoryImpl.getProductsFns(key)
     }
 
     fun insertProduct(product: Product): Int? {

@@ -325,12 +325,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             }
             R.id.id_demo_retrofit->{
-                demoList.clear()
+                //demoList.clear()
                 Toast.makeText(this,R.string.demo_load_data,Toast.LENGTH_LONG).show()
                 getDemoJsonByName("6294837fcfb1f1a16860eda9.json","")
                 getDemoJsonByName("629483daffd38dd204df6c19.json","")
                 getDemoJsonByName("629c0cf6f5913801646dd150.json",getString(R.string.demo_is_loaded))
-                fillAdapter()
                 //Toast.makeText(this,R.string.demo_is_loaded,Toast.LENGTH_LONG).show()
             } else-> rootElement.drawerLayout.closeDrawer(GravityCompat.START)
         }
@@ -355,18 +354,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     var receipt: Receipt?=null
                     for(i in 0 until arrayOfChecksModelItem.size){
                         receipt=(arrayOfChecksModelItem[i] as ChecksModelItem).ticket.document.receipt
-                        demoList.add(receipt)
-                    }
-                    if(!message.isEmpty()){
-                        job?.cancel()
-                        job = CoroutineScope(Dispatchers.Main).launch {
-                            for(i in 0 until demoList.size){
-                                import_checks.receiptToDb(demoList[i],viewModel, separator,title_color,100)
-                            }
+                        import_checks.receiptToDb(receipt,viewModel, separator,title_color,100)
+                        //demoList.add(receipt)
+                        if(!message.isEmpty()){
+                            Toast.makeText(this@MainActivity,message,Toast.LENGTH_LONG).show()
                         }
-                        Toast.makeText(this@MainActivity,message,Toast.LENGTH_LONG).show()
                     }
-                    //println("Retrofit response " + response.body()?.size);
                 }
             }
         })

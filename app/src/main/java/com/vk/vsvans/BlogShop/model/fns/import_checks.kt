@@ -103,7 +103,7 @@ object import_checks {
 
     }//func
 // if from retrofit.demobase divider=100 else =1
-    suspend fun receiptToDb(receipt: Receipt, viewModel:ActivityViewModel, separator:String,title_color:Int,divider:Int){
+    fun receiptToDb(receipt: Receipt, viewModel:ActivityViewModel, separator:String,title_color:Int,divider:Int){
         var fn=""
         var fd=0
         var fp=0.0
