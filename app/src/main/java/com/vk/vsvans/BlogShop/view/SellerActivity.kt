@@ -145,15 +145,15 @@ class SellerActivity : AppCompatActivity() {
         seller.id=0
         DialogHelper.showBaseListInputDialog(this@SellerActivity,seller,
             object: IUpdateBaseListItemList {
-                override fun onUpdateBaseListItemList(seller: BaseList) {
+                override fun onUpdateBaseListItemList(baselist: BaseList) {
                     // add single product
-                    val id=viewModel.insertSeller(seller as Seller)
+                    val id=viewModel.insertSeller(baselist as Seller)
                     if (id != null) {
-                        seller.id=id
-                        seller.idparent=id
-                        seller.fullpath=id.toString()
-                        viewModel.updateSeller(seller as Seller)
-                        adapter.updateAdapterInsert(seller)
+                        baselist.id=id
+                        baselist.idparent=id
+                        baselist.fullpath=id.toString()
+                        viewModel.updateSeller(baselist as Seller)
+                        adapter.updateAdapterInsert(baselist)
                     }
                 }
 

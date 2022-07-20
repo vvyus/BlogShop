@@ -311,14 +311,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.id_products->{
-                val intent= Intent(this@MainActivity, ProductActivity::class.java)
+                //val intent= Intent(this@MainActivity, ProductActivity::class.java)
+                val intent= Intent(this@MainActivity, BaseListActivity::class.java)
+                intent.putExtra(R.string.BASE_LIST_TYPE.toString(),1) // ==1 is product
                 intent.putExtra(R.string.PURCHASE_ID.toString(),0)
                 // сообщаем системе о запуске активити
                 startActivity(intent)
             }
             R.id.id_sellers->{
-                val intent= Intent(this@MainActivity, SellerActivity::class.java)
-                intent.putExtra(R.string.PURCHASE_ID.toString(),0)
+                //val intent= Intent(this@MainActivity, SellerActivity::class.java)
+                val intent= Intent(this@MainActivity, BaseListActivity::class.java)
+                intent.putExtra(R.string.BASE_LIST_TYPE.toString(),2) // ==2 is seller
+                intent.putExtra(R.string.SELLER_ID.toString(),0)
                 // сообщаем системе о запуске активити
                 startActivity(intent)
                 //Toast.makeText(this@MainActivity,"Pressed sellers", Toast.LENGTH_LONG).show()

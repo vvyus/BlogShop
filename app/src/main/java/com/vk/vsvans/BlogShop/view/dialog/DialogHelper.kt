@@ -30,10 +30,7 @@ import com.vk.vsvans.BlogShop.model.data.PurchaseItem
 import com.vk.vsvans.BlogShop.model.data.Seller
 import com.vk.vsvans.BlogShop.util.FilterForActivity
 import com.vk.vsvans.BlogShop.util.UtilsHelper
-import com.vk.vsvans.BlogShop.view.EditPurchaseActivity
-import com.vk.vsvans.BlogShop.view.MainActivity
-import com.vk.vsvans.BlogShop.view.ProductActivity
-import com.vk.vsvans.BlogShop.view.SellerActivity
+import com.vk.vsvans.BlogShop.view.*
 import com.vk.vsvans.BlogShop.view.`interface`.*
 import com.vk.vsvans.BlogShop.view.adapter.StringRcAdapter
 import kotlinx.coroutines.CoroutineScope
@@ -164,26 +161,29 @@ object DialogHelper {
         return customDialog
     }
 
-    fun showBaseListInputDialog(context: Context, product: BaseList, iupdateBaseListItemList: IUpdateBaseListItemList) {
+    fun showBaseListInputDialog(context: Context, baselist: BaseList, iupdateBaseListItemList: IUpdateBaseListItemList) {
         val customDialog = AlertDialog.Builder(context, 0).create()
         var inflater: LayoutInflater?=null
-        if(context is ProductActivity)
-            inflater =(context as ProductActivity).layoutInflater
-        else  inflater =(context as SellerActivity).layoutInflater
+
+        if(context is ProductActivity) inflater =(context as ProductActivity).layoutInflater
+        else if(context is SellerActivity) inflater =(context as SellerActivity).layoutInflater
+        else inflater =(context as BaseListActivity).layoutInflater
+
         val view: View = inflater.inflate(R1.layout.input_baselist_item, null)
+
         customDialog.setView(view)
         val rootView=view.rootView
 
         val edTitle=rootView.findViewById<EditText>(R1.id.edTitleBaselist)
-        edTitle.setText(product.name.toString())
+        edTitle.setText(baselist.name.toString())
 
         val btnOk=rootView.findViewById<Button>(R1.id.btnOk)
         btnOk.setOnClickListener {
             // редактируем name, title не трогаем
-            product.name=edTitle.text.toString()
+            baselist.name=edTitle.text.toString()
             //product.title=edTitle.text.toString()//title синоним для поиска продуктов с чека фнс
             // (context as EditPurchaseActivity).up
-            if(iupdateBaseListItemList!=null)iupdateBaseListItemList.onUpdateBaseListItemList(product)
+            if(iupdateBaseListItemList!=null)iupdateBaseListItemList.onUpdateBaseListItemList(baselist)
             customDialog.dismiss()
         }
 
@@ -204,17 +204,21 @@ fun showSelectParentBaseListDialog(title: String?, activity: Activity,
 ) {
     val builder = AlertDialog.Builder(activity)
     var nodes: List<BaseList>? =null
+
     if(activity is ProductActivity)
         nodes =(activity as ProductActivity).adapter.BaseListArray
-    else
+    else if(activity is SellerActivity)
         nodes =(activity as SellerActivity).adapter.BaseListArray
+    else if(activity is BaseListActivity)
+        nodes =(activity as BaseListActivity).adapter.BaseListArray
+
     val filterNodes=ArrayList<BaseList>()
     builder.setTitle(title)
         .setNegativeButton(
             ( activity).resources.getString(R.string.cancel)
         ) { dialog, which -> dialog.dismiss() }
         .setAdapter(
-            createTreeArrayAdapter(activity, nodes,filterNodes)
+            createTreeArrayAdapter(activity, nodes!!,filterNodes)
         ) { dialog, which ->
             if (eventsListener != null) {
                 // which==0 this mean node is root
