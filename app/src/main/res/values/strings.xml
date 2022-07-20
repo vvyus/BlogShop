@@ -68,6 +68,6 @@
     <string name="demo_is_loaded">Данные загружены</string>
     <string name="demo_load_data">Данные загружаются</string>
     <string name="demo_fail">Ошибка получения данных</string>
-    <string name="delete_items_message">Удалить отмеченные?</string>
-
+    <string name="delete_items_message">Удалить отмеченные записи?</string>
+    <string name="download_demo">Загрузить базу?</string>
 </resources>

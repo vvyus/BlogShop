@@ -48,6 +48,30 @@ import com.vk.vsvans.BlogShop.R as R1
 
 object DialogHelper {
     var job: Job? = null
+
+    fun getConfirmActionDialog(context: Context,confirmAction:IConfirmAction,title:String){
+        val alertDialog = AlertDialog.Builder(context)
+        alertDialog.apply {
+            setIcon(R1.drawable.ic_download)
+            setTitle(title)
+            setMessage(R1.string.download_demo)
+
+            setNegativeButton(R1.string.no_dialog) { _, _ ->
+            }
+
+            setPositiveButton(R1.string.yes_dialog) { _, _ ->
+                if(confirmAction!=null)confirmAction.onConfirm()
+            }
+        }.create()//.show()
+        val negative=alertDialog.show().getButton(AlertDialog.BUTTON_NEGATIVE)
+        negative.apply {
+            setFocusable(true)
+            setFocusableInTouchMode(true)
+            requestFocus()
+        }
+
+    }
+
     fun showPurchaseDeleteItemDialog(context: Context, ids:ArrayList<Int>, ideleteItem:IDeleteItem) {
         val alertDialog = AlertDialog.Builder(context)
 

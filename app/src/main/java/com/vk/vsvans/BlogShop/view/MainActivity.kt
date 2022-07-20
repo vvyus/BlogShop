@@ -326,10 +326,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             R.id.id_demo_retrofit->{
                 //demoList.clear()
-                Toast.makeText(this,R.string.demo_load_data,Toast.LENGTH_LONG).show()
-                getDemoJsonByName("6294837fcfb1f1a16860eda9.json","")
-                getDemoJsonByName("629483daffd38dd204df6c19.json","")
-                getDemoJsonByName("629c0cf6f5913801646dd150.json",getString(R.string.demo_is_loaded))
+                DialogHelper.getConfirmActionDialog(this,object :IConfirmAction{
+                    override fun onConfirm() {
+                        Toast.makeText(this@MainActivity,R.string.demo_load_data,Toast.LENGTH_LONG).show()
+                        getDemoJsonByName("6294837fcfb1f1a16860eda9.json","")
+                        getDemoJsonByName("629483daffd38dd204df6c19.json","")
+                        getDemoJsonByName("629c0cf6f5913801646dd150.json",getString(R.string.demo_is_loaded))
+                    }
+
+                },getString(R.string.demo_base))
                 //Toast.makeText(this,R.string.demo_is_loaded,Toast.LENGTH_LONG).show()
             } else-> rootElement.drawerLayout.closeDrawer(GravityCompat.START)
         }
