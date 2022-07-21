@@ -22,12 +22,6 @@
             android:name=".view.BaseListActivity"
             android:exported="false" />
         <activity
-            android:name=".view.SellerActivity"
-            android:exported="false" />
-        <activity
-            android:name=".view.ProductActivity"
-            android:exported="false" />
-        <activity
             android:name=".view.EditPurchaseActivity"
             android:exported="false" />
         <activity

@@ -224,8 +224,9 @@ class EditPurchaseActivity : AppCompatActivity() {
     }
 
     fun launchSellerActivity(id:Int){
-        val intent= Intent(this@EditPurchaseActivity, SellerActivity::class.java)
+        val intent= Intent(this@EditPurchaseActivity, BaseListActivity::class.java)
         intent.putExtra(R.string.SELLER_ID.toString(),id)
+        intent.putExtra(R.string.BASE_LIST_TYPE.toString(),2) // ==2 is seller
         launcherSeller.launch(intent) //getLauncher().launch(intent)
     }
 

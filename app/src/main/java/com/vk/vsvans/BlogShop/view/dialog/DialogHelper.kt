@@ -123,8 +123,9 @@ object DialogHelper {
                 var idproduct=0
                 if(tvProduct.tag==null ) idproduct=pit!!.idProduct
                 else idproduct=(tvProduct.tag as Product).id
-                val intent= Intent(context as EditPurchaseActivity, ProductActivity::class.java)
+                val intent= Intent(context as EditPurchaseActivity, BaseListActivity::class.java)
                 intent.putExtra(com.vk.vsvans.BlogShop.R.string.PRODUCT_ID.toString(),idproduct)
+                intent.putExtra(com.vk.vsvans.BlogShop.R.string.BASE_LIST_TYPE.toString(),1) // ==1 is product
                 launcherProduct.launch(intent) //getLauncher().launch(intent)
 
 //                var idProduct=0
@@ -165,9 +166,10 @@ object DialogHelper {
         val customDialog = AlertDialog.Builder(context, 0).create()
         var inflater: LayoutInflater?=null
 
-        if(context is ProductActivity) inflater =(context as ProductActivity).layoutInflater
-        else if(context is SellerActivity) inflater =(context as SellerActivity).layoutInflater
-        else inflater =(context as BaseListActivity).layoutInflater
+//        if(context is ProductActivity) inflater =(context as ProductActivity).layoutInflater
+//        else if(context is SellerActivity) inflater =(context as SellerActivity).layoutInflater
+//        else
+        inflater =(context as BaseListActivity).layoutInflater
 
         val view: View = inflater.inflate(R1.layout.input_baselist_item, null)
 
@@ -205,11 +207,11 @@ fun showSelectParentBaseListDialog(title: String?, activity: Activity,
     val builder = AlertDialog.Builder(activity)
     var nodes: List<BaseList>? =null
 
-    if(activity is ProductActivity)
-        nodes =(activity as ProductActivity).adapter.BaseListArray
-    else if(activity is SellerActivity)
-        nodes =(activity as SellerActivity).adapter.BaseListArray
-    else if(activity is BaseListActivity)
+//    if(activity is ProductActivity)
+//        nodes =(activity as ProductActivity).adapter.BaseListArray
+//    else if(activity is SellerActivity)
+//        nodes =(activity as SellerActivity).adapter.BaseListArray
+//    else if(activity is BaseListActivity)
         nodes =(activity as BaseListActivity).adapter.BaseListArray
 
     val filterNodes=ArrayList<BaseList>()
