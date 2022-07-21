@@ -9,4 +9,6 @@
     <string name="PRODUCT_ID" translatable="false">PRODUCT_ID</string>
     <string name="SELLER_ID" translatable="false">SELLER_ID</string>
     <string name="BASE_LIST_TYPE" translatable="false">BASE_LIST_TYPE</string>
+    <string name="AMOUNT" translatable="false">AMOUNT</string>
+
 </resources>

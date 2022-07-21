@@ -22,6 +22,7 @@
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable/ic_add.xml" value="0.2265" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable/ic_add_purchase_item.xml" value="0.238" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable/ic_arrow_drop_down.xml" value="0.2565" />
+        <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable/ic_calculator.xml" value="0.234" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable/ic_check.xml" value="0.238" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable/ic_close.xml" value="0.238" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable/ic_delete_ad.xml" value="0.2265" />
@@ -40,6 +41,7 @@
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable/ic_search.xml" value="0.2265" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/drawable/ic_seller.xml" value="0.2565" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/activity_base_list.xml" value="0.25" />
+        <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/activity_calculator.xml" value="0.25" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/activity_edit_purchase.xml" value="0.25" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/activity_main.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/veslav/AndroidStudioProjects/BlogShop/app/src/main/res/layout/activity_product.xml" value="0.25416666666666665" />

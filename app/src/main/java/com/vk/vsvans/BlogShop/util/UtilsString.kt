@@ -37,7 +37,7 @@ object UtilsString {
         // add fraction part if any
         if (parts.size > 1) {
             if (parts[1].length > FRACTION_LENGTH) {
-                number += mDecimalSeparator.toString() + parts[1].substring(0, FRACTION_LENGTH - 1)
+                number += mDecimalSeparator.toString() + parts[1].substring(0, FRACTION_LENGTH )
             } else {
                 number += mDecimalSeparator + parts[1]
             }

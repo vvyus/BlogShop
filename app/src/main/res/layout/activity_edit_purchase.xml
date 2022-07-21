@@ -233,20 +233,34 @@
                             android:textStyle="bold" />
 
 
-                        <com.vk.vsvans.BlogShop.util.NumberEditText
-                            android:id="@+id/edSummaPurchase"
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@null"
-                            android:ems="10"
-                            android:hint="@string/summa_hint"
-                            android:inputType="numberDecimal"
-                            android:padding="10dp"
-                            android:selectAllOnFocus="true"
-                            android:textColorHint="@color/gray_dark"
-                            app:digits_after_dot="2"
-                            app:digits_before_dot="10"
-                            app:show_soft_input_on_focus="true" />
+                            android:orientation="horizontal">
+
+                            <com.vk.vsvans.BlogShop.util.NumberEditText
+                                android:id="@+id/edSummaPurchase"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+                                android:background="@null"
+                                android:ems="10"
+                                android:hint="@string/summa_hint"
+                                android:inputType="numberDecimal"
+                                android:padding="10dp"
+                                android:selectAllOnFocus="true"
+                                android:textColorHint="@color/gray_dark"
+                                app:digits_after_dot="2"
+                                app:digits_before_dot="10"
+                                app:show_soft_input_on_focus="true" />
+
+                            <ImageButton
+                                android:id="@+id/btnCalculator"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                app:srcCompat="@drawable/ic_calculator" />
+                        </LinearLayout>
 
 
                         <LinearLayout

@@ -61,6 +61,7 @@ class EditPurchaseActivity : AppCompatActivity() {
     //var content_temp:SpannableString="".makeSpannableString()
     lateinit var launcherSeller: ActivityResultLauncher<Intent>
     lateinit var launcherProduct: ActivityResultLauncher<Intent>
+    lateinit var launcherCalculator: ActivityResultLauncher<Intent>
     lateinit var pitDialog:AlertDialog
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -151,6 +152,10 @@ class EditPurchaseActivity : AppCompatActivity() {
         if(idPurchase==0) rootElement.purchaseItemButton.visibility=View.VISIBLE
         else rootElement.purchaseItemButton.visibility=View.GONE
 
+        rootElement.btnCalculator.setOnClickListener{
+            launchCalculatorActivity(rootElement.edSummaPurchase.value.toDouble())
+        }
+
         // register launchers for baselist
         launcherSeller=getLauncher()
 
@@ -166,6 +171,18 @@ class EditPurchaseActivity : AppCompatActivity() {
                         tvProduct.setTag(product)
                         tvProduct.text=product.name
                     }
+                }
+            }
+        }
+
+        launcherCalculator=registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+                result: ActivityResult ->
+            if(result.resultCode== AppCompatActivity.RESULT_OK){
+                if(result.data!=null){
+                    val intent=result.data
+                    val amount=intent!!.getDoubleExtra(getString(R.string.AMOUNT),0.0)
+                    purchase!!.summa=amount
+                    rootElement.edSummaPurchase.value=amount.toBigDecimal()
                 }
             }
         }
@@ -230,6 +247,11 @@ class EditPurchaseActivity : AppCompatActivity() {
         launcherSeller.launch(intent) //getLauncher().launch(intent)
     }
 
+    fun launchCalculatorActivity(amount:Double){
+        val intent= Intent(this@EditPurchaseActivity, CalculatorActivity::class.java)
+        intent.putExtra(R.string.AMOUNT.toString(),amount)
+        launcherCalculator.launch(intent) //getLauncher().launch(intent)
+    }
 
 
     private fun getLauncher():ActivityResultLauncher<Intent>{
