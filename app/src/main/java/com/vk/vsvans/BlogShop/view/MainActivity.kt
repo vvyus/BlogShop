@@ -489,11 +489,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             @RequiresApi(Build.VERSION_CODES.N)
             override fun import_checks(selected_date: HashMap<String, Date?>) {
                 val receiptList=ArrayList<Receipt>()
+                val dialog = ProgressDialog.createProgressDialog(this@MainActivity )
                 import_checks.getReceiptList(selected_date, receiptList)
 
                 job?.cancel()
                 job = CoroutineScope(Dispatchers.Main).launch{
-                    val dialog = ProgressDialog.createProgressDialog(this@MainActivity )
+
                     val separator=resources.getString(R.string.SEPARATOR)
                     val title_color=getColor(R.color.light_gray_text)
                     for(i in 0 until receiptList.size){

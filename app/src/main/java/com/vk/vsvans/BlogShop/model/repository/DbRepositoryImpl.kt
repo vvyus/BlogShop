@@ -28,6 +28,7 @@ class DbRepositoryImpl(context: Context):IDbRepository {
         val dataId = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
         val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_ID_FNS_PRODUCTS))
         val dataName = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_NAME_PRODUCTS))
+        //!!val dataDescription = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_DESCRIPTION_PRODUCTS))
         val idparent = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_IDPARENT_PRODUCTS))
         val level = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_LEVEL_PRODUCTS))
         val fullpath = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_FULLPATH_PRODUCTS))
@@ -110,6 +111,7 @@ class DbRepositoryImpl(context: Context):IDbRepository {
         val dataId = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
         val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_ID_FNS_SELLERS))
         val dataName = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_NAME_SELLERS))
+        val dataDescription = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_DESCRIPTION_SELLERS))
         val idparent = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_IDPARENT_SELLERS))
         val level = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_LEVEL_SELLERS))
         val fullpath = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_FULLPATH_SELLERS))
@@ -117,6 +119,7 @@ class DbRepositoryImpl(context: Context):IDbRepository {
         val seller = Seller()
         seller.id = dataId
         seller.name = dataName
+        seller.description=dataDescription
         seller.id_fns=dataTitle
         seller.level = level?:0
         seller.idparent = idparent?:0

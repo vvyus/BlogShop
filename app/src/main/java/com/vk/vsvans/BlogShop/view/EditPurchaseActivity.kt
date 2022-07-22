@@ -107,7 +107,7 @@ class EditPurchaseActivity : AppCompatActivity() {
                 if(purchase!=null){
                     rootElement.apply {
                         //content_temp=Html.fromHtml(purchase!!.content_html,0).makeSpannableString()
-                        //edTitle.setText(purchase!!.title)
+                        tvAdress.setText(purchase!!.title)
                         edSellerSelect.setText(purchase!!.sellername)
                         edSummaPurchase.setText(purchase!!.summa.toString())
                         initDateTime()
@@ -269,7 +269,7 @@ class EditPurchaseActivity : AppCompatActivity() {
                     val seller= intent!!.getSerializableExtra(Seller::class.java.getSimpleName()) as Seller
                     rootElement.edSellerSelect.setTag(seller)
                     rootElement.edSellerSelect.setText(seller.name)
-
+                    rootElement.tvAdress.text=seller.description
 //                    tvSelection.text=selectItem.name
 //                    tvSelection.setTag(selectItem)
                 }
@@ -287,7 +287,7 @@ class EditPurchaseActivity : AppCompatActivity() {
             job = CoroutineScope(Dispatchers.Main).launch{
                //здесь то что редактируется а не пришло из фрагмента
                 purchase!!.summa= edSummaPurchase.value.toDouble();//.text.toString().toDouble()
-                //purchase!!.title=edTitle.text.toString()
+                purchase!!.title=tvAdress.text.toString()
                 if(edSellerSelect.tag!=null) {
                     val seller=edSellerSelect.tag as Seller
                     purchase!!.idseller=seller.id

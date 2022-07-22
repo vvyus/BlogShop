@@ -35,7 +35,8 @@ object import_checks {
        var user=""
        var dateTime=""
        var dateTimeLong:Long?=0
-        val path= Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath
+       var retailPlaceAddress=""
+       val path= Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath
 
        val files= File(path).listFiles(object : FilenameFilter {
            override fun accept(dir: File?, name: String): Boolean {
@@ -85,9 +86,10 @@ object import_checks {
                                             //itemList+=item_instance
                                             itemList.add(item_instance)
                                         }
+                                        retailPlaceAddress=receipt.getString("retailPlaceAddress")
                                         val receipt_instance=Receipt(0,0,0,0,dateTime,0,0,
                                             fd,fn,fp,"", itemList,"",0,0,"","",0,
-                                            0,0,"","",0,0, totalSum,user,"")
+                                            0,0,"",retailPlaceAddress,0,0, totalSum,user,"")
                                         //receiptToDb(receipt_,viewModel,separator,title_color)
                                         receiptList.add(receipt_instance)
                                     }// if receipt
@@ -140,9 +142,12 @@ object import_checks {
             purchase!!.time_day=UtilsHelper.correct_date_begin(purchase!!.time)
         }
         purchase!!.summa=totalSum
-        var sellername=user
-        purchase!!.title=sellername //user==sellername
 
+        var sellername=user
+        var retailPlaceAddress=receipt.retailPlaceAddress
+
+        purchase!!.title= retailPlaceAddress //user==sellername
+//purchase!!.
         //!
         var seller: Seller?=null
         val list=viewModel.getSellersFns(user)
@@ -150,6 +155,7 @@ object import_checks {
         if(list.size==0){
             seller= Seller()
             seller.name=sellername
+            seller.description=retailPlaceAddress
             seller.id_fns=sellername
             idseller= viewModel.insertSeller(seller)!!
             seller.id=idseller
@@ -158,11 +164,13 @@ object import_checks {
 
         }else{
             seller= list[0] as Seller
+            seller.description=retailPlaceAddress // !!late remove this
             idseller=seller.id
             sellername=seller.name
         }
 
         viewModel.updateSeller(seller)
+
         purchase!!.sellername=sellername
         purchase!!.idseller=idseller
         //!

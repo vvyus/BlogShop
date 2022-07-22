@@ -179,10 +179,14 @@ object DialogHelper {
         val edTitle=rootView.findViewById<EditText>(R1.id.edTitleBaselist)
         edTitle.setText(baselist.name.toString())
 
+        val edDescription=rootView.findViewById<EditText>(R1.id.edDescriptionBaselist)
+        edDescription.setText(baselist.description.toString())
+if(baselist is Product) edDescription.setEnabled(false)
         val btnOk=rootView.findViewById<Button>(R1.id.btnOk)
         btnOk.setOnClickListener {
             // редактируем name, title не трогаем
             baselist.name=edTitle.text.toString()
+            baselist.description=edDescription.text.toString()
             //product.title=edTitle.text.toString()//title синоним для поиска продуктов с чека фнс
             // (context as EditPurchaseActivity).up
             if(iupdateBaseListItemList!=null)iupdateBaseListItemList.onUpdateBaseListItemList(baselist)

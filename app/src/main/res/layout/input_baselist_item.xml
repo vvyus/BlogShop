@@ -102,6 +102,18 @@
                     android:padding="10dp"
                     android:textColorHint="@color/gray_dark" />
 
+                <EditText
+                    android:id="@+id/edDescriptionBaselist"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:ems="10"
+                    android:hint="@string/description_hint"
+                    android:inputType="textMultiLine"
+                    android:minHeight="48dp"
+                    android:padding="10dp"
+                    android:textColorHint="@color/gray_dark" />
+
                 <LinearLayout
                     android:id="@+id/divider1"
                     android:layout_width="match_parent"
