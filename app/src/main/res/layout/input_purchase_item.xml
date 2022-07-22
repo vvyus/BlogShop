@@ -94,21 +94,21 @@
                     android:id="@+id/edBaseList"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:onClick="onClickSelectProduct"
-                    android:padding="10dp"
-                    android:hint="@string/select_product"
-                    android:textColor="@color/black"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
                     android:backgroundTint="@color/white"
                     android:cursorVisible="false"
                     android:drawableEnd="@drawable/ic_arrow_drop_down"
                     android:focusable="false"
                     android:fontFamily="sans-serif-medium"
-                    android:inputType="none|textNoSuggestions"
+                    android:hint="@string/select_product"
+                    android:inputType="none|textMultiLine|textNoSuggestions"
+                    android:padding="10dp"
                     android:singleLine="false"
                     android:textAlignment="textStart"
+                    android:textColor="@color/black"
                     android:textColorHint="@color/light_gray_text"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+
                     />
 
                 <LinearLayout
