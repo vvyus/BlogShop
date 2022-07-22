@@ -61,6 +61,7 @@ class EditPurchaseActivity : AppCompatActivity() {
     lateinit var launcherSeller: ActivityResultLauncher<Intent>
     lateinit var launcherProduct: ActivityResultLauncher<Intent>
     lateinit var launcherCalculator: ActivityResultLauncher<Intent>
+    lateinit var launcherDialogCalculator: ActivityResultLauncher<Intent>
     lateinit var pitDialog:AlertDialog
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -80,16 +81,6 @@ class EditPurchaseActivity : AppCompatActivity() {
     private fun initViewModel(){
         //{} это слушатель
         //если наше activity доступно не разрушено или ждет когда можно обновить слушателт сработает
-        // теперь списки для спиннера нам не нужны
-//        viewModel.liveSellerList.observe(this,{
-//            listSellers.clear()
-//            listSellers.addAll(it)
-//        })
-//        viewModel.liveProductList.observe(this,{
-//            listProducts.clear()
-//            listProducts.addAll(it)
-//        })
-        //
         viewModel.livePurchaseItemList.observe(this,{
             (rootElement.vpPurchaseItems.adapter as CardItemPurchaseRcAdapter).update(it)
         })
@@ -182,6 +173,20 @@ class EditPurchaseActivity : AppCompatActivity() {
                     val amount=intent!!.getDoubleExtra(getString(R.string.AMOUNT),0.0)
                     purchase!!.summa=amount
                     rootElement.edSummaPurchase.value=amount.toBigDecimal()
+                }
+            }
+        }
+
+        launcherDialogCalculator=registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+                result: ActivityResult ->
+            if(result.resultCode== AppCompatActivity.RESULT_OK){
+                if(result.data!=null){
+                    val intent=result.data
+                    val amount=intent!!.getDoubleExtra(getString(R.string.AMOUNT),0.0)
+                    if(pitDialog!=null) {
+                        val edSumma=pitDialog.findViewById<TextView>(R.id.edSummaItem)
+                        edSumma.setText(amount.toString())
+                    }
                 }
             }
         }
@@ -406,7 +411,7 @@ class EditPurchaseActivity : AppCompatActivity() {
             pitDialog=DialogHelper.showPurchaseItemInputDialog(this@EditPurchaseActivity,
                 pit,
                 launcherProduct,
-                launcherCalculator,
+                launcherDialogCalculator,
                 object: IUpdatePurchaseItemList {
                     override fun onUpdatePurchaseItemList(pit: PurchaseItem) {
                         if(pit.id==0)purchaseItemFragment!!.adapter.updateAdapterInsert(pit)

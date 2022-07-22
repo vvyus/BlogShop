@@ -71,7 +71,7 @@ class PurchaseItemListFragment(private val fragCloseInterface:IFragmentCloseInte
                     (activity as EditPurchaseActivity).pitDialog=DialogHelper.showPurchaseItemInputDialog(activity as EditPurchaseActivity,
                         pit,
                         (activity as EditPurchaseActivity).launcherProduct ,
-                        (activity as EditPurchaseActivity).launcherCalculator ,
+                        (activity as EditPurchaseActivity).launcherDialogCalculator ,
                         object:IUpdatePurchaseItemList{
                             override fun onUpdatePurchaseItemList(pit: PurchaseItem) {
                                 adapter.updateAdapterEdit(pit)

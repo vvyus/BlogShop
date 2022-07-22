@@ -92,8 +92,8 @@ object DialogHelper {
     }
 
     fun showPurchaseItemInputDialog(context: Context, pit: PurchaseItem,
-                                    launcherProduct: ActivityResultLauncher<Intent> ,
-                                    launcherCalculator:ActivityResultLauncher<Intent> ,
+                                    launcherProduct: ActivityResultLauncher<Intent>,
+                                    launcherDialogCalculator:ActivityResultLauncher<Intent>,
                                     iupdatePurchaseItemList: IUpdatePurchaseItemList):AlertDialog {
         val customDialog = AlertDialog.Builder(context, 0).create()
         val inflater: LayoutInflater =(context as EditPurchaseActivity).layoutInflater
@@ -125,12 +125,6 @@ object DialogHelper {
                 intent.putExtra(com.vk.vsvans.BlogShop.R.string.PRODUCT_ID.toString(),idproduct)
                 intent.putExtra(com.vk.vsvans.BlogShop.R.string.BASE_LIST_TYPE.toString(),1) // ==1 is product
                 launcherProduct.launch(intent) //getLauncher().launch(intent)
-
-//                var idProduct=0
-//                if(tvProduct.tag==null || (tvProduct.tag as Product)==null) idProduct=pit!!.idProduct
-//                else idProduct=(tvProduct.tag as Product).id
-//                tvProduct.setTag(idProduct)
-//                dialog.showSpinnerDialog(context, listProduct, tvProduct)
             }
         }
 
@@ -139,7 +133,7 @@ object DialogHelper {
             val amount=pit.summa
             val intent= Intent(context as EditPurchaseActivity, CalculatorActivity::class.java)
             intent.putExtra(com.vk.vsvans.BlogShop.R.string.AMOUNT.toString(),amount)
-            launcherCalculator.launch(intent)
+            launcherDialogCalculator.launch(intent)
         }
 
         val btnOk=rootView.findViewById<Button>(R1.id.btnOk)
