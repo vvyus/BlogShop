@@ -118,7 +118,7 @@ class EditPurchaseActivity : AppCompatActivity() {
                     rootElement.apply {
                         //content_temp=Html.fromHtml(purchase!!.content_html,0).makeSpannableString()
                         //edTitle.setText(purchase!!.title)
-                        tvSellerSelect.text=purchase!!.sellername
+                        edSellerSelect.setText(purchase!!.sellername)
                         edSummaPurchase.setText(purchase!!.summa.toString())
                         initDateTime()
                     }
@@ -141,11 +141,11 @@ class EditPurchaseActivity : AppCompatActivity() {
     private fun init(){
         cardItemPurchaseAdapter= CardItemPurchaseRcAdapter()
         rootElement.vpPurchaseItems.adapter=cardItemPurchaseAdapter
-        rootElement.tvSellerSelect.setOnClickListener {
+        rootElement.edSellerSelect.setOnClickListener {
             var idseller=0
             //if(rootElement.tvSellerSelect.tag==null || (rootElement.tvSellerSelect.tag as Seller)==null) idseller=purchase!!.idseller
-            if(rootElement.tvSellerSelect.tag==null ) idseller=purchase!!.idseller
-            else idseller=(rootElement.tvSellerSelect.tag as Seller).id
+            if(rootElement.edSellerSelect.tag==null ) idseller=purchase!!.idseller
+            else idseller=(rootElement.edSellerSelect.tag as Seller).id
            // rootElement.tvSellerSelect.setTag(idseller)
             launchSellerActivity(idseller)
         }
@@ -263,8 +263,8 @@ class EditPurchaseActivity : AppCompatActivity() {
                     val intent=result.data
                     //val new_purchase_time=intent!!.getLongExtra(getString(R.string.new_purchase_time),0L)
                     val seller= intent!!.getSerializableExtra(Seller::class.java.getSimpleName()) as Seller
-                    rootElement.tvSellerSelect.setTag(seller)
-                    rootElement.tvSellerSelect.text=seller.name
+                    rootElement.edSellerSelect.setTag(seller)
+                    rootElement.edSellerSelect.setText(seller.name)
 
 //                    tvSelection.text=selectItem.name
 //                    tvSelection.setTag(selectItem)
@@ -284,8 +284,8 @@ class EditPurchaseActivity : AppCompatActivity() {
                //здесь то что редактируется а не пришло из фрагмента
                 purchase!!.summa= edSummaPurchase.value.toDouble();//.text.toString().toDouble()
                 //purchase!!.title=edTitle.text.toString()
-                if(tvSellerSelect.tag!=null) {
-                    val seller=tvSellerSelect.tag as Seller
+                if(edSellerSelect.tag!=null) {
+                    val seller=edSellerSelect.tag as Seller
                     purchase!!.idseller=seller.id
                     purchase!!.sellername=seller.name
                 }

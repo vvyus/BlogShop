@@ -201,15 +201,25 @@
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/tvSellerSelect"
+                        <EditText
+                            android:id="@+id/edSellerSelect"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="10dp"
-                            android:text="@string/select_seller"
+                            android:hint="@string/select_seller"
                             android:textColor="@color/black"
                             android:textSize="18sp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            android:backgroundTint="@color/white"
+                            android:cursorVisible="false"
+                            android:drawableEnd="@drawable/ic_arrow_drop_down"
+                            android:focusable="false"
+                            android:fontFamily="sans-serif-medium"
+                            android:inputType="none|textNoSuggestions"
+                            android:singleLine="false"
+                            android:textAlignment="textStart"
+                            android:textColorHint="@color/light_gray_text"
+                            />
 
                         <LinearLayout
                             android:id="@+id/divider5"
