@@ -25,7 +25,6 @@ import com.vk.vsvans.BlogShop.view.fragment.PurchaseItemListFragment
 import com.vk.vsvans.BlogShop.view.`interface`.IFragmentCallBack
 import com.vk.vsvans.BlogShop.view.`interface`.IFragmentCloseInterface
 import com.vk.vsvans.BlogShop.view.`interface`.IUpdatePurchaseItemList
-import com.vk.vsvans.BlogShop.view.dialog.DialogSpinnerHelper
 import com.vk.vsvans.BlogShop.util.*
 import com.vk.vsvans.BlogShop.viewmodel.ActivityViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -167,7 +166,7 @@ class EditPurchaseActivity : AppCompatActivity() {
                     val intent=result.data
                     val product= intent!!.getSerializableExtra(Product::class.java.getSimpleName()) as Product
                     if(pitDialog!=null) {
-                        val tvProduct=pitDialog.findViewById<TextView>(R.id.tvProduct)
+                        val tvProduct=pitDialog.findViewById<TextView>(R.id.edBaseList)
                         tvProduct.setTag(product)
                         tvProduct.text=product.name
                     }

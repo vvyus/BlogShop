@@ -14,11 +14,8 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -27,7 +24,6 @@ import com.vk.vsvans.BlogShop.calendar.CalendarDialogAdapter
 import com.vk.vsvans.BlogShop.model.data.BaseList
 import com.vk.vsvans.BlogShop.model.data.Product
 import com.vk.vsvans.BlogShop.model.data.PurchaseItem
-import com.vk.vsvans.BlogShop.model.data.Seller
 import com.vk.vsvans.BlogShop.util.FilterForActivity
 import com.vk.vsvans.BlogShop.util.UtilsHelper
 import com.vk.vsvans.BlogShop.view.*
@@ -110,7 +106,7 @@ object DialogHelper {
         edQuantity.setText(pit.quantity.toString())
         edSumma.setText(pit.summa.toString())
 
-        val tvProduct=rootView.findViewById<TextView>(R1.id.tvProduct)
+        val tvProduct=rootView.findViewById<TextView>(R1.id.edBaseList)
         if(!pit.productName.isEmpty()){
             tvProduct.setText(pit.productName)
         }
