@@ -406,6 +406,7 @@ class EditPurchaseActivity : AppCompatActivity() {
             pitDialog=DialogHelper.showPurchaseItemInputDialog(this@EditPurchaseActivity,
                 pit,
                 launcherProduct,
+                launcherCalculator,
                 object: IUpdatePurchaseItemList {
                     override fun onUpdatePurchaseItemList(pit: PurchaseItem) {
                         if(pit.id==0)purchaseItemFragment!!.adapter.updateAdapterInsert(pit)

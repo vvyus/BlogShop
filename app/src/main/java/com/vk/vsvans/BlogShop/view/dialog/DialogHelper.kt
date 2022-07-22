@@ -16,6 +16,7 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.RequiresApi
+import androidx.appcompat.widget.AppCompatImageButton
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -92,6 +93,7 @@ object DialogHelper {
 
     fun showPurchaseItemInputDialog(context: Context, pit: PurchaseItem,
                                     launcherProduct: ActivityResultLauncher<Intent> ,
+                                    launcherCalculator:ActivityResultLauncher<Intent> ,
                                     iupdatePurchaseItemList: IUpdatePurchaseItemList):AlertDialog {
         val customDialog = AlertDialog.Builder(context, 0).create()
         val inflater: LayoutInflater =(context as EditPurchaseActivity).layoutInflater
@@ -130,6 +132,14 @@ object DialogHelper {
 //                tvProduct.setTag(idProduct)
 //                dialog.showSpinnerDialog(context, listProduct, tvProduct)
             }
+        }
+
+        val btnCalculator=rootView.findViewById<AppCompatImageButton>(R1.id.btnCalculatorDialog)
+        btnCalculator.setOnClickListener {
+            val amount=pit.summa
+            val intent= Intent(context as EditPurchaseActivity, CalculatorActivity::class.java)
+            intent.putExtra(com.vk.vsvans.BlogShop.R.string.AMOUNT.toString(),amount)
+            launcherCalculator.launch(intent)
         }
 
         val btnOk=rootView.findViewById<Button>(R1.id.btnOk)
