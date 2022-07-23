@@ -229,13 +229,24 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     fun fillAdapter() {
         job?.cancel()
         job = CoroutineScope(Dispatchers.Main).launch{
-            viewModel.getPurchases(filter_fact)
-
-            if(isSetFilter()) {
-                setFilterPanel(liveAmount,livePurchaseList_size)
-            }
-            else resetFilterPanel()
+            getPurchases()
+//            viewModel.getPurchases(filter_fact)
+//
+//            if(isSetFilter()) {
+//                setFilterPanel(liveAmount,livePurchaseList_size)
+//            }
+//            else resetFilterPanel()
         }
+    }
+
+    fun getPurchases(){
+        viewModel.getPurchases(filter_fact)
+
+        if(isSetFilter()) {
+            setFilterPanel(liveAmount,livePurchaseList_size)
+        }
+        else resetFilterPanel()
+
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -365,9 +376,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         receipt=(arrayOfChecksModelItem[i] as ChecksModelItem).ticket.document.receipt
                         import_checks.receiptToDb(receipt,viewModel, separator,title_color,100)
                         //demoList.add(receipt)
-                        if(!message.isEmpty()){
+                            //if(!message.isEmpty()){
+                            getPurchases()
                             Toast.makeText(this@MainActivity,message,Toast.LENGTH_LONG).show()
-                        }
+                        //}
                     }
                 }
             }
