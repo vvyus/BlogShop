@@ -150,7 +150,7 @@ object import_checks {
         var sellername=user
         var retailPlaceAddress=receipt.retailPlaceAddress
 
-        purchase!!.title= retailPlaceAddress //user==sellername
+        purchase!!.address= retailPlaceAddress //user==sellername
 //purchase!!.
         //!
         var seller: Seller?=null
@@ -160,7 +160,7 @@ object import_checks {
             seller= Seller()
             seller.name=sellername
             seller.description=retailPlaceAddress
-            seller.id_fns=sellername
+            seller.id_fns=sellername+retailPlaceAddress // early was sellername
             idseller= viewModel.insertSeller(seller)!!
             seller.id=idseller
             seller.idparent=idseller
@@ -168,7 +168,7 @@ object import_checks {
 
         }else{
             seller= list[0] as Seller
-            seller.description=retailPlaceAddress // !!late remove this
+            //seller.description=retailPlaceAddress // !!late remove this
             idseller=seller.id
             sellername=seller.name
         }

@@ -107,7 +107,7 @@ class EditPurchaseActivity : AppCompatActivity() {
                 if(purchase!=null){
                     rootElement.apply {
                         //content_temp=Html.fromHtml(purchase!!.content_html,0).makeSpannableString()
-                        tvAdress.setText(purchase!!.title)
+                        tvAdress.setText(purchase!!.address)
                         edSellerSelect.setText(purchase!!.sellername)
                         edSummaPurchase.setText(purchase!!.summa.toString())
                         initDateTime()
@@ -287,7 +287,7 @@ class EditPurchaseActivity : AppCompatActivity() {
             job = CoroutineScope(Dispatchers.Main).launch{
                //здесь то что редактируется а не пришло из фрагмента
                 purchase!!.summa= edSummaPurchase.value.toDouble();//.text.toString().toDouble()
-                purchase!!.title=tvAdress.text.toString()
+                purchase!!.address=tvAdress.text.toString()
                 if(edSellerSelect.tag!=null) {
                     val seller=edSellerSelect.tag as Seller
                     purchase!!.idseller=seller.id

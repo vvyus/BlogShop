@@ -5,8 +5,6 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.provider.BaseColumns
-import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import com.vk.vsvans.BlogShop.model.MyDbHelper
 import com.vk.vsvans.BlogShop.model.data.*
 import com.vk.vsvans.BlogShop.util.FilterForActivity
@@ -28,7 +26,7 @@ class DbRepositoryImpl(context: Context):IDbRepository {
         val dataId = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
         val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_ID_FNS_PRODUCTS))
         val dataName = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_NAME_PRODUCTS))
-        //!!val dataDescription = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_DESCRIPTION_PRODUCTS))
+        val dataDescription = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_DESCRIPTION_PRODUCTS))
         val idparent = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_IDPARENT_PRODUCTS))
         val level = cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_LEVEL_PRODUCTS))
         val fullpath = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_FULLPATH_PRODUCTS))
@@ -36,6 +34,7 @@ class DbRepositoryImpl(context: Context):IDbRepository {
         val product = Product()
         product.id = dataId
         product.name = dataName
+        product.description=dataDescription
         product.id_fns=dataTitle
         product.level = level?:0
         product.idparent = idparent?:0
@@ -79,6 +78,7 @@ class DbRepositoryImpl(context: Context):IDbRepository {
     fun getProductContentValues(product: Product): ContentValues {
         val values = ContentValues().apply {
             put(DbName.COLUMN_NAME_NAME_PRODUCTS, product.name)
+            put(DbName.COLUMN_NAME_DESCRIPTION_PRODUCTS, product.description)
             put(DbName.COLUMN_NAME_ID_FNS_PRODUCTS, product.id_fns)
             put(DbName.COLUMN_NAME_IDPARENT_PRODUCTS, product.idparent)
             put(DbName.COLUMN_NAME_LEVEL_PRODUCTS, product.level)
@@ -193,7 +193,8 @@ class DbRepositoryImpl(context: Context):IDbRepository {
 // PURCHASES
 
     private fun getPurchaseFromCursor(cursor: Cursor): Purchase {
-        val dataTitle = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_TITLE))
+        val dataAddress = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_ADDRESS))
+        val dataDescription = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_DESCRIPTION))
         val dataContent = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_CONTENT))
         val dataContentHtml = cursor.getString(cursor.getColumnIndex(DbName.COLUMN_NAME_CONTENT_HTML))
 
@@ -207,7 +208,8 @@ class DbRepositoryImpl(context: Context):IDbRepository {
         val sellerid=cursor.getInt(cursor.getColumnIndex(DbName.COLUMN_NAME_SELLER_ID))
 
         val purchase = Purchase()
-        purchase.title = dataTitle
+        purchase.address = dataAddress
+        purchase.description = dataDescription
         purchase.content = dataContent
         purchase.content_html= dataContentHtml
         purchase.id = dataId
@@ -368,7 +370,8 @@ class DbRepositoryImpl(context: Context):IDbRepository {
 
     fun getPurchaseContentValues(purchase: Purchase):ContentValues {
         val values = ContentValues().apply {
-            put(DbName.COLUMN_NAME_TITLE, purchase.title)
+            put(DbName.COLUMN_NAME_ADDRESS, purchase.address)
+            put(DbName.COLUMN_NAME_DESCRIPTION, purchase.description)
             put(DbName.COLUMN_NAME_CONTENT, purchase.content)
             put(DbName.COLUMN_NAME_SUMMA_PURCHASES, purchase.summa)
             put(DbName.COLUMN_NAME_CONTENT_HTML,purchase.content_html)

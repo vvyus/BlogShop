@@ -3,7 +3,8 @@ package com.vk.vsvans.BlogShop.model.data
 import java.io.Serializable
 
 class Purchase: Serializable,Comparable<Purchase> {
-    var title = ""
+    var address = ""
+    var description = ""
     var content = ""
     var summa:Double= 0.0
     var time:Long = 0

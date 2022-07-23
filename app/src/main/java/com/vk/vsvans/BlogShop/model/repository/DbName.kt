@@ -2,23 +2,25 @@ package com.vk.vsvans.BlogShop.model.repository
 import android.provider.BaseColumns
 
 object DbName {
-        const val DATABASE_VERSION = 24
+        const val DATABASE_VERSION = 25
         const val DATABASE_NAME = "BlogShopDb.db"
   // Table Purchase
         const val TABLE_NAME = "Purchases"
-        const val COLUMN_NAME_TITLE = "title"
+        const val COLUMN_NAME_ADDRESS = "address"
+        const val COLUMN_NAME_DESCRIPTION = "description"
         const val COLUMN_NAME_CONTENT = "content"
         const val COLUMN_NAME_CONTENT_HTML = "content_html"
         const val COLUMN_NAME_SUMMA_PURCHASES = "summa"
         const val COLUMN_NAME_TIME = "time"
-    const val COLUMN_NAME_TIME_DAY = "time_day"
+        const val COLUMN_NAME_TIME_DAY = "time_day"
         const val COLUMN_NAME_ID_FNS = "id_fns"
         const val COLUMN_NAME_SELLER_ID = "idseller"
         const val COLUMN_NAME_SELLER_NAME = "sellername"
 
         const val CREAT_TABLE = "CREATE TABLE IF NOT EXISTS $TABLE_NAME (" +
                 "${BaseColumns._ID} INTEGER PRIMARY KEY," +
-                "$COLUMN_NAME_TITLE TEXT," +
+                "$COLUMN_NAME_ADDRESS TEXT," +
+                "$COLUMN_NAME_DESCRIPTION TEXT," +
                 "$COLUMN_NAME_CONTENT TEXT," +
                 "$COLUMN_NAME_CONTENT_HTML TEXT,"+
                 "$COLUMN_NAME_SUMMA_PURCHASES DOUBLE,"+
@@ -77,6 +79,7 @@ object DbName {
     // поле title ключ для фнс
     const val COLUMN_NAME_ID_FNS_PRODUCTS = "id_fns"
     const val COLUMN_NAME_NAME_PRODUCTS = "name"
+    const val COLUMN_NAME_DESCRIPTION_PRODUCTS = "description"
     const val COLUMN_NAME_BCOLOR_PRODUCTS = "bcolor"
     const val COLUMN_NAME_IDPARENT_PRODUCTS = "idparent"
     const val COLUMN_NAME_LEVEL_PRODUCTS = "level"
@@ -86,6 +89,7 @@ object DbName {
             "${BaseColumns._ID} INTEGER PRIMARY KEY," +
             "$COLUMN_NAME_ID_FNS_PRODUCTS TEXT," +
             "$COLUMN_NAME_NAME_PRODUCTS TEXT," +
+            "$COLUMN_NAME_DESCRIPTION_PRODUCTS TEXT," +
             "$COLUMN_NAME_BCOLOR_PRODUCTS INTEGER," +
             "$COLUMN_NAME_IDPARENT_PRODUCTS INTEGER," +
             "$COLUMN_NAME_LEVEL_PRODUCTS INTEGER," +
@@ -96,7 +100,8 @@ object DbName {
 
     const val WHERE_FOR_PURCHASE_QUERY = "'%WHERETRUE%'"
     val PURCHASE_QUERY = "SELECT $TABLE_NAME.${BaseColumns._ID} as ${BaseColumns._ID}," +
-            "$TABLE_NAME.$COLUMN_NAME_TITLE as $COLUMN_NAME_TITLE," +
+            "$TABLE_NAME.$COLUMN_NAME_ADDRESS as $COLUMN_NAME_ADDRESS," +
+            "$TABLE_NAME.$COLUMN_NAME_DESCRIPTION as $COLUMN_NAME_DESCRIPTION," +
             "$COLUMN_NAME_CONTENT,$COLUMN_NAME_CONTENT_HTML," +
             "$TABLE_NAME.$COLUMN_NAME_ID_FNS,$COLUMN_NAME_TIME,$COLUMN_NAME_TIME_DAY,$COLUMN_NAME_SUMMA_PURCHASES," +
             "$TABLE_NAME_SELLERS.$COLUMN_NAME_NAME_SELLERS AS $COLUMN_NAME_SELLER_NAME," +
