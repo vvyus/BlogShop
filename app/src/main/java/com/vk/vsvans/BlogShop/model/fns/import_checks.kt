@@ -27,7 +27,7 @@ import kotlin.math.roundToLong
 object import_checks {
     //viewModel:ActivityViewModel,separator:String,title_color:Int,
    @RequiresApi(Build.VERSION_CODES.N)
-   fun getReceiptList(selected_date: HashMap<String, Date?>, receiptList:ArrayList<Receipt>){
+   suspend fun getReceiptList(selected_date: HashMap<String, Date?>, viewModel:ActivityViewModel, separator:String,title_color:Int, divider:Int){
        var fn=""
        var fd=0
        var fp=0.0
@@ -90,8 +90,8 @@ object import_checks {
                                         val receipt_instance=Receipt(0,0,0,0,dateTime,0,0,
                                             fd,fn,fp,"", itemList,"",0,0,"","",0,
                                             0,0,"",retailPlaceAddress,0,0, totalSum,user,"")
-                                        //receiptToDb(receipt_,viewModel,separator,title_color)
-                                        receiptList.add(receipt_instance)
+                                        receiptToDb(receipt_instance,viewModel,separator,title_color,divider)
+                                        //receiptList.add(receipt_instance)
                                     }// if receipt
                                 } // if ticket
                             }// if document
