@@ -27,7 +27,7 @@ import kotlin.math.roundToLong
 object import_checks {
     //viewModel:ActivityViewModel,separator:String,title_color:Int,
    @RequiresApi(Build.VERSION_CODES.N)
-   suspend fun getReceiptList(selected_date: HashMap<String, Date?>, viewModel:ActivityViewModel, separator:String,title_color:Int, divider:Int){
+   suspend fun getReceipt(selected_date: HashMap<String, Date?>, viewModel:ActivityViewModel, separator:String, title_color:Int, divider:Int){
        var fn=""
        var fd=0
        var fp=0.0
@@ -64,11 +64,12 @@ object import_checks {
                                     val document = ticket.getJSONObject("document")
                                     if(ImportUtils.isJsonObject(document,"receipt")) {
                                         val receipt = document.getJSONObject("receipt")
+
                                         user = receipt.getString("user")
+
                                         dateTime = receipt.getString("dateTime")
                                         dateTimeLong=ImportUtils.parseDateTimeQrString(dateTime)
-                                        val key: String = UtilsHelper.getDate(dateTimeLong!!)
-                                        if(selected_date.size>0 && selected_date.get(key)==null) continue
+
                                         totalSum = receipt.getLong("totalSum") / 100.0
                                         fn = receipt.getString("fiscalDriveNumber")//fn
                                         fd = receipt.getString("fiscalDocumentNumber").toInt() //fd
@@ -90,9 +91,12 @@ object import_checks {
                                         val receipt_instance=Receipt(0,0,0,0,dateTime,0,0,
                                             fd,fn,fp,"", itemList,"",0,0,"","",0,
                                             0,0,"",retailPlaceAddress,0,0, totalSum,user,"")
+
+                                        val key: String = UtilsHelper.getDate(dateTimeLong!!)
+                                        if(selected_date.size>0 && selected_date.get(key)==null) continue
+
                                         receiptToDb(receipt_instance,viewModel,separator,title_color,divider)
-                                        //receiptList.add(receipt_instance)
-                                    }// if receipt
+                                     }// if receipt
                                 } // if ticket
                             }// if document
                         }//if jsonobj

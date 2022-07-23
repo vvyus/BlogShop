@@ -483,10 +483,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun importPurchase(){
         DialogHelper.showLoadChecksDialog(this@MainActivity,object: IDialogImportChecks{
-            override fun import_checks() {
-            }
 
-            @RequiresApi(Build.VERSION_CODES.N)
+            override fun import_checks() {}
+
+//            @RequiresApi(Build.VERSION_CODES.N)
             override fun import_checks(selected_date: HashMap<String, Date?>) {
                 val dialog = ProgressDialog.createProgressDialog(this@MainActivity )
                 job?.cancel()
@@ -494,7 +494,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
                     val separator=resources.getString(R.string.SEPARATOR)
                     val title_color=getColor(R.color.light_gray_text)
-                    import_checks.getReceiptList(selected_date,viewModel,separator,title_color,1)
+                    import_checks.getReceipt(selected_date,viewModel,separator,title_color,1)
                     fillAdapter()
                     dialog.dismiss()
 
