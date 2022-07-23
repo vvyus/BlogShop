@@ -147,20 +147,21 @@ object import_checks {
         }
         purchase!!.summa=totalSum
 
-        var sellername=user
-        var retailPlaceAddress=receipt.retailPlaceAddress
 
-        purchase!!.address= retailPlaceAddress //user==sellername
-//purchase!!.
-        //!
+        val retailPlaceAddress=receipt.retailPlaceAddress
+        val sellerFns=user+retailPlaceAddress
+
+        purchase!!.address= retailPlaceAddress
+
         var seller: Seller?=null
-        val list=viewModel.getSellersFns(user)
+        val list=viewModel.getSellersFns(sellerFns)
         var idseller=0
+        var sellername=user
         if(list.size==0){
             seller= Seller()
             seller.name=sellername
             seller.description=retailPlaceAddress
-            seller.id_fns=sellername+retailPlaceAddress // early was sellername
+            seller.id_fns=sellerFns // early was sellername
             idseller= viewModel.insertSeller(seller)!!
             seller.id=idseller
             seller.idparent=idseller

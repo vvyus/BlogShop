@@ -333,9 +333,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 DialogHelper.getConfirmActionDialog(this,object :IConfirmAction{
                     override fun onConfirm() {
                         Toast.makeText(this@MainActivity,R.string.demo_load_data,Toast.LENGTH_LONG).show()
-                        getDemoJsonByName("6294837fcfb1f1a16860eda9.json","")
-                        getDemoJsonByName("629483daffd38dd204df6c19.json","")
-                        getDemoJsonByName("629c0cf6f5913801646dd150.json",getString(R.string.demo_is_loaded))
+                        getDemoJsonByName("demo1.json","")
+                        getDemoJsonByName("demo2.json","")
+                        getDemoJsonByName("demo3.json",getString(R.string.demo_is_loaded))
                     }
 
                 },getString(R.string.demo_base))
