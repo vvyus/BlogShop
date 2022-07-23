@@ -333,7 +333,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 DialogHelper.getConfirmActionDialog(this,object :IConfirmAction{
                     override fun onConfirm() {
                         Toast.makeText(this@MainActivity,R.string.demo_load_data,Toast.LENGTH_LONG).show()
-                        getDemoJsonByName("demo1.json","")
+                        getDemoJsonByName("demo1.json","") //ошибка получения данных из за 52/1 в retailAddress
                         getDemoJsonByName("demo2.json","")
                         getDemoJsonByName("demo3.json",getString(R.string.demo_is_loaded))
                     }
