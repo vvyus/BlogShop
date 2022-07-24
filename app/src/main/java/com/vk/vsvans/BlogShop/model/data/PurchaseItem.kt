@@ -4,6 +4,7 @@ import android.content.res.Resources
 import android.graphics.Color
 import android.text.SpannableString
 import com.vk.vsvans.BlogShop.util.*
+import kotlin.math.roundToInt
 
 
 class PurchaseItem {
@@ -27,13 +28,13 @@ class PurchaseItem {
         val summa_title=   getSpannableTitle("Сум",title_color)
 
         val product_value=getSpannableTitle("${this.productName}"+delim,title_color)//getSpannableValue("${this.productName}")
-        var str_price="${this.price}".format("%12.2f")
+        var str_price=((price*100).roundToInt()/100.0).toString()//"${this.price}".format("%12.2f")
         str_price=str_price.padStart(width-3-str_price.length,' ')
         val price_value=getSpannableValue(str_price)
-        var str_quantity="${this.quantity}".format("%12.3f")
+        var str_quantity=((quantity*1000).roundToInt()/1000.0).toString()//"${this.quantity}".format("%12.3f")
         str_quantity=str_quantity.padStart(width-3-str_quantity.length,' ')
         val quan_value=getSpannableValue(str_quantity)
-        var str_summa="${this.summa}".format("%12.2f")
+        var str_summa=((summa*100).roundToInt()/100.0).toString()//"${this.summa}".format("%12.2f")
         str_summa=str_summa.padStart(width-3-str_summa.length,' ')
         val summa_value=getSpannableValue(str_summa)
 
@@ -55,11 +56,11 @@ class PurchaseItem {
         val summa_title=   getSpannableTitle("Сумма",title_color)
 
         val product_value=getSpannableTitle("${this.productName}"+delim,title_color)
-        val str_price="${this.price}".format("%12.2f")
+        val str_price=((price*100).roundToInt()/100.0).toString()//"${this.price}".format("%12.2f")
         val price_value=getSpannableValue(str_price.padStart(width-price_title.length-str_price.length,' ')+indent)
-        val str_quantity="${this.quantity}".format("%12.3f")
+        val str_quantity=((quantity*1000).roundToInt()/1000.0).toString()//"${this.quantity}".format("%12.3f")
         val quan_value=getSpannableValue(str_quantity.padStart(width-quan_title.length-str_quantity.length,' ')+indent)
-        val str_summa="${this.summa}".format("%12.2f")
+        val str_summa=((summa*100).roundToInt()/100.0).toString()//"${this.summa}".format("%12.2f")
         val summa_value=getSpannableValue(str_summa.padStart(width-summa_title.length-str_summa.length,' '))
 
         val str=product_value+
