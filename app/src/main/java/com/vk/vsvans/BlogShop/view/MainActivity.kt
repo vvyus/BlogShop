@@ -52,7 +52,7 @@ import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    private lateinit var rootElement: ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
     //val dbManager= DbManager(this)
     //val viewModel:ActivityViewModel by viewModels()
 
@@ -77,7 +77,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     var liveProductAmount=ArrayList<BaseAmount>()
     var liveSellerAmount=ArrayList<BaseAmount>()
 
-    var demoList=ArrayList<Receipt>()
+    val number_demo_files=3
+    var index_demo_files=0
 
     private var baseAmountFragment: BaseAmountFragment?=null
 
@@ -110,8 +111,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         checkPermission()
        // viewModel= ActivityViewModel(application)
         mainActivity=this
-        rootElement= ActivityMainBinding.inflate(layoutInflater)
-        val view=rootElement.root
+        binding= ActivityMainBinding.inflate(layoutInflater)
+        val view=binding.root
         setContentView(view)
 
         init()
@@ -251,16 +252,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     @RequiresApi(Build.VERSION_CODES.N)
     private fun init(){
-        rootElement.navView.setNavigationItemSelectedListener(this)
+        binding.navView.setNavigationItemSelectedListener(this)
 
-        toolbar=rootElement.mainContent.toolbar
+        toolbar=binding.mainContent.toolbar
         toolbar.title=""
         setSupportActionBar(toolbar)
 
-        val toggle= ActionBarDrawerToggle(this,rootElement.drawerLayout,toolbar, R.string.open,R.string.close)
-        rootElement.drawerLayout.addDrawerListener(toggle)
+        val toggle= ActionBarDrawerToggle(this,binding.drawerLayout,toolbar, R.string.open,R.string.close)
+        binding.drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
-        rootElement.mainContent.imCloseFilter.setOnClickListener{
+        binding.mainContent.imCloseFilter.setOnClickListener{
             resetFilter_For_Activity()
             fillAdapter()
         }
@@ -275,7 +276,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun initRecyclerView(){
-        rootElement.apply {
+        binding.apply {
             //если просто указатб this это будет ссылка на rootElement поэтому this@MainActivity
             mainContent.rcView.layoutManager= LinearLayoutManager(this@MainActivity)
             mainContent.rcView.adapter=adapter
@@ -308,15 +309,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         str_amount= UtilsString.format_string(str_amount)
 
         val str_count=count.toString().format(R.string.int_format)
-        rootElement.mainContent.tvFilteredSumma.text=str_amount
-        rootElement.mainContent.tvFilteredCount.text=str_count
-        rootElement.mainContent.cvFilterPanel.visibility=View.VISIBLE
+        binding.mainContent.tvFilteredSumma.text=str_amount
+        binding.mainContent.tvFilteredCount.text=str_count
+        binding.mainContent.cvFilterPanel.visibility=View.VISIBLE
     }
 
     private fun showFilterPanel(){
-        rootElement.mainContent.tvFilteredSumma.text=""
-        rootElement.mainContent.tvFilteredCount.text=""
-        rootElement.mainContent.cvFilterPanel.visibility=View.GONE
+        binding.mainContent.tvFilteredSumma.text=""
+        binding.mainContent.tvFilteredCount.text=""
+        binding.mainContent.cvFilterPanel.visibility=View.GONE
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -344,22 +345,28 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 DialogHelper.getConfirmActionDialog(this,object :IConfirmAction{
                     override fun onConfirm() {
                         Toast.makeText(this@MainActivity,R.string.demo_load_data,Toast.LENGTH_LONG).show()
-                        getDemoJsonByName("demo1.json","") //ошибка получения данных из за 52/1 в retailAddress
-                        getDemoJsonByName("demo2.json","")
-                        getDemoJsonByName("demo3.json",getString(R.string.demo_is_loaded))
+                        val prefix_demo_files=getString(R.string.prefix_demo_files)
+                        var file_name_json=""
+                        for(i in 0 until number_demo_files){
+                            file_name_json="${prefix_demo_files}${i+1}.json"
+                            getDemoJsonByName(file_name_json)
+                        }
+//                        getDemoJsonByName("demo1.json","") //ошибка получения данных из за 52/1 в retailAddress
+//                        getDemoJsonByName("demo2.json","")
+//                        getDemoJsonByName("demo3.json",getString(R.string.demo_is_loaded))
                     }
 
                 },getString(R.string.demo_base))
                 //Toast.makeText(this,R.string.demo_is_loaded,Toast.LENGTH_LONG).show()
-            } else-> rootElement.drawerLayout.closeDrawer(GravityCompat.START)
+            } else-> binding.drawerLayout.closeDrawer(GravityCompat.START)
         }
         return true
     }
 
-    private fun getDemoJsonByName(name:String,message:String){
+    private fun getDemoJsonByName(file_name_json:String){
         val service= RetrofitCommon.retrofitService
         //listOf("6294837fcfb1f1a16860eda9.json","629483daffd38dd204df6c19.json")
-        service.getChecksModelItem(name)?.enqueue(object : Callback<MutableList<ChecksModelItem>> {
+        service.getChecksModelItem(file_name_json)?.enqueue(object : Callback<MutableList<ChecksModelItem>> {
             override fun onFailure(call: Call<MutableList<ChecksModelItem>>, t: Throwable) {
                 Toast.makeText(this@MainActivity,getString(R.string.demo_fail),Toast.LENGTH_LONG).show()
                 println("Retrofit fail!!! "+t)
@@ -376,18 +383,22 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         receipt=(arrayOfChecksModelItem[i] as ChecksModelItem).ticket.document.receipt
                         import_checks.receiptToDb(receipt,viewModel, separator,title_color,100)
                         //demoList.add(receipt)
-                            //if(!message.isEmpty()){
-                            getPurchases()
-                            Toast.makeText(this@MainActivity,message,Toast.LENGTH_LONG).show()
-                        //}
+                        //if(!message.isEmpty()){
+                        getPurchases()
+                        if(index_demo_files==number_demo_files-1) {
+                            index_demo_files=0
+                            Toast.makeText(this@MainActivity,getString(R.string.demo_is_loaded),Toast.LENGTH_LONG).show()
+                        }else index_demo_files++
                     }
+                    //}
+                    //}
                 }
             }
         })
     } // fun get demo json
 
     @RequiresApi(Build.VERSION_CODES.N)
-    private fun bottomMenuOnClick()=with(rootElement){
+    private fun bottomMenuOnClick()=with(binding){
         mainContent.bNavView.setOnItemSelectedListener {
             when(it.itemId){
                 R.id.id_new_purchase->{
@@ -561,7 +572,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun setUpToolbar() {
-        rootElement.apply {
+        binding.apply {
 
             //toolbar.inflateMenu(R.menu.menu_choose_purchase_item)
 
@@ -615,7 +626,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             // GO BACK
             toolbar.setNavigationOnClickListener {
  //               onBackPressed()
-                val drawer = rootElement.drawerLayout//findViewById<DrawerLayout>(R.id.drawerLayout)
+                val drawer = binding.drawerLayout//findViewById<DrawerLayout>(R.id.drawerLayout)
 
                 if (!drawer.isDrawerOpen(GravityCompat.START)) {
                     drawer.openDrawer(GravityCompat.START)
@@ -637,7 +648,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 //            supportFragmentManager?.beginTransaction()?.remove(baseAmountFragment!!)?.commit()
 //            return
 //        }
-        val drawer =rootElement.drawerLayout //findViewById<DrawerLayout>(R.id.drawerLayout)
+        val drawer =binding.drawerLayout //findViewById<DrawerLayout>(R.id.drawerLayout)
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START)
         }else {
