@@ -34,6 +34,7 @@ import kotlinx.coroutines.launch
 import java.text.*
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.math.roundToInt
 
 
 class EditPurchaseActivity : AppCompatActivity() {
@@ -370,6 +371,7 @@ class EditPurchaseActivity : AppCompatActivity() {
                     content_temp+=pit.getContentShort(title_color)+"\n\n"
                     summa+=pit.summa
                 }
+                summa=(summa*100).roundToInt()/100.0
                 purchase!!.content= content_temp.toString()
                 purchase!!.content_html=Html.toHtml(content_temp,0)
                 rootElement.edSummaPurchase.setText(summa.toString())

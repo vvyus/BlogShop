@@ -13,6 +13,7 @@ import com.vk.vsvans.BlogShop.model.data.ProductAmount
 import com.vk.vsvans.BlogShop.util.FilterForActivity
 import com.vk.vsvans.BlogShop.util.UtilsString
 import com.vk.vsvans.BlogShop.view.`interface`.ICallBackAmountAdapter
+import kotlin.math.roundToInt
 
 class BaseAmountRcAdapter(val callBack:ICallBackAmountAdapter, val filterForActivity: FilterForActivity,val baseAmountType: BaseAmountType) : RecyclerView.Adapter<BaseAmountRcAdapter.SpViewHolder>() {
 
@@ -137,10 +138,13 @@ class BaseAmountRcAdapter(val callBack:ICallBackAmountAdapter, val filterForActi
             val tvMonthAmount=itemView.findViewById<TextView>(R.id.tvMonthAmount)
             val tvWeekAmount=itemView.findViewById<TextView>(R.id.tvWeekAmount)
             tvProdNameAmount.text=baseAmount.name
-            tvYearAmount.text= UtilsString.format_string(baseAmount.yearAmount.toString())//baseAmount.yearAmount.toString()
-            tvMonthAmount.text= UtilsString.format_string(baseAmount.monthAmount.toString())
-            tvWeekAmount.text= UtilsString.format_string(baseAmount.weekAmount.toString())
-            // присваиваем onClick выбранному элементу
+            //tvYearAmount.text= UtilsString.format_string(baseAmount.yearAmount.toString())
+            tvYearAmount.text=((baseAmount.yearAmount*100).roundToInt()/100.0).toString()
+            //tvMonthAmount.text= UtilsString.format_string(baseAmount.monthAmount.toString())
+            tvMonthAmount.text=((baseAmount.monthAmount*100).roundToInt()/100.0).toString()
+            //tvWeekAmount.text= UtilsString.format_string(baseAmount.weekAmount.toString())
+            tvWeekAmount.text=((baseAmount.weekAmount*100).roundToInt()/100.0).toString()
+                    // присваиваем onClick выбранному элементу
             itemView.setOnClickListener(this)
         }
 

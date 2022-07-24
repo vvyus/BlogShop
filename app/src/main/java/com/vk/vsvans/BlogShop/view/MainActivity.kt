@@ -49,6 +49,7 @@ import retrofit2.Response
 import java.lang.String.valueOf
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -304,9 +305,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun showFilterPanel(amount:Double,count: Int){
-        var str_amount=amount.toString().format(R.string.double_format)
+        val str_amount=((amount*100).roundToInt()/100.0).toString()
+        //var str_amount=amount.toString().format(R.string.double_format)
 
-        str_amount= UtilsString.format_string(str_amount)
+        //str_amount= UtilsString.format_string(str_amount)
 
         val str_count=count.toString().format(R.string.int_format)
         binding.mainContent.tvFilteredSumma.text=str_amount
@@ -514,7 +516,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 val dialog = ProgressDialog.createProgressDialog(this@MainActivity )
                 job?.cancel()
                 job = CoroutineScope(Dispatchers.Main).launch{
-
+                    //val dialog = ProgressDialog.createProgressDialog(this@MainActivity )
                     val separator=resources.getString(R.string.SEPARATOR)
                     val title_color=getColor(R.color.light_gray_text)
                     import_checks.getReceipt(selected_date,viewModel,separator,title_color,1)
