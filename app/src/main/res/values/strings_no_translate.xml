@@ -10,6 +10,7 @@
     <string name="SELLER_ID" translatable="false">SELLER_ID</string>
     <string name="BASE_LIST_TYPE" translatable="false">BASE_LIST_TYPE</string>
     <string name="AMOUNT" translatable="false">AMOUNT</string>
-    <string name="prefix_demo_files">demo</string>
+    <string name="prefix_demo_files" translatable="false">demo</string>
+    <string name="BASE_LIST_EDIT_ITEM" translatable="false">BASE_LIST_EDIT_ITEM</string>
 
 </resources>

@@ -46,6 +46,7 @@ class BaseListActivity : AppCompatActivity() {
     private lateinit var searchView:SearchView
     private var baseListType: BaseAmountType=BaseAmountType.PRODUCT
     private var basetype=0
+    var edit_item_by_click=false
     val TAG="MyLog"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,6 +54,8 @@ class BaseListActivity : AppCompatActivity() {
 
         val intent=getIntent()
         basetype=intent.getIntExtra(R.string.BASE_LIST_TYPE.toString(), 0)
+
+        edit_item_by_click=intent.getBooleanExtra(R.string.BASE_LIST_EDIT_ITEM.toString(), false)
 
         if(basetype==1)baseListType=BaseAmountType.PRODUCT
         else if(basetype==2)baseListType=BaseAmountType.SELLER
@@ -80,15 +83,19 @@ class BaseListActivity : AppCompatActivity() {
 
             override fun onClickItem(baseList: BaseList) {
                 val data = Intent()
-                if(baseListType==BaseAmountType.PRODUCT){
+                if(baseListType==BaseAmountType.PRODUCT && !edit_item_by_click){
                     data.putExtra(getString(R.string.PRODUCT_ID), baseList.id)
                     data.putExtra(Product::class.java.getSimpleName(), baseList as Product)
-                }else if(baseListType==BaseAmountType.SELLER){
+                }else if(baseListType==BaseAmountType.SELLER && !edit_item_by_click){
                     data.putExtra(getString(R.string.SELLER_ID), baseList.id)
                     data.putExtra(Seller::class.java.getSimpleName(), baseList as Seller)
                 }
-                setResult(RESULT_OK, data)
-                onBackPressed()
+                if((baseListType==BaseAmountType.PRODUCT || baseListType==BaseAmountType.SELLER) && edit_item_by_click){
+                    editBaseListItem()
+                }else{
+                    setResult(RESULT_OK, data)
+                    onBackPressed()
+                }
             }
 
             override fun onEditItem() {}
@@ -255,6 +262,25 @@ class BaseListActivity : AppCompatActivity() {
         }
     }//setupToolbar
 
+    private fun editBaseListItem(){
+        val baselist= adapter.getBaseList()
+        if (baselist != null) {
+            DialogHelper.showBaseListInputDialog(this@BaseListActivity,baselist,
+                object: IUpdateBaseListItemList {
+                    override fun onUpdateBaseListItemList(baselist: BaseList) {
+                        // add single product
+                        adapter.updateAdapterEdit(baselist)
+                        if(baseListType==BaseAmountType.PRODUCT)
+                            viewModel.updateProduct(baselist as Product)
+                        else if(baseListType==BaseAmountType.SELLER)
+                            viewModel.updateSeller(baselist as Seller)
+                    }
+
+                }
+            )
+        }
+    } //editBaseListItem
+
     private fun bottomMenuOnClick()=with(rootElement){
         bNavView.setOnItemSelectedListener {
             when(it.itemId){
@@ -340,22 +366,23 @@ class BaseListActivity : AppCompatActivity() {
                 }
 
                 R.id.id_edit_baselist->{
-                    val baselist= adapter.getBaseList()
-                    if (baselist != null) {
-                        DialogHelper.showBaseListInputDialog(this@BaseListActivity,baselist,
-                            object: IUpdateBaseListItemList {
-                                override fun onUpdateBaseListItemList(baselist: BaseList) {
-                                    // add single product
-                                    adapter.updateAdapterEdit(baselist)
-                                    if(baseListType==BaseAmountType.PRODUCT)
-                                        viewModel.updateProduct(baselist as Product)
-                                    else if(baseListType==BaseAmountType.SELLER)
-                                        viewModel.updateSeller(baselist as Seller)
-                                }
-
-                            }
-                        )
-                    }
+                    editBaseListItem()
+//                    val baselist= adapter.getBaseList()
+//                    if (baselist != null) {
+//                        DialogHelper.showBaseListInputDialog(this@BaseListActivity,baselist,
+//                            object: IUpdateBaseListItemList {
+//                                override fun onUpdateBaseListItemList(baselist: BaseList) {
+//                                    // add single product
+//                                    adapter.updateAdapterEdit(baselist)
+//                                    if(baseListType==BaseAmountType.PRODUCT)
+//                                        viewModel.updateProduct(baselist as Product)
+//                                    else if(baseListType==BaseAmountType.SELLER)
+//                                        viewModel.updateSeller(baselist as Seller)
+//                                }
+//
+//                            }
+//                        )
+//                    }
 
                 }
                 R.id.id_parent_baselist->{

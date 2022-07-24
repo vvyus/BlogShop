@@ -329,6 +329,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 val intent= Intent(this@MainActivity, BaseListActivity::class.java)
                 intent.putExtra(R.string.BASE_LIST_TYPE.toString(),1) // ==1 is product
                 intent.putExtra(R.string.PURCHASE_ID.toString(),0)
+                intent.putExtra(R.string.BASE_LIST_EDIT_ITEM.toString(),true)
                 // сообщаем системе о запуске активити
                 startActivity(intent)
             }
@@ -337,6 +338,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 val intent= Intent(this@MainActivity, BaseListActivity::class.java)
                 intent.putExtra(R.string.BASE_LIST_TYPE.toString(),2) // ==2 is seller
                 intent.putExtra(R.string.SELLER_ID.toString(),0)
+                intent.putExtra(R.string.BASE_LIST_EDIT_ITEM.toString(),true)
                 // сообщаем системе о запуске активити
                 startActivity(intent)
                 //Toast.makeText(this@MainActivity,"Pressed sellers", Toast.LENGTH_LONG).show()

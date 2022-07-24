@@ -44,7 +44,7 @@ class BaseListRcAdapter(val clickItemCallback: OnClickItemCallback?): RecyclerVi
             }else{
 
                 if(clickItemCallback!=null) clickItemCallback.onClickItem(getBaseList()!!)
-                unSelectItem()
+               // unSelectItem()
             }
             notifyItemChanged(selected_position)
 
